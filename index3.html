@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Superio - Dashboard de Candidatos</title>
+  <!-- Tailwind CSS desde CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js para el gráfico -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            blue: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              600: '#2563eb'
+            },
+            red: {
+              50: '#fef2f2',
+              100: '#fee2e2',
+              600: '#dc2626'
+            },
+            yellow: {
+              50: '#fefce8',
+              100: '#fef9c3',
+              600: '#ca8a04'
+            },
+            green: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              600: '#16a34a'
+            },
+            indigo: {
+              500: '#6366f1'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    /* Estilos adicionales */
+    .sidebar {
+      transition: transform 0.3s ease;
+    }
+    
+    .sidebar.hidden {
+      transform: translateX(-100%);
+    }
+    
+    @media (min-width: 768px) {
+      .sidebar.hidden {
+        transform: translateX(0);
+      }
+    }
+    
+    .progress-ring-circle {
+      transition: stroke-dashoffset 0.35s;
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+    }
+    
+    /* Estilos para el scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: #c1c1c1;
+      border-radius: 3px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: #a1a1a1;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+  <div class="min-h-screen flex flex-col">
+    <!-- Header/Navbar -->
+    <header class="bg-blue-100 border-b shadow-sm">
+      <div class="container mx-auto px-4 flex items-center justify-between h-16">
+        <div class="flex items-center gap-8">
+          <div class="flex items-center gap-2">
+            <div class="bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center">
+              <i data-lucide="zap" class="w-6 h-6"></i>
+            </div>
+            <span class="font-bold text-xl">Superio</span>
+          </div>
+          
+          <nav class="hidden md:flex items-center gap-6">
+            <div class="relative group">
+              <button class="flex items-center gap-1 text-gray-500 hover:text-gray-900">
+                Home <i data-lucide="chevron-down" class="w-4 h-4"></i>
+              </button>
+              <div class="absolute left-0 top-full mt-1 w-48 bg-white shadow-md rounded-md border border-gray-100 hidden group-hover:block z-10">
+                <a href="#" class="block px-4 py-2 hover:bg-gray-50">Home Page 1</a>
+                <a href="#" class="block px-4 py-2 hover:bg-gray-50">Home Page 2</a>
+              </div>
+            </div>
+            
+            <div class="relative group">
+              <button class="flex items-center gap-1 text-gray-500 hover:text-gray-900">
+                Find Jobs <i data-lucide="chevron-down" class="w-4 h-4"></i>
+              </button>
+              <div class="absolute left-0 top-full mt-1 w-48 bg-white shadow-md rounded-md border border-gray-100 hidden group-hover:block z-10">
+                <a href="#" class="block px-4 py-2 hover:bg-gray-50">Browse Jobs</a>
+                <a href="#" class="block px-4 py-2 hover:bg-gray-50">Job Detail</a>
+              </div>
+            </div>
+            
+            <div class="relative group">
+              <button class="flex items-center gap-1 text-gray-500 hover:text-gray-900">
+                Employers <i data-lucide="chevron-down" class="w-4 h-4"></i>
+              </button>
+              <div class="absolute left-0 top-full mt-1 w-48 bg-white shadow-md rounded-md border border-gray-100 hidden group-hover:block z-10">
+                <a href="#" class="block px-4 py-2 hover:bg-gray-50">Browse Employers</a>
+                <a href="#" class="block px-4 py-2 hover:bg-gray-50">Employer Detail</a>
+              </div>
+            </div>
+            
+            <div class="relative group">
+              <button class="flex items-center gap-1 text-blue-600">
+                Candidates <i data-lucide="chevron-down" class="w-4 h-4"></i>
+              </button>
+              <div class="absolute left-0 top-full mt-1 w-48 bg-white shadow-md rounded-md border border-gray-100 hidden group-hover:block z-10">
+                <a href="#" class="block px-4 py-2 hover:bg-gray-50">Browse Candidates</a>
+                <a href="#" class="block px-4 py-2 hover:bg-gray-50">Candidate Detail</a>
+              </div>
+            </div>
+            
+            <div class="relative group">
+              <button class="flex items-center gap-1 text-gray-500 hover:text-gray-900">
+                Blog <i data-lucide="chevron-down" class="w-4 h-4"></i>
+              </button>
+              <div class="absolute left-0 top-full mt-1 w-48 bg-white shadow-md rounded-md border border-gray-100 hidden group-hover:block z-10">
+                <a href="#" class="block px-4 py-2 hover:bg-gray-50">Blog List</a>
+                <a href="#" class="block px-4 py-2 hover:bg-gray-50">Blog Detail</a>
+              </div>
+            </div>
+            
+            <div class="relative group">
+              <button class="flex items-center gap-1 text-gray-500 hover:text-gray-900">
+                Pages <i data-lucide="chevron-down" class="w-4 h-4"></i>
+              </button>
+              <div class="absolute left-0 top-full mt-1 w-48 bg-white shadow-md rounded-md border border-gray-100 hidden group-hover:block z-10">
+                <a href="#" class="block px-4 py-2 hover:bg-gray-50">About Us</a>
+                <a href="#" class="block px-4 py-2 hover:bg-gray-50">Contact</a>
+                <a href="#" class="block px-4 py-2 hover:bg-gray-50">FAQ</a>
+              </div>
+            </div>
+          </nav>
+        </div>
+        
+        <div class="flex items-center gap-4">
+          <div class="relative">
+            <span class="absolute -top-1 -right-1 bg-blue-600 text-white w-5 h-5 flex items-center justify-center rounded-full text-xs">3</span>
+            <button class="text-gray-500 hover:text-gray-900">
+              <i data-lucide="bell" class="w-6 h-6"></i>
+            </button>
+          </div>
+          
+          <div class="relative">
+            <span class="absolute -top-1 -right-1 bg-blue-600 text-white w-5 h-5 flex items-center justify-center rounded-full text-xs">5</span>
+            <button class="text-gray-500 hover:text-gray-900">
+              <i data-lucide="mail" class="w-6 h-6"></i>
+            </button>
+          </div>
+          
+          <div class="relative group">
+            <button class="flex items-center gap-2">
+              <div class="w-8 h-8 bg-gray-200 rounded-full overflow-hidden">
+                <img src="https://via.placeholder.com/32" alt="User" class="w-full h-full object-cover">
+              </div>
+              <span class="hidden md:inline text-sm">My Account</span>
+              <i data-lucide="chevron-down" class="w-4 h-4"></i>
+            </button>
+            <div class="absolute right-0 top-full mt-1 w-48 bg-white shadow-md rounded-md border border-gray-100 hidden group-hover:block z-10">
+              <a href="#" class="block px-4 py-2 hover:bg-gray-50">Profile</a>
+              <a href="#" class="block px-4 py-2 hover:bg-gray-50">Settings</a>
+              <a href="#" class="block px-4 py-2 hover:bg-gray-50">Logout</a>
+            </div>
+          </div>
+          
+          <button id="mobile-menu-toggle" class="md:hidden text-gray-500 hover:text-gray-900">
+            <i data-lucide="menu" class="w-6 h-6"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+    
+    <div class="flex flex-1">
+      <!-- Sidebar -->
+      <aside id="sidebar" class="sidebar fixed md:static w-64 bg-white h-screen md:h-auto border-r z-30 overflow-y-auto">
+        <div class="flex flex-col h-full">
+          <div class="flex-1 py-4">
+            <ul class="px-4 space-y-1">
+              <li>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-blue-600 bg-blue-50 rounded-md">
+                  <i data-lucide="home" class="w-5 h-5"></i>
+                  Dashboard
+                </a>
+              </li>
+              <li>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
+                  <i data-lucide="user" class="w-5 h-5"></i>
+                  My Profile
+                </a>
+              </li>
+              <li>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
+                  <i data-lucide="file-text" class="w-5 h-5"></i>
+                  My Resume
+                </a>
+              </li>
+              <li>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
+                  <i data-lucide="briefcase" class="w-5 h-5"></i>
+                  Applied Jobs
+                </a>
+              </li>
+              <li>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
+                  <i data-lucide="bell" class="w-5 h-5"></i>
+                  Job Alerts
+                </a>
+              </li>
+              <li>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
+                  <i data-lucide="bookmark" class="w-5 h-5"></i>
+                  Shortlisted Jobs
+                </a>
+              </li>
+              <li>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
+                  <i data-lucide="file-text" class="w-5 h-5"></i>
+                  CV Manager
+                </a>
+              </li>
+              <li>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
+                  <i data-lucide="package" class="w-5 h-5"></i>
+                  Packages
+                </a>
+              </li>
+              <li>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
+                  <i data-lucide="message-square" class="w-5 h-5"></i>
+                  Messages
+                </a>
+              </li>
+              <li>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
+                  <i data-lucide="lock" class="w-5 h-5"></i>
+                  Change Password
+                </a>
+              </li>
+              <li>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
+                  <i data-lucide="log-out" class="w-5 h-5"></i>
+                  Logout
+                </a>
+              </li>
+              <li>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-red-500 hover:bg-gray-50 rounded-md">
+                  <i data-lucide="trash-2" class="w-5 h-5"></i>
+                  Delete Profile
+                </a>
+              </li>
+            </ul>
+          </div>
+          
+          <div class="p-4 border-t">
+            <h3 class="text-sm font-medium text-gray-500">Skills Percentage</h3>
+            <p class="mt-2 text-xs text-gray-500">
+              Put value for <span class="font-medium">Cover Image</span> field to increase your skill up to 
+              <span class="font-medium">85%</span>
+            </p>
+            <div class="mt-4 flex justify-center">
+              <div class="relative w-32 h-32">
+                <svg class="w-full h-full" viewBox="0 0 100 100">
+                  <circle
+                    class="text-gray-200"
+                    stroke-width="10"
+                    stroke="currentColor"
+                    fill="transparent"
+                    r="45"
+                    cx="50"
+                    cy="50"
+                  />
+                  <circle
+                    class="text-indigo-500 progress-ring-circle"
+                    stroke-width="10"
+                    stroke-dasharray="282.7"
+                    stroke-dashoffset="197.9"
+                    stroke-linecap="round"
+                    stroke="currentColor"
+                    fill="transparent"
+                    r="45"
+                    cx="50"
+                    cy="50"
+                  />
+                </svg>
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <span class="text-2xl font-bold text-indigo-500">30%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+      
+      <!-- Main Content -->
+      <main class="flex-1 md:ml-64 md:pl-0 pl-0 pt-16 md:pt-0">
+        <div class="p-6">
+          <div class="max-w-6xl mx-auto">
+            <div class="mb-8">
+              <h1 class="text-2xl font-bold text-gray-800">Howdy, Jerome!!</h1>
+              <p class="text-gray-500 mt-1">Ready to jump back in?</p>
+            </div>
+            
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+              <!-- Applied Jobs -->
+              <div class="bg-white rounded-lg shadow-sm p-6">
+                <div class="flex items-center gap-4">
+                  <div class="bg-blue-50 p-3 rounded-md">
+                    <i data-lucide="briefcase" class="w-6 h-6 text-blue-600"></i>
+                  </div>
+                  <div>
+                    <div class="text-sm text-gray-500">Applied Jobs</div>
+                    <div class="text-xl font-bold text-blue-600">22</div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Job Alerts -->
+              <div class="bg-white rounded-lg shadow-sm p-6">
+                <div class="flex items-center gap-4">
+                  <div class="bg-red-50 p-3 rounded-md">
+                    <i data-lucide="file-text" class="w-6 h-6 text-red-600"></i>
+                  </div>
+                  <div>
+                    <div class="text-sm text-gray-500">Job Alerts</div>
+                    <div class="text-xl font-bold text-red-600">9382</div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Messages -->
+              <div class="bg-white rounded-lg shadow-sm p-6">
+                <div class="flex items-center gap-4">
+                  <div class="bg-yellow-50 p-3 rounded-md">
+                    <i data-lucide="message-square" class="w-6 h-6 text-yellow-600"></i>
+                  </div>
+                  <div>
+                    <div class="text-sm text-gray-500">Messages</div>
+                    <div class="text-xl font-bold text-yellow-600">74</div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Shortlist -->
+              <div class="bg-white rounded-lg shadow-sm p-6">
+                <div class="flex items-center gap-4">
+                  <div class="bg-green-50 p-3 rounded-md">
+                    <i data-lucide="bookmark" class="w-6 h-6 text-green-600"></i>
+                  </div>
+                  <div>
+                    <div class="text-sm text-gray-500">Shortlist</div>
+                    <div class="text-xl font-bold text-green-600">32</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <!-- Profile Views Chart -->
+              <div class="bg-white rounded-lg shadow-sm p-6 col-span-2">
+                <div class="flex items-center justify-between mb-6">
+                  <h3 class="text-lg font-semibold">Your Profile Views</h3>
+                  <div class="relative">
+                    <select id="time-range" class="appearance-none bg-white border border-gray-300 rounded-md py-2 pl-3 pr-8 text-sm font-medium text-gray-700 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                      <option value="6">Last 6 Months</option>
+                      <option value="3">Last 3 Months</option>
+                      <option value="1">Last Month</option>
+                    </select>
+                    <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                      <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400"></i>
+                    </div>
+                  </div>
+                </div>
+                <div class="h-[300px]">
+                  <canvas id="profile-views-chart"></canvas>
+                </div>
+              </div>
+              
+              <!-- Notifications -->
+              <div class="bg-white rounded-lg shadow-sm p-6">
+                <h3 class="text-lg font-semibold mb-6">Notifications</h3>
+                <div class="space-y-4">
+                  <!-- Notification Item 1 -->
+                  <div class="flex items-start gap-3">
+                    <div class="p-1 rounded-full bg-blue-100">
+                      <div class="w-8 h-8 bg-gray-200 rounded-full overflow-hidden flex items-center justify-center">
+                        <i data-lucide="mail" class="w-4 h-4 text-blue-600"></i>
+                      </div>
+                    </div>
+                    <div class="flex-1">
+                      <div class="text-sm font-medium">Henry Wilson <span class="font-normal text-gray-500">applied for a job</span></div>
+                      <div class="text-sm text-blue-600">Product Designer</div>
+                    </div>
+                  </div>
+                  
+                  <!-- Notification Item 2 -->
+                  <div class="flex items-start gap-3">
+                    <div class="p-1 rounded-full bg-green-100">
+                      <div class="w-8 h-8 bg-gray-200 rounded-full overflow-hidden flex items-center justify-center">
+                        <i data-lucide="mail" class="w-4 h-4 text-green-600"></i>
+                      </div>
+                    </div>
+                    <div class="flex-1">
+                      <div class="text-sm font-medium">Raul Costa <span class="font-normal text-gray-500">applied for a job</span></div>
+                      <div class="text-sm text-green-600">Product Manager, Risk</div>
+                    </div>
+                  </div>
+                  
+                  <!-- Notification Item 3 -->
+                  <div class="flex items-start gap-3">
+                    <div class="p-1 rounded-full bg-blue-100">
+                      <div class="w-8 h-8 bg-gray-200 rounded-full overflow-hidden flex items-center justify-center">
+                        <i data-lucide="mail" class="w-4 h-4 text-blue-600"></i>
+                      </div>
+                    </div>
+                    <div class="flex-1">
+                      <div class="text-sm font-medium">Jack Milk <span class="font-normal text-gray-500">applied for a job</span></div>
+                      <div class="text-sm text-blue-600">Technical Architect</div>
+                    </div>
+                  </div>
+                  
+                  <!-- Notification Item 4 -->
+                  <div class="flex items-start gap-3">
+                    <div class="p-1 rounded-full bg-green-100">
+                      <div class="w-8 h-8 bg-gray-200 rounded-full overflow-hidden flex items-center justify-center">
+                        <i data-lucide="mail" class="w-4 h-4 text-green-600"></i>
+                      </div>
+                    </div>
+                    <div class="flex-1">
+                      <div class="text-sm font-medium">Michel Arian <span class="font-normal text-gray-500">applied for a job</span></div>
+                      <div class="text-sm text-green-600">Software Engineer</div>
+                    </div>
+                  </div>
+                  
+                  <!-- Notification Item 5 -->
+                  <div class="flex items-start gap-3">
+                    <div class="p-1 rounded-full bg-blue-100">
+                      <div class="w-8 h-8 bg-gray-200 rounded-full overflow-hidden flex items-center justify-center">
+                        <i data-lucide="mail" class="w-4 h-4 text-blue-600"></i>
+                      </div>
+                    </div>
+                    <div class="flex-1">
+                      <div class="text-sm font-medium">Wade Warren <span class="font-normal text-gray-500">applied for a job</span></div>
+                      <div class="text-sm text-blue-600">Web Developer</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Recent Jobs -->
+            <div class="bg-white rounded-lg shadow-sm p-6 mt-6">
+              <h3 class="text-lg font-semibold mb-6">Jobs Applied Recently</h3>
+              <!-- Jobs list would go here -->
+              <div class="text-center text-gray-500 py-4">No recent job applications to display.</div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  
+  <script>
+    // Inicializar los iconos de Lucide
+    lucide.createIcons();
+    
+    // Toggle del menú móvil
+    document.getElementById('mobile-menu-toggle').addEventListener('click', function() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('hidden');
+    });
+    
+    // Cerrar el sidebar en móvil cuando se hace clic fuera de él
+    document.addEventListener('click', function(event) {
+      const sidebar = document.getElementById('sidebar');
+      const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+      
+      if (window.innerWidth < 768 && 
+          !sidebar.contains(event.target) && 
+          !mobileMenuToggle.contains(event.target)) {
+        sidebar.classList.add('hidden');
+      }
+    });
+    
+    // Inicializar el gráfico de vistas de perfil
+    const ctx = document.getElementById('profile-views-chart').getContext('2d');
+    const profileViewsChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+        datasets: [{
+          label: 'Profile Views',
+          data: [200, 130, 220, 360, 210, 250],
+          fill: false,
+          borderColor: '#3b82f6',
+          tension: 0.3,
+          pointBackgroundColor: '#3b82f6',
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2,
+          pointRadius: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: false,
+            min: 100,
+            grid: {
+              color: 'rgba(0, 0, 0, 0.05)'
+            },
+            ticks: {
+              stepSize: 50
+            }
+          },
+          x: {
+            grid: {
+              display: false
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+            padding: 10,
+            cornerRadius: 4
+          }
+        }
+      }
+    });
+    
+    // Cambiar datos del gráfico según el rango de tiempo seleccionado
+    document.getElementById('time-range').addEventListener('change', function() {
+      const value = this.value;
+      let data;
+      
+      if (value === '3') {
+        data = [180, 220, 360, 210, 250, 300];
+      } else if (value === '1') {
+        data = [210, 250, 300, 280, 320, 350];
+      } else {
+        data = [200, 130, 220, 360, 210, 250];
+      }
+      
+      profileViewsChart.data.datasets[0].data = data;
+      profileViewsChart.update();
+    });
+    
+    // Ajustar el sidebar en cambios de tamaño de ventana
+    window.addEventListener('resize', function() {
+      const sidebar = document.getElementById('sidebar');
+      if (window.innerWidth >= 768) {
+        sidebar.classList.remove('hidden');
+      } else {
+        sidebar.classList.add('hidden');
+      }
+    });
+    
+    // Inicializar el sidebar como oculto en móvil al cargar
+    if (window.innerWidth < 768) {
+      document.getElementById('sidebar').classList.add('hidden');
+    }
+  </script>
+</body>
+</html>
+

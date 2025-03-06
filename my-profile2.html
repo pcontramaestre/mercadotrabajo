@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Superio - My Profile</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              DEFAULT: '#1967D2',
+              50: '#E9F0FD',
+              100: '#D3E2FB',
+              600: '#1967D2'
+            },
+            secondary: {
+              DEFAULT: '#0A65C2',
+              50: '#E6F0F9',
+              100: '#CCE0F4'
+            },
+            success: {
+              DEFAULT: '#34A853',
+              50: '#E6F4EA',
+              100: '#CEEAD6'
+            },
+            danger: {
+              DEFAULT: '#EA4335',
+              50: '#FCEBE9',
+              100: '#F8D7D5'
+            },
+            warning: {
+              DEFAULT: '#FBBC05',
+              50: '#FEF7E0',
+              100: '#FDEFCD'
+            },
+            gray: {
+              50: '#f9fafb',
+              100: '#f3f4f6',
+              200: '#e5e7eb',
+              300: '#d1d5db',
+              400: '#9ca3af',
+              500: '#6b7280',
+              600: '#4b5563',
+              700: '#374151',
+              800: '#1f2937',
+              900: '#111827'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    /* Custom styles */
+    .form-select {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+      background-position: right 0.5rem center;
+      background-repeat: no-repeat;
+      background-size: 1.5em 1.5em;
+      padding-right: 2.5rem;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+    }
+    
+    .theme-btn {
+      transition: all 0.3s ease;
+    }
+    
+    .btn-style-one {
+      background-color: #1967D2;
+      color: white;
+      border-radius: 0.375rem;
+      padding: 0.75rem 1.5rem;
+      font-weight: 500;
+    }
+    
+    .btn-style-one:hover {
+      background-color: #1558B6;
+    }
+    
+    .btn-style-three {
+      background-color: #E9F0FD;
+      color: #1967D2;
+      border-radius: 0.375rem;
+      padding: 0.75rem 1.5rem;
+      font-weight: 500;
+    }
+    
+    .btn-style-three:hover {
+      background-color: #D3E2FB;
+    }
+    
+    .widget-title {
+      position: relative;
+      margin-bottom: 20px;
+    }
+    
+    .widget-title:after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -10px;
+      height: 2px;
+      width: 40px;
+      background-color: #1967D2;
+    }
+    
+    .uploading-outer {
+      position: relative;
+      margin-bottom: 30px;
+    }
+    
+    .uploadButton {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    
+    .uploadButton-input {
+      display: none;
+    }
+    
+    .uploadButton-button {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #E9F0FD;
+      color: #1967D2;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .uploadButton-button:hover {
+      background-color: #D3E2FB;
+    }
+    
+    .uploadButton-file-name {
+      margin-left: 10px;
+      color: #6b7280;
+    }
+    
+    .tag-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 4px;
+      border: 1px solid #d1d5db;
+      border-radius: 0.375rem;
+      min-height: 42px;
+    }
+    
+    .tag {
+      display: flex;
+      align-items: center;
+      background-color: #E9F0FD;
+      color: #1967D2;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.875rem;
+    }
+    
+    .tag-remove {
+      margin-left: 4px;
+      cursor: pointer;
+    }
+    
+    .tag-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      padding: 4px;
+      min-width: 60px;
+    }
+
+    .image-upload-area {
+        border: 2px dashed #d1d5db;
+        transition: all 0.3sease;
+    }
+    .image-upload-area:hover {
+        border-color: #2563eb;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+  <!-- Main content only, as requested -->
+  <section class="p-6">
+    <div class="max-w-6xl mx-auto">
+      <div class="mb-8">
+        <h1 class="text-2xl font-bold text-gray-800">My Profile!</h1>
+        <p class="text-gray-500 mt-1">Ready to jump back in?</p>
+      </div>
+      
+      <!-- Profile Content -->
+      <div class="bg-white rounded-lg shadow-sm p-6 mb-6 border border-gray-200">
+        <div class="widget-title mb-6">
+          <h4 class="text-lg font-medium text-gray-700">My Profile</h4>
+        </div>
+        <!-- Logo Upload -->
+        <div class="mb-6">
+            <div class="image-upload-area flex flex-col items-center justify-center rounded-md p-6 cursor-pointer">
+              <input type="file" id="logo-upload" class="hidden" accept="image/jpeg, image/png">
+              <i data-lucide="upload" class="w-8 h-8 text-gray-400 mb-2"></i>
+              <p class="text-sm text-gray-500 font-medium">Browse Logo</p>
+            </div>
+            <p class="text-xs text-gray-500 mt-2">Max file size is 1MB, Minimum dimension: 330x300 And Suitable files are .jpg & .png</p>
+          </div>
+
+        <!-- <div class="uploading-outer">
+          <div class="uploadButton">
+            <input class="uploadButton-input" accept="image/*" id="upload" required type="file" name="attachments[]">
+            <label class="uploadButton-button ripple-effect" for="upload">Browse Logo</label>
+            <span class="uploadButton-file-name"></span>
+          </div>
+          <div class="text-sm text-gray-500">Max file size is 1MB, Minimum dimension: 330x300 And Suitable files are .jpg & .png</div>
+        </div> -->
+        
+        <form action="#" class="default-form">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="form-group">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+              <input placeholder="Jerome" required type="text" name="name" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+            </div>
+            
+            <div class="form-group">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Job Title</label>
+              <input placeholder="UI Designer" required type="text" name="job_title" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+            </div>
+            
+            <div class="form-group">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+              <input placeholder="0 123 456 7890" required type="text" name="phone" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+            </div>
+            
+            <div class="form-group">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Email address</label>
+              <input placeholder="creativelayers" required type="email" name="email" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+            </div>
+            
+            <div class="form-group">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Website</label>
+              <input placeholder="www.jerome.com" required type="text" name="website" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+            </div>
+            
+            <div class="form-group">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Current Salary($)</label>
+              <select class="form-select w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary" required>
+                <option>40-70 K</option>
+                <option>50-80 K</option>
+                <option>60-90 K</option>
+                <option>70-100 K</option>
+                <option>100-150 K</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Expected Salary($)</label>
+              <select class="form-select w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary" required>
+                <option>120-350 K</option>
+                <option>40-70 K</option>
+                <option>50-80 K</option>
+                <option>60-90 K</option>
+                <option>70-100 K</option>
+                <option>100-150 K</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Experience</label>
+              <input placeholder="5-10 Years" required type="text" name="experience" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+            </div>
+            
+            <div class="form-group">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Age</label>
+              <select class="form-select w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary" required>
+                <option>23 - 27 Years</option>
+                <option>24 - 28 Years</option>
+                <option>25 - 29 Years</option>
+                <option>26 - 30 Years</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Education Levels</label>
+              <input placeholder="Certificate" required type="text" name="education" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+            </div>
+            
+            <div class="form-group">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Languages</label>
+              <input placeholder="English, Turkish" required type="text" name="languages" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+            </div>
+            
+            <div class="form-group col-span-1 md:col-span-2">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Categories</label>
+              <div class="tag-container">
+                <div class="tag">
+                  <span>Digital & Creative</span>
+                  <span class="tag-remove" data-value="Digital & Creative">
+                    <i data-lucide="x" class="w-3 h-3"></i>
+                  </span>
+                </div>
+                <input type="text" class="tag-input" placeholder="Add categories...">
+              </div>
+              <input type="hidden" name="categories" id="categories-input" value="Digital & Creative">
+            </div>
+            
+            <div class="form-group">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Allow In Search & Listing</label>
+              <select class="form-select w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary" required>
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </div>
+            
+            <div class="form-group col-span-1 md:col-span-2">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+              <textarea 
+                placeholder="Spent several years working on sheep on Wall Street. Had moderate success investing in Yugo's on Wall Street. Managed a small team buying and selling Pogo sticks for farmers. Spent several years licensing licorice in West Palm Beach, FL. Developed several new methods for working it banjos in the aftermarket. Spent a weekend importing banjos in West Palm Beach, FL.In this position, the Software Engineer collaborates with Evention's Development team to continuously enhance our current software solutions as well as create new solutions to eliminate the back-office operations and management challenges present" 
+                rows="6" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
+              ></textarea>
+            </div>
+            
+            <div class="form-group">
+              <button type="submit" class="theme-btn btn-style-one">Save</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      
+      <!-- Contact Information Section -->
+      <div class="bg-white rounded-lg shadow-sm p-6 mb-6 border border-gray-200">
+        <div class="widget-title mb-6">
+          <h4 class="text-lg font-medium text-gray-700">Contact Information</h4>
+        </div>
+        
+        <form class="default-form">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="form-group">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Country</label>
+              <select class="form-select w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary" required>
+                <option>Australia</option>
+                <option>Pakistan</option>
+                <option>China</option>
+                <option>Japan</option>
+                <option>India</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label class="block text-sm font-medium text-gray-700 mb-1">City</label>
+              <select class="form-select w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary" required>
+                <option>Melbourne</option>
+                <option>Sydney</option>
+                <option>Brisbane</option>
+                <option>Perth</option>
+                <option>Adelaide</option>
+              </select>
+            </div>
+            
+            <div class="form-group col-span-1 md:col-span-2">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Complete Address</label>
+              <input placeholder="329 Queensberry Street, North Melbourne VIC 3051, Australia." required type="text" name="address" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+            </div>
+            
+            <div class="form-group col-span-1 md:col-span-2">
+              <button type="submit" class="theme-btn btn-style-one">Save</button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Social Network Section -->
+      <div class="bg-white rounded-lg shadow-sm p-6 mb-6 border border-gray-200">
+        <div class="widget-title mb-6">
+          <h4 class="text-lg font-medium text-gray-700">Social Network</h4>
+        </div>
+        
+        <form class="default-form">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="form-group">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Facebook</label>
+              <input placeholder="www.facebook.com/Invision" required type="text" name="facebook" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+            </div>
+            
+            <div class="form-group">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Twitter</label>
+              <input placeholder="" required type="text" name="twitter" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+            </div>
+            
+            <div class="form-group">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Linkedin</label>
+              <input placeholder="" required type="text" name="linkedin" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+            </div>
+            
+            <div class="form-group">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Google Plus</label>
+              <input placeholder="" required type="text" name="google_plus" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+            </div>
+            
+            <div class="form-group">
+              <button type="submit" class="theme-btn btn-style-one">Save</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+  
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+
+    // Manejo del área de carga de imagen
+    const imageUploadArea = document.querySelector('.image-upload-area');
+    const fileInput = document.getElementById('logo-upload');
+    
+    imageUploadArea.addEventListener('click', function() {
+      fileInput.click();
+    });
+    
+    fileInput.addEventListener('change', function(e) {
+      if (e.target.files.length > 0) {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+          // Crear una vista previa de la imagen
+          const preview = document.createElement('img');
+          preview.src = e.target.result;
+          preview.classList.add('w-32', 'h-32', 'object-cover', 'rounded-md');
+          
+          // Limpiar el área de carga y agregar la vista previa
+          imageUploadArea.innerHTML = '';
+          imageUploadArea.appendChild(preview);
+          
+          // Agregar botón para eliminar la imagen
+          const removeButton = document.createElement('button');
+          removeButton.innerHTML = '<i data-lucide="x" class="w-4 h-4"></i>';
+          removeButton.classList.add('absolute', 'top-2', 'right-2', 'bg-white', 'rounded-full', 'p-1', 'shadow-sm', 'text-gray-500', 'hover:text-gray-700');
+          
+          removeButton.addEventListener('click', function(e) {
+            e.stopPropagation();
+            fileInput.value = '';
+            resetImageUploadArea();
+          });
+          
+          imageUploadArea.classList.add('relative');
+          imageUploadArea.appendChild(removeButton);
+          lucide.createIcons(); // Reinicializar iconos para el nuevo botón
+        };
+        
+        reader.readAsDataURL(file);
+      }
+    });
+    
+    function resetImageUploadArea() {
+      imageUploadArea.innerHTML = `
+        <i data-lucide="upload" class="w-8 h-8 text-gray-400 mb-2"></i>
+        <p class="text-sm text-gray-500 font-medium">Browse Logo</p>
+      `;
+      imageUploadArea.classList.remove('relative');
+      lucide.createIcons();
+    }
+    
+    // File upload handling
+    document.addEventListener('DOMContentLoaded', function() {
+      const uploadInput = document.querySelector('.uploadButton-input');
+      const fileNameDisplay = document.querySelector('.uploadButton-file-name');
+      
+      uploadInput.addEventListener('change', function() {
+        if (this.files && this.files[0]) {
+          fileNameDisplay.textContent = this.files[0].name;
+          
+          // Preview image if needed
+          // const reader = new FileReader();
+          // reader.onload = function(e) {
+          //   // Set preview image src
+          // };
+          // reader.readAsDataURL(this.files[0]);
+        }
+      });
+      
+      // Categories/Tags handling
+      const tagContainer = document.querySelector('.tag-container');
+      const tagInput = document.querySelector('.tag-input');
+      const hiddenInput = document.getElementById('categories-input');
+      
+      // Function to update the hidden input value
+      function updateHiddenInput() {
+        const tags = Array.from(tagContainer.querySelectorAll('.tag')).map(tag => 
+          tag.querySelector('span:first-child').textContent
+        );
+        hiddenInput.value = tags.join(',');
+      }
+      
+      // Add new tag when Enter is pressed
+      tagInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && this.value.trim() !== '') {
+          e.preventDefault();
+          
+          const tag = document.createElement('div');
+          tag.className = 'tag';
+          tag.innerHTML = `
+            <span>${this.value.trim()}</span>
+            <span class="tag-remove" data-value="${this.value.trim()}">
+              <i data-lucide="x" class="w-3 h-3"></i>
+            </span>
+          `;
+          
+          tagContainer.insertBefore(tag, this);
+          this.value = '';
+          
+          // Initialize the new icon
+          lucide.createIcons({
+            icons: {
+              'x': tag.querySelectorAll('[data-lucide="x"]')
+            }
+          });
+          
+          updateHiddenInput();
+        }
+      });
+      
+      // Remove tag when the X is clicked
+      tagContainer.addEventListener('click', function(e) {
+        if (e.target.closest('.tag-remove')) {
+          e.target.closest('.tag').remove();
+          updateHiddenInput();
+        }
+      });
+      
+      
+      // Form submission handlers
+      const forms = document.querySelectorAll('form');
+      forms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          // Simulate form submission
+          const submitBtn = this.querySelector('button[type="submit"]');
+          const originalText = submitBtn.textContent;
+          
+          submitBtn.textContent = 'Saving...';
+          submitBtn.disabled = true;
+          
+          // Simulate API call
+          setTimeout(() => {
+            alert('Form data saved successfully!');
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+          }, 1500);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
