@@ -1,7 +1,6 @@
 <?php
 // models/BaseModel.php
 require_once 'functions/functions.php';
-require_once 'config/config.php';
 require_once 'helpers/DatabaseHelper.php';
 
 class BaseModel {
@@ -42,8 +41,8 @@ class BaseModel {
         return $this->dbHelper->update($table, $data, $conditions);
     }
 
-    public function delete(string $tablaName,array $conditions) {
-        return $this->dbHelper->delete($tablaName, $conditions);
+    public function delete(string $tableName,array $conditions) {
+        return $this->dbHelper->delete($tableName, $conditions);
     }
 
     public function select($tableName, $conditions = [], $orderBy = 'id DESC', $offset = 0, $limit = null, $joinClause = null) {
@@ -64,5 +63,33 @@ class BaseModel {
 
     public function getRelatedJobs($jobID, $limit): array{
         return $this->dbHelper->getRelatedJobs($jobID, $limit);
+    }
+
+    public function saveJob(int $userId, int $jobId): bool {
+        $data = [
+            'user_id' => $userId,
+            'job_id' => $jobId,
+        ];
+    
+        try {
+            // Verificar si el trabajo ya está guardado
+            $exists = $this->select('saved_jobs', ['user_id' => $userId, 'job_id' => $jobId]);
+            if (!empty($exists)) {
+                $this->delete('saved_jobs', ['user_id' => $userId, 'job_id' => $jobId]);
+                return false; // Ya está guardado
+            }
+    
+            // Guardar el trabajo
+            $this->insert('saved_jobs', $data);
+            return true;
+        } catch (Exception $e) {
+            error_log("Error saving job: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function isJobSaved(int $userId, int $jobId): bool {
+        $result = $this->select('saved_jobs', ['user_id' => $userId, 'job_id' => $jobId]);
+        return !empty($result);
     }
 }

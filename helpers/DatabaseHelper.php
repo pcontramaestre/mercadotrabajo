@@ -70,6 +70,7 @@ class DatabaseHelper {
         
         
         try {
+
             
             $columns = implode(", ", array_keys($data));
             $placeholders = ":" . implode(", :", array_keys($data));
@@ -85,8 +86,10 @@ class DatabaseHelper {
             //si hay un error al insertar mostrar el error
             if ($this->connection->errorCode() != 0) {
                 error_log("Error: " . $this->connection->errorInfo());
+
                 return false;
             } else {
+
                 return $this->connection->lastInsertId();
             }
 

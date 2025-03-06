@@ -100,6 +100,11 @@ switch ($request) {
     break;
 
   //Llamadas api
+  case '/save-job':
+    $controller = new BaseController($db);
+    $controller->saveJobAction();
+    break;
+
   case '/api/v1/getdatacandidate':
     $id_user = 8;
     $controller = new getDataCandidateJsonController($db);

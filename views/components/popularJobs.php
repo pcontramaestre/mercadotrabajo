@@ -9,13 +9,21 @@ $database = new Database($configuration);
 $db = $database->getConnection();
 $controller = new BaseController($db);
 
+$user_id = $_SESSION['user_id'];
 
 $fields = "
     jobs.id, 
     jobs.title AS title, 
     jobs.city as location, 
     0 AS isFavorite,
-    0 AS isSaved,
+    CASE 
+        WHEN EXISTS (
+            SELECT 1 
+            FROM saved_jobs 
+            WHERE saved_jobs.user_id = ".$user_id." AND saved_jobs.job_id = jobs.id
+        ) THEN 1 
+        ELSE 0 
+    END AS isSaved,
     CONCAT('$', FORMAT(IFNULL(jobs.salary_min, 0), 2),' - $',FORMAT(IFNULL(jobs.salary_max, 0), 2)) AS salary,
     CASE
         WHEN TIMESTAMPDIFF(SECOND, jobs.created_at, NOW()) < 60 THEN CONCAT(TIMESTAMPDIFF(SECOND, jobs.created_at, NOW()), ' seconds ago')
@@ -140,6 +148,30 @@ $categories = $controller->findRecordsManual($queryManual);
 </div>
 
 <script>
+
+    // Toast notification function
+    function showToast(message, type = "success") {
+        const toast = document.getElementById("toast");
+        const toastMessage = document.getElementById("toast-message");
+
+        // Set message and type
+        toastMessage.textContent = message;
+        toast.className = "toast";
+        toast.classList.add(`toast-${type}`);
+
+        // Show toast
+        setTimeout(() => {
+          toast.classList.add("show");
+        }, 100);
+
+        // Hide toast after 3 seconds
+        setTimeout(() => {
+          toast.classList.remove("show");
+        }, 3000);
+      }
+</script>
+
+<script>
     document.addEventListener("alpine:init", () => {
         Alpine.data("jobsData", () => ({
             activeTab: "All",
@@ -147,6 +179,33 @@ $categories = $controller->findRecordsManual($queryManual);
             limit: 10, // Límite inicial
             showMore() {
                 this.limit += 10; // Incrementa el límite en 10
+            },
+            toggleSaveJob(jobId) {
+                const job = this.jobs.find(j => j.id === jobId);
+                // comvertir jobId en numerico
+                jobId = parseInt(jobId)
+
+                fetch('/save-job', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ job_id: jobId }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        job.isSaved = !job.isSaved; // Actualizar el estado local
+                        showToast(data.message);
+                    } else {
+                        showToast('Error :' + (data.message || 'Unknown error'), "error");
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showToast('Ocurrió un error al guardar el trabajo. Error :' + (error || 'Unknown error'), "error");
+                    alert('Ocurrió un error al guardar el trabajo.');
+                });
             },
             // No lo usaremos por ahora
             get displayedJobs() {

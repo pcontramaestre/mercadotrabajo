@@ -14,7 +14,7 @@ $controller = new BaseController($db);
       LIMIT 5;
   ";
 
-  $popularJobs = $controller->findRecords($query);
+  $popularJobs = $controller->findRecordsManual($query);
 ?>
 
 <section class="banner-section-four" style="background-image:url(<?php echo SYSTEM_BASE_DIR ?>assets/img/banner-home.png)">
@@ -31,7 +31,7 @@ $controller = new BaseController($db);
     </div>
     <div class="popular-searches aos-init aos-animate" data-aos="fade-up" data-aos-delay="1000"><span class="title">Popular Searches :</span> 
       <?php foreach ($popularJobs as $job): ?>
-        <a href="javascript:void(0);" data-job-query="<?php echo $job['query'] ?>">
+        <a href="javascript:void(0);" data-job-query="<?php echo $job['query'] ?>" role="button" aria-label="Buscar empleos relacionados con <?php echo $job['query'] ?>">
           | <?php echo strtoupper($job['query']) ?>
         </a>
       <?php endforeach; ?>

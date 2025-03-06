@@ -61,7 +61,7 @@ class Config {
         return $this->emailFrom;
     }
 }
-
+    session_start();
     $_SESSION['user_id'] = 8;
     $config = new Config();
     define('SYSTEM_BASE_DIR', $config->getUrlBase());

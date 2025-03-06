@@ -21,7 +21,6 @@ class setDataCandidateJsonController extends BaseController
         header('Access-Control-Allow-Methods: POST');
         header('Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With');
 
-        session_start();
         $userId = $_SESSION['user_id'] ?? 8;
 
         $response = [
@@ -276,7 +275,7 @@ class setDataCandidateJsonController extends BaseController
         header('Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With');
 
         // Obtener el user_id de la sesión (ejemplo)
-        session_start();
+
         $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 8;
 
         $response = [

@@ -279,4 +279,41 @@ class BaseController {
             return $records;
         }
     }
+
+    public function saveJobAction() {
+        header('Content-Type: application/json');
+    
+        // Leer el cuerpo de la solicitud
+        $rawData = file_get_contents('php://input');
+        $data = json_decode($rawData, true);
+    
+        // Verificar si se recibió el ID del trabajo
+        if (!isset($data['job_id']) || !is_numeric($data['job_id'])) {
+            echo json_encode(['success' => false, 'message' => 'ID de trabajo inválido o no proporcionado.']);
+            return;
+        }
+    
+        $jobId = (int)$data['job_id'];
+    
+        // Continuar con el resto del código...
+        $userId = $_SESSION['user_id'] ?? 8;
+    
+        if (!$userId) {
+            echo json_encode(['success' => false, 'message' => 'Usuario no autenticado.']);
+            return;
+        }
+    
+        try {
+            $isSaved = $this->modelBase->saveJob($userId, $jobId);
+    
+            if ($isSaved) {
+                echo json_encode(['success' => true, 'message' => 'Trabajo guardado exitosamente.']);
+            } else {
+                echo json_encode(['success' => true, 'message' => 'Se elimino el trabajo de sus favoritos']);
+            }
+        } catch (Exception $e) {
+            error_log("Error al guardar el trabajo: " . $e->getMessage());
+            echo json_encode(['success' => false, 'message' => 'Error al guardar el trabajo.']);
+        }
+    }
 }
