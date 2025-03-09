@@ -15,7 +15,7 @@ include_once 'views/candidate/header.php';
     <section class="user-dashboard max-w-6xl mx-auto">
         <div class="dashboard-outer">
             <div class="upper-title-box">
-                <h3 class="text-2xl font-bold text-gray-800">Shortlisted jobs!</h3>
+                <h3 class="text-2xl font-bold text-gray-800">Applied jobs!</h3>
                 <p class="text text-gray-500 mt-1">Ready to jump back in?</p>
             </div>
             <div class="mb-4 ms-0 show-1023"><button type="button" class="theme-btn toggle-filters"><span class="flaticon-menu-1"></span> Menu</button></div>
@@ -24,7 +24,7 @@ include_once 'views/candidate/header.php';
                     <div class="ls-widget">
                         <div class="tabs-box">
                             <div class="widget-title">
-                                <h4>My Favorite Jobs</h4>
+                                <h4>My Applied jobs</h4>
                             </div>
                             <div class="widget-content">
                                 <div class="table-outer">
@@ -33,7 +33,7 @@ include_once 'views/candidate/header.php';
                                             <thead>
                                                 <tr>
                                                     <th>Job Title</th>
-                                                    <th>Date Save</th>
+                                                    <th>Date Applied</th>
                                                     <th>Status</th>
                                                     <th>Action</th>
                                                 </tr>

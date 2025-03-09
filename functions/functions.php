@@ -91,6 +91,3 @@ function sendEmail($to, $subject, $message, $headers = [], $attachments = []) {
     // Enviar el correo  
     return mail($to, $subject, $body, implode("\r\n", $headers));  
 }
-
-
-?>

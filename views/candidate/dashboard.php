@@ -1,4 +1,9 @@
 <?php
+
+if (empty($_SESSION['user_id'])) {
+  echo "Acceso denegado. Por favor, inicia sesión.";
+  die(); // Detener la ejecución del script
+}
   include_once 'config/config.php';
   include_once 'views/candidate/header.php';
 ?>
@@ -37,7 +42,6 @@
   </script>
 
 <main class="flex-1 md:ml-64 md:pl-0 pl-0 pt-16 md:pt-0">
-        <?php print_r($dataUserProfile); ?>
         <div class="p-6">
           <div class="max-w-6xl mx-auto">
             <div class="mb-8">

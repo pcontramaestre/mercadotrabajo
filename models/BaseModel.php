@@ -25,8 +25,8 @@ class BaseModel {
         return $this->dbHelper->getLastRecord($this->tableName);
     }
 
-    public function countRecords($conditions = []) {
-        return $this->dbHelper->countRecords($this->tableName, $conditions);
+    public function countRecords(string $tablename,array $conditions = []) {
+        return $this->dbHelper->countRecords($tablename, $conditions);
     }
 
     public function paginate($conditions = [], $page = 1, $perPage = 10) {

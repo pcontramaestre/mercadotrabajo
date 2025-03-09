@@ -52,7 +52,7 @@ if (empty($search)) {
                     :id="'job-' + job.id"
                     :tabindex="0"
                     :ref="index === 0 ? 'firstJob' : null"
-                    :class="{ 'bg-yellow-100': selectedJob && selectedJob.id === job.id }"
+                    :class="{ 'bg-blue2-100': selectedJob && selectedJob.id === job.id }"
                     class="grid grid-cols-12 grid-rows-1 gap-3 relative rounded-lg shadow-md p-4 border hover:shadow-lg transition-shadow cursor-pointer p-2 hover:bg-gray-100 mb-6 cursor-pointer p-2 hover:bg-gray-100 job-item"
                     @click="selectJob(job)">
                     <div class="col-span-12">
@@ -60,21 +60,21 @@ if (empty($search)) {
                             <!-- Iconos de favoritos y guardar -->
                             <div class="flex justify-end space-x-4 absolute right-0 top-0">
                                 <!-- Icono de corazón (favoritos) -->
-                                <button
+                                <!-- <button
                                     @click="job.isFavorite = !job.isFavorite"
                                     class="text-gray-400 hover:text-red-500 transition-colors">
                                     <i
                                         :class="{'fas text-red-500': job.isFavorite, 'far': !job.isFavorite}"
                                         class="fa-heart"></i>
-                                </button>
+                                </button> -->
                                 <!-- Icono de guardar (bookmark) -->
-                                <button
+                                <!-- <button
                                     @click="job.isSaved = !job.isSaved"
                                     class="text-gray-400 hover:text-blue-500 transition-colors">
                                     <i
                                         :class="{'fas text-blue-500': job.isSaved, 'far': !job.isSaved}"
                                         class="fa-bookmark"></i>
-                                </button>
+                                </button> -->
                             </div>
 
                             <h2 class="text-lg font-semibold" x-text="job.title"></h2>
@@ -170,15 +170,67 @@ if (empty($search)) {
         <div class="col-span-6 descripcion-trabajos">
             <template x-if="selectedJob">
                 <div>
-                    <h2 class="text-xl font-bold" x-text="selectedJob.title"></h2>
-                    <p class="text-gray-600" x-text="'Location: ' + selectedJob.location"></p>
-                    <p class="text-gray-600" x-text="'Salary: ' + selectedJob.salary"></p>
-                    <p class="text-gray-600" x-text="'Posted: ' + selectedJob.timeAgo"></p>
-                    <p class="mt-4" x-text="'Category: ' + selectedJob.category"></p>
-                    <p class="mt-4" x-text="'Job Type: ' + selectedJob.job_type_name"></p>
-                    <p class="mt-4" x-text="'Employment Type: ' + selectedJob.employment_type_name"></p>
-                    <p class="mt-4" x-text="'Company: ' + selectedJob.company"></p>
-                    <img :src="selectedJob.logo" alt="Company Logo" class="mt-4 w-20 h-20">
+                    <div class="bg-blue2-100 p-4 flex flex-column items-center">
+                        <div class="text-center">
+                            <img :src="selectedJob.logo" alt="Company Logo" class="w-20 h-20 mx-auto">
+                            <p class="mt-1 mb-1" x-text="'Company: ' + selectedJob.company"></p>
+                        </div>
+                        <h2 class="text-xl font-bold text-center" x-text="selectedJob.title"></h2>
+                        <div class="flex flex-row gap-3 justify-center">
+                            <div class="flex flex-row items-center gap-1">
+                                <i class="fas fa-map-marker-alt mr-1 text-gray-400"></i>
+                                <span class="text-gray-600 text-[14px]" x-text="selectedJob.location"></span>
+                            </div>
+                            <div class="flex flex-row items-center gap-1">
+                                <i class="fas fa-money-bill-alt mr-1 text-gray-400"></i>
+                                <span class="text-gray-600 text-[14px]" x-text="selectedJob.salary"></span>
+                            </div>
+                            <div class="flex flex-row items-center gap-1">
+                                <i class="far fa-clock mr-1 text-gray-400"></i>
+                                <p class="text-gray-600 text-[14px]" x-text="selectedJob.timeAgo"></p>
+                            </div>
+                            <div class="flex flex-row items-center gap-1">
+                                <i class="fas fa-briefcase mr-1 text-gray-400"></i>
+                                <p class="text-gray-600 text-[14px]" x-text="selectedJob.category"></p>
+                            </div>
+                        </div>
+                        <div class="text-center mt-3">
+                            <span class="px-2 py-1 rounded-lg text-xs bg-blue-200 text-blue-600" x-text="selectedJob.employment_type_name"></span>
+                            <span class="px-2 py-1 rounded-lg text-xs bg-yellow-200 ml-3" x-text="selectedJob.job_type_name"></span>
+                        </div>
+
+                        <div class="btn-box mt-4 job-block-seven">
+                            <!-- x-if selectedJob.isApplied -->
+                                <!-- Mostrar el botón "Apply For Job" solo si no se ha aplicado -->
+                                <template x-if="!selectedJob.isApplied">
+                                    <a href="#" class="theme-btn btn-style-one" data-bs-toggle="modal"
+                                    :data-bs-target="'#applyJobModal'+selectedJob.id"
+                                    data-bs-target="#applyJobModal">
+                                        Aplicar al trabajo
+                                    </a>
+                                </template>
+
+                                <!-- Mostrar un mensaje alternativo si ya se aplicó -->
+                                <template x-if="selectedJob.isApplied">
+                                    <a href="#" class="theme-btn btn-style-one disabled" aria-disabled="true">
+                                        Ya aplicaste a este trabajo
+                                    </a>
+                                </template>
+
+                                
+                            <button
+                                @click.stop="toggleSaveJob(selectedJob.id)"
+                                :class="{'text-blue-500': selectedJob.isSaved, 'text-gray-400': !selectedJob.isSaved}"
+                                class="bookmark-btn">
+                                <!-- <i class="flaticon-bookmark"></i> -->
+                                <i
+                                    :class="{'fas text-blue-500 hover:text-white': selectedJob.isSaved, 'far': !selectedJob.isSaved}"
+                                    class="fa-bookmark far"></i>
+                            </button>
+                        </div>
+
+                    </div>
+
                     <div class="mt-4">
                         <h3 class="font-semibold" data-translate-es="Descripción:" data-translate-en="Description:">Description:</h3>
                         <p x-html="selectedJob.description"></p>
@@ -192,8 +244,59 @@ if (empty($search)) {
                         <p x-html="selectedJob.skills_experience"></p>
                     </div>
                 </div>
-
             </template>
+
+            <div class="modal fade"
+                :id="'applyJobModal'+selectedJob.id"
+                id="applyJobModal4" tabindex="-1" style="display: none;" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                    <div class="apply-modal-content modal-content">
+                        <div class="text-center">
+                            <h3 class="title" x-text="'Apply for '+selectedJob.title">Apply for this job</h3>
+                            <button type="button" class="closed-modal" data-bs-dismiss="modal" aria-label="Close">
+
+                            </button>
+                        </div>
+                        <form
+                            :data-id="selectedJob.id"
+                            method="post"
+                            class="default-form job-apply-form" method="post" data-id="">
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                                    <div class="uploading-outer apply-cv-outer">
+                                        <div id="uploaded-files">
+                                            <!-- <select id="uploaded-my-cvs"></select> -->
+                                        </div>
+                                        <!-- <div class="uploadButton">
+                                            <input class="uploadButton-input" accept=".doc, .docx, application/pdf" id="upload" required="" type="file" name="attachments[]">
+                                            <label class="uploadButton-button ripple-effect" for="upload">Upload CV (doc, docx, pdf)</label>
+                                        </div> -->
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                                    <textarea class="darma" name="cover_letter" id="cover_letter" placeholder="Message" required=""></textarea>
+                                    <input type="hidden" name="job_id" :value="selectedJob.id" required>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                                    <div class="input-group checkboxes square">
+                                        <input id="rememberMe" type="checkbox" name="remember-me">
+                                        <label for="rememberMe" class="remember">
+                                            <span class="custom-checkbox"></span> You accept our
+                                            <span data-bs-dismiss="modal">
+                                                <a href="/terms" target="_blank">Terms and Conditions and Privacy Policy</a>
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                                    <button class="theme-btn btn-style-one w-100" type="submit" name="submit-form">Apply Job</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
             <div class="jobs-related mt-4" x-data="relatedJobsData">
                 <!-- Mostrar trabajos relacionados -->
                 <template x-if="relatedJobs && relatedJobs[$store.selectedJobId]">
@@ -202,11 +305,10 @@ if (empty($search)) {
                         <div class="grid grid-cols-1 gap-2">
                             <template x-for="job in relatedJobs[$store.selectedJobId]" :key="job.id">
                                 <div
-                                    :data-url-job="'<?php echo SYSTEM_BASE_DIR.'searchjobs?job=' ?>' + job.id"  
+                                    :data-url-job="'<?php echo SYSTEM_BASE_DIR . 'searchjobs?job=' ?>' + job.id"
                                     @click.prevent="window.location.href = $el.dataset.urlJob"
-                                    data-url-job="" 
-                                    class="border rounded p-2 cursor-pointer hover:bg-gray-100" 
-                                    >
+                                    data-url-job=""
+                                    class="border rounded p-2 cursor-pointer hover:bg-gray-100">
                                     <h4 class="text-sm font-semibold" x-text="job.title"></h4>
                                     <p class="text-xs text-gray-500" x-text="job.city"></p>
                                 </div>
@@ -228,6 +330,152 @@ if (empty($search)) {
 </div>
 
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        //Abrir CV candidate
+        loadFiles();
+
+        // Escuchar el evento de envío del formulario de aplicación
+        document.querySelectorAll('.job-apply-form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault(); // Evitar el envío predeterminado del formulario
+
+                const form = e.target; // Referencia al formulario actual
+                const jobId = form.dataset.id; // ID del trabajo seleccionado
+                const coverLetter = form.querySelector('#cover_letter').value.trim(); // Carta de presentación
+                const cvSelect = form.querySelector('#uploaded-my-cvs'); // Select con los CVs cargados
+                const termsCheckbox = form.querySelector('#rememberMe'); // Checkbox de términos y condiciones
+
+                // Validar campos requeridos
+                if (!cvSelect || cvSelect.value === '') {
+                    showToast('Please select a CV to apply.', 'error');
+                    return;
+                }
+
+                if (!coverLetter) {
+                    showToast('Please write a cover letter.', 'error');
+                    return;
+                }
+
+                if (!termsCheckbox.checked) {
+                    showToast('You must accept the Terms and Conditions.', 'error');
+                    return;
+                }
+
+                // Mostrar spinner o mensaje de carga
+                const submitButton = form.querySelector('button[type="submit"]');
+                const originalButtonText = submitButton.textContent;
+                submitButton.textContent = 'Submitting...';
+                submitButton.disabled = true;
+
+                // Preparar los datos para enviar al servidor
+                const formData = new FormData();
+                formData.append('action', 'apply_job'); // Acción para aplicar al trabajo
+                formData.append('job_id', jobId); // ID del trabajo
+                formData.append('cv_id', cvSelect.value); // ID del CV seleccionado
+                formData.append('cover_letter', coverLetter); // Carta de presentación
+
+                // Enviar los datos al backend
+                fetch('/api/v1/setdatacandidate', {
+                        method: 'POST',
+                        body: formData,
+                    })
+                    .then(response => {
+                        if (!response.ok) throw new Error('Network response was not ok');
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            showToast('Application submitted successfully!', 'success');
+                            form.reset(); // Limpiar el formulario
+                            closeModal(form.closest('.modal')); // Cerrar el modal
+                        } else {
+                            showToast('Error: ' + (data.message || 'Unknown error'), 'error');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showToast('An error occurred while submitting your application. Please try again.', 'error');
+                    })
+                    .finally(() => {
+                        // Restaurar el botón de envío
+                        submitButton.textContent = originalButtonText;
+                        submitButton.disabled = false;
+                    });
+            });
+        });
+
+        // Función para cerrar el modal
+        function closeModal(modal) {
+            const modalInstance = bootstrap.Modal.getInstance(modal);
+            if (modalInstance) {
+                modalInstance.hide();
+            }
+        }
+    });
+
+    function loadFiles() {
+        fetch('/api/v1/getdatacandidate')
+            .then(response => response.json())
+            .then(data => {
+                const uploadedFilesContainer = document.getElementById('uploaded-files');
+                uploadedFilesContainer.innerHTML = '';
+                // if (data.success && data.cvs) {
+                //     data.cvs.forEach(cv => {
+                //         addFileToUI(cv.filename, cv.id); // Mostrar archivos del servidor
+                //     });
+                // } else {
+                //     addFileToUI("", "");
+                // }
+                if (data.success && data.cvs) {
+                    data.cvs.forEach(cv => addFileToUI(cv.filename, cv.id));
+                } else {
+                    addFileToUI(null, null); // Forzar mensaje de error
+                }
+            })
+            .catch(error => {
+                console.error('Error loading files:', error);
+                showToast('Error loading your files. Please refresh the page.', 'error');
+            });
+    }
+
+    function addFileToUI(filename, id) {
+        const container = document.getElementById('uploaded-files');
+
+        if (!filename && !id) {
+            // Caso 1: No hay CVs cargados → Mostrar mensaje
+            container.innerHTML = `
+            <div class="no-cvs-message">
+                <p data-bs-dismiss="modal">No tiene CVs cargados, <a href="<?php echo SYSTEM_BASE_DIR . 'dashboard/candidate/mycvmanager' ?>" target="blank" class="font-bold text-blue-500">haz clic aquí para agregar uno</a>.</p>
+            </div>
+        `;
+        } else {
+            // Caso 2: Agregar opciones al select
+            let select = document.getElementById('uploaded-my-cvs');
+
+            // Si el select no existe, crearlo
+            if (!select) {
+                select = document.createElement('select');
+                select.id = 'uploaded-my-cvs';
+                select.setAttribute('name', 'cv_id');
+                select.className = 'cv-select'; // Agrega clases CSS según tu diseño
+                const option = document.createElement('option');
+                option.value = '';
+                option.textContent = 'Selecciona tu CV';
+                select.appendChild(option);
+                select.setAttribute('required', '');
+                container.appendChild(select);
+            }
+
+            // Crear una nueva opción
+            const option = document.createElement('option');
+            option.value = id;
+            option.textContent = filename;
+            select.appendChild(option);
+        }
+    }
+
+
+
     document.addEventListener("alpine:init", () => {
         Alpine.store('selectedJobId', 0);
         console.log('Alpine initialized');
@@ -244,6 +492,35 @@ if (empty($search)) {
                 return Math.ceil(this.jobs.length / this.perPage);
             },
 
+            toggleSaveJob(jobId) {
+                const job = this.jobs.find(j => j.id === jobId);
+                // comvertir jobId en numerico
+                jobId = parseInt(jobId)
+
+                fetch('<?php echo SYSTEM_BASE_DIR ?>save-job', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            job_id: jobId
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            job.isSaved = !job.isSaved; // Actualizar el estado local
+                            showToast(data.message);
+                        } else {
+                            showToast('Error :' + (data.message || 'Unknown error'), "error");
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showToast('Ocurrió un error al guardar el trabajo. Error :' + (error || 'Unknown error'), "error");
+                        alert('Ocurrió un error al guardar el trabajo.');
+                    });
+            },
             // Obtener los trabajos de la página actual
             get paginatedJobs() {
                 const start = (this.currentPage - 1) * this.perPage;

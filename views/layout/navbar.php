@@ -1,3 +1,9 @@
+<style>
+  .dashboard-option .dropdown-toggle::after {
+    content: unset;
+  }
+</style>
+
 <header class="main-header header-style-two alternate  ">
   <div class="auto-container">
     <div class="main-box">
@@ -83,6 +89,7 @@
               src="<?php echo SYSTEM_BASE_DIR ?>uploads/candidates/candidate-1.webp"
               style="color: transparent;">
             <span class="name text-white">My Account</span>
+            <i data-lucide="chevron-down" class="w-5 h-5"></i>
           </a>
           <ul 
              x-data="{ currentPath: window.location.pathname }"
@@ -111,13 +118,13 @@
                 </a>
               </li>
               <li>
-                <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
+                <a href="<?php echo SYSTEM_BASE_DIR ?>dashboard/candidate/mycvmanager" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
                   <i data-lucide="file-text" class="w-5 h-5"></i>
                   CV Manager
                 </a>
               </li>
               <li>
-                <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
+                <a href="<?php echo SYSTEM_BASE_DIR ?>dashboard/candidate/appliedjobs" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
                   <i data-lucide="briefcase" class="w-5 h-5"></i>
                   Applied Jobs
                 </a>
@@ -129,7 +136,7 @@
                 </a>
               </li> -->
               <li>
-                <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
+                <a href="<?php echo SYSTEM_BASE_DIR ?>dashboard/candidate/shorlistedjobs" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
                   <i data-lucide="bookmark" class="w-5 h-5"></i>
                   Shortlisted Jobs
                 </a>
@@ -181,12 +188,12 @@
       <div class="nav-outer">
         <div class="logo-box">
           <div class="logo"><a href="/"><img alt="brand" loading="lazy" width="154" height="50" decoding="async"
-                data-nimg="1" style="color:transparent" src="/images/logo.svg"></a></div>
+                data-nimg="1" style="color:transparent" src="<?php echo SYSTEM_BASE_DIR ?>assets/img/logo2.png"></a></div>
         </div>
         <div class="offcanvas offcanvas-start mobile_menu-contnet" tabindex="-1" id="offcanvasMenu"
           data-bs-scroll="true">
           <div class="pro-header"><a href="/"><img alt="brand" loading="lazy" width="154" height="50" decoding="async"
-                data-nimg="1" style="color:transparent" src="/images/logo.svg"></a>
+                data-nimg="1" style="color:transparent" src="<?php echo SYSTEM_BASE_DIR ?>assets/img/logo2.png"></a>
             <div class="fix-icon" data-bs-dismiss="offcanvas" aria-label="Close"><span class="flaticon-close"></span>
             </div>
           </div>
@@ -515,7 +522,7 @@
             <div class="mm-listitem__text">
               <div class="contact-info"><span class="phone-num"><span>Call us</span><a href="tel:1234567890">123 456
                     7890</a></span><span class="address">329 Queensberry Street, North Melbourne VIC <br>3051,
-                  Australia.</span><a href="mailto:support@superio.com" class="email">support@superio.com</a></div>
+                  Australia.</span><a href="mailto:support@mercadotrabajo.com" class="email">support@mercadotrabajo.com</a></div>
               <div class="social-links"><a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer"><i
                     class="fab fa-facebook-f"></i></a><a href="https://www.twitter.com/" target="_blank"
                   rel="noopener noreferrer"><i class="fab fa-twitter"></i></a><a href="https://www.instagram.com/"

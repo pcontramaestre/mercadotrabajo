@@ -52,7 +52,7 @@ class JobCards {
                 <div class="col-span-10">
                     <div class="col-span-10 pr-12 relative pb-2">
                         <!-- Iconos de favoritos y guardar -->
-                        <div class="flex justify-end space-x-4 absolute right-0 top-0">
+                        <div class="flex justify-end space-x-4 absolute right-0 top-0 job-block-seven">
                             <!-- Icono de corazón (favoritos) -->
                             <!-- <button
                                 @click.stop="job.isFavorite = !job.isFavorite"
@@ -65,7 +65,7 @@ class JobCards {
                             <button
                                 @click.stop="toggleSaveJob(job.id)"
                                 :class="{'text-blue-500': job.isSaved, 'text-gray-400': !job.isSaved}"
-                                class="text-gray-400 hover:text-blue-500 transition-colors">
+                                class="text-gray-400 hover:text-blue-500 transition-colors bookmark-btn">
                                 <i
                                     :class="{'fas text-blue-500': job.isSaved, 'far': !job.isSaved}"
                                     class="fa-bookmark"></i>

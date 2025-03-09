@@ -185,7 +185,7 @@ $categories = $controller->findRecordsManual($queryManual);
                 // comvertir jobId en numerico
                 jobId = parseInt(jobId)
 
-                fetch('/save-job', {
+                fetch('<?php echo SYSTEM_BASE_DIR ?>save-job', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

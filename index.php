@@ -58,15 +58,6 @@ switch ($request) {
     } elseif ($lengArray == 3) {
       $jobId = $matches[2];
     }
-
-    // print_r("Encontrados:".$lengArray." valores.  ");
-    // print_r($matches);
-    // print_r( "  0 value: ". $matches[0]);
-    // print_r( "  1 value: ". $matches[1]);
-    // print_r( "  2 value: ".$matches[2] );
-    // $jobId = $matches[1]; // Obtener el ID del trabajo desde la URL
-    // $jobId = $matches[1] ?? $matches[2] ?? null;
-    // exit;
     $jobId = (int) $jobId;
     $controller->viewSearchJobs($jobId); // Pasar el ID al controlador
     break;
@@ -83,14 +74,15 @@ switch ($request) {
     $controller = new CandidateDashboardController($db);
     $controller->viewDashboard($dataUserProfile);
     break;
+
   case '/dashboard/candidate/myresume':
     $controllerDataProfile = new getDataCandidateJsonController($db);
     $dataUserProfile = $controllerDataProfile->getUserProfile($id_user);
 
-
     $controller = new CandidateDashboardController($db);
     $controller->viewResume($dataUserProfile);
     break;
+
   case '/dashboard/candidate/myprofile':
     $controllerDataProfile = new getDataCandidateJsonController($db);
     $dataUserProfile = $controllerDataProfile->getUserProfile($id_user);
@@ -99,6 +91,34 @@ switch ($request) {
     $controller->viewProfile($dataUserProfile);
     break;
 
+  case '/dashboard/candidate/mycvmanager':
+    $controllerDataProfile = new getDataCandidateJsonController($db);
+    $dataUserProfile = $controllerDataProfile->getUserProfile($id_user);
+
+    $controller = new CandidateDashboardController($db);
+    $controller->viewCvManager($dataUserProfile);
+    break;
+  case '/dashboard/candidate/appliedjobs':
+    $controllerDataProfile = new getDataCandidateJsonController($db);
+    $dataUserProfile = $controllerDataProfile->getUserProfile($id_user);
+    $dataUserJobsSave = $controllerDataProfile->getAppliedJobs($id_user);
+    
+
+    $controller = new CandidateDashboardController($db);
+    $controller->viewAppliedJobs($dataUserProfile, $dataUserJobsSave );
+    break;
+  case '/dashboard/candidate/shorlistedjobs':
+    $controllerDataProfile = new getDataCandidateJsonController($db);
+    $dataUserProfile = $controllerDataProfile->getUserProfile($id_user);
+    $dataUserJobsSave = $controllerDataProfile->getSaveJobs($id_user);
+    
+
+    $controller = new CandidateDashboardController($db);
+    $controller->viewShortListedJobs($dataUserProfile, $dataUserJobsSave );
+    break;
+
+
+    
   //Llamadas api
   case '/save-job':
     $controller = new BaseController($db);
@@ -112,16 +132,42 @@ switch ($request) {
     break;
   case '/api/v1/setdatacandidate':
     $controller = new setDataCandidateJsonController($db);
-    switch ($_POST['action']) {
-      case 'delete_item':
-        $controller->saveDataResumeCandidate($_POST['action'], $_POST['id']);
+    
+    // Obtener la acción del POST
+    $action = $_POST['action'] ?? null;
+
+    if (!$action) {
+        echo json_encode(['success' => false, 'message' => 'Acción no especificada.']);
         break;
-      case 'save_description':
-        $controller->saveDataResumeCandidate($_POST['action'], $_POST['description']);
-        break;
-      default:
-        $controller->saveDataResumeCandidate($_POST['action'], $_POST['data']);
-        break;
+    }
+
+    try {
+        switch ($action) {
+            case 'add_file':
+                // Para subir archivos, los datos están en $_FILES
+                $controller->setDataCVCandidate($action, $_FILES);
+                break;
+            case 'delete_file':
+                // Para eliminar archivos, el ID está en $_POST
+                $controller->setDataCVCandidate($action, $_POST);
+                break;
+            case 'apply_job':
+                // Para aplicar a un trabajo, los datos están en $_POST
+                $controller->setDataApplicationJob($action, $_POST);
+                break;
+            case 'delete_item':
+                $controller->saveDataResumeCandidate($action, $_POST['id']);
+                break;
+            case 'save_description':
+                $controller->saveDataResumeCandidate($action, $_POST['description']);
+                break;
+            default:
+                $controller->saveDataResumeCandidate($action, $_POST['data']);
+                break;
+        }
+    } catch (Exception $e) {
+        error_log("Error en /api/v1/setdatacandidate: " . $e->getMessage());
+        echo json_encode(['success' => false, 'message' => 'Error procesando la solicitud.']);
     }
     break;
   case '/api/v1/getdataprofilecandidate':

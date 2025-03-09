@@ -16,8 +16,22 @@ class CandidateDashboardController extends BaseController {
         include_once  'views/candidate/dashboard.php';
     }
 
-    public function viewShortListedJobs(?array $params = []) {
+    public function viewCvManager(?array $params = []) {
         $dataUserProfile = $params;
+        include_once  'views/candidate/MyCvManager.php';
+    }
+
+    public function viewShortListedJobs(?array $params = [], ?array $params2 = []) {
+        $dataUserProfile = $params;
+        $dataUserJobsSave = $params2;
         include_once  'views/candidate/shortListedJobs.php';
     }
+
+    public function viewAppliedJobs(?array $params = [], ?array $params2 = []) {
+        $dataUserProfile = $params;
+        $dataUserJobsSave = $params2;
+        include_once  'views/candidate/appliedJobs.php';
+    }
+
+    
 }

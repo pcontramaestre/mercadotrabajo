@@ -1,5 +1,6 @@
 <?php
-
+require_once 'controllers/BaseController.php';
+require_once 'config/database.php';
 class Config {
     private $url_base = 'http://mercadotrabajo.localdev:8080/';
     private $host = "127.0.0.1";
@@ -63,7 +64,24 @@ class Config {
 }
     session_start();
     $_SESSION['user_id'] = 8;
+    
+
     $config = new Config();
     define('SYSTEM_BASE_DIR', $config->getUrlBase());
     define('SYSTEM_HOME_URL', $config->getHomeUrl());
+
+    $database = new Database($config);
+    //$database = new Database();
+    $db = $database->getConnection();
+    $controller = new BaseController($db);
+    $conditions = [
+        'id'=> $_SESSION['user_id']
+    ];
+
+    $userUniqueid = $controller->findRecord('users', $conditions);
+    if (empty($userUniqueid)) {
+        $_SESSION['user_uid'] = '';
+    } else {
+        $_SESSION['user_uid'] = $userUniqueid['uid'];
+    }
 ?>

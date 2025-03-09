@@ -1,6 +1,27 @@
             </div>
         </div>
         <script>
+            lucide.createIcons();
+            
+            function showToast(message, type = "success") {
+                const toast = document.getElementById("toast");
+                const toastMessage = document.getElementById("toast-message");
+
+                // Set message and type
+                toastMessage.textContent = message;
+                toast.className = "toast";
+                toast.classList.add(`toast-${type}`);
+
+                // Show toast
+                setTimeout(() => {
+                toast.classList.add("show");
+                }, 100);
+
+                // Hide toast after 3 seconds
+                setTimeout(() => {
+                toast.classList.remove("show");
+                }, 3000);
+            }
             // Toggle del menú móvil
             document.getElementById('mobile-menu-toggle').addEventListener('click', function() {
             const sidebar = document.getElementById('sidebar');

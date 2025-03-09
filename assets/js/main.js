@@ -77,9 +77,9 @@ document.addEventListener('scroll', function() {
   
   if (window.scrollY > 0) {
       // Si el scroll es mayor a 0, agregamos las clases
-      header.classList.add('fixed-header', 'animated', 'slideInDown');
+      header.classList.add('fixed-header', 'animated', 'fadeIn');
   } else {
       // Si el scroll está en el top, eliminamos las clases
-      header.classList.remove('fixed-header', 'animated', 'slideInDown');
+      header.classList.remove('fixed-header', 'animated', 'fadeIn');
   }
 });

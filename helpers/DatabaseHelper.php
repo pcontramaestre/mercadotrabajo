@@ -409,6 +409,33 @@ class DatabaseHelper {
         ?int $idJob = null
     ): array {
         try {
+            if ($_SESSION['user_id']){
+                $saveJob = "
+                    CASE 
+                        WHEN EXISTS (
+                            SELECT 1 
+                            FROM saved_jobs 
+                            WHERE saved_jobs.user_id = ".$_SESSION['user_id']." AND saved_jobs.job_id = jobs.id
+                        ) THEN 1 
+                        ELSE 0 
+                    END AS isSaved
+                ";
+
+                $ApplyJob = "
+                    CASE 
+                        WHEN EXISTS (
+                            SELECT 1 
+                            FROM   job_applications
+                            WHERE  job_applications.user_id = ".$_SESSION['user_id']." AND job_applications.job_id = jobs.id
+                        ) THEN 1 
+                        ELSE 0 
+                    END AS isApplied
+                ";
+                // $ApplyJob = "0 AS isApplied";
+            } else {
+                $saveJob = "0 AS isSaved";
+                $ApplyJob = "0 AS isApplied";
+            }
             // Definir los campos a seleccionar
             $fields = "
                 jobs.id, 
@@ -419,7 +446,8 @@ class DatabaseHelper {
                 jobs.skills_experience,
                 jobs.priority,
                 0 AS isFavorite,
-                0 AS isSaved,
+                ".$saveJob.",
+                ".$ApplyJob.",
                 CONCAT('$', FORMAT(IFNULL(jobs.salary_min, 0), 2),' - $',FORMAT(IFNULL(jobs.salary_max, 0), 2)) AS salary,
                 CASE
                     WHEN TIMESTAMPDIFF(SECOND, jobs.created_at, NOW()) < 60 THEN CONCAT(TIMESTAMPDIFF(SECOND, jobs.created_at, NOW()), ' seconds ago')
@@ -531,23 +559,24 @@ class DatabaseHelper {
             // Consulta SQL para buscar trabajos relacionados
             $query = "
                 SELECT 
-                    id, 
-                    title, 
-                    category_id, 
-                    employment_type_id, 
-                    city, 
-                    MATCH(title, job_description) AGAINST(:search_query IN NATURAL LANGUAGE MODE) AS relevance
+                    jobs.id, 
+                    jobs.title, 
+                    jobs.category_id, 
+                    jobs.employment_type_id, 
+                    jobs.city, 
+                    MATCH(jobs.title, jobs.job_description) AGAINST(:search_query IN NATURAL LANGUAGE MODE) AS relevance
                 FROM 
                     jobs
+                
                 WHERE 
-                    id != :job_id
-                    AND category_id = :category_id
-                    AND is_active = 1
+                    jobs.id != :job_id
+                    AND jobs.category_id = :category_id
+                    AND jobs.is_active = 1
                     AND MATCH(title, job_description) AGAINST(:search_query IN NATURAL LANGUAGE MODE) >= 1
                 ORDER BY 
                     relevance DESC, 
-                    category_id = :category_id DESC, 
-                    employment_type_id = :employment_type_id DESC, 
+                    jobs.category_id = :category_id DESC, 
+                    jobs.employment_type_id = :employment_type_id DESC, 
                     city = :city DESC
                 LIMIT $limit
             ";
@@ -581,7 +610,12 @@ class DatabaseHelper {
             $stmt = $this->connection->prepare($query);
             $stmt->bindValue(':job_id', $jobId, PDO::PARAM_INT);
             $stmt->execute();
-            return $stmt->fetch(PDO::FETCH_ASSOC);
+            $job = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($job) {
+                return $job;
+            } else {
+                return null;
+            }
         } catch (Exception $e) {
             error_log("Error fetching job details: " . $e->getMessage());
             return null;
@@ -648,6 +682,7 @@ class DatabaseHelper {
                 $query .= " ORDER BY $orderBy";
             }
             $query .= " $limitClause";
+
             //ejecutar consulta sin prepare
             $stmt = $this->connection->prepare($query);
             

@@ -201,11 +201,16 @@ class BaseController {
                 $results = [];
             }
         } else {
+            $results = [];
             $limit = 50;
             $results = $this->modelBase->searchJobs('','',null, $limit,null);
-            foreach ($results as $result) {
-                $idJob = $result['id'];
-                $relatedJobs[$idJob] = $this->modelBase->getRelatedJobs($idJob, 5);
+            if ($results) {
+                foreach ($results as $result) {
+                    $idJob = $result['id'];
+                    $relatedJobs[$idJob] = $this->modelBase->getRelatedJobs($idJob, 5);
+                }
+            } else {
+                $results = [];
             }
         }
         include_once 'views/front/pages/searchJobs.php';

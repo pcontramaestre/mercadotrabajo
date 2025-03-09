@@ -1,5 +1,10 @@
 
 <?php
+  if (empty($_SESSION['user_id'])) {
+    echo "Acceso denegado. Por favor, inicia sesión.";
+    die(); // Detener la ejecución del script
+  }
+
   include_once 'config/config.php';
   include_once 'views/candidate/header.php';
 ?>

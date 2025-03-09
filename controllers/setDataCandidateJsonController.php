@@ -9,11 +9,11 @@ class setDataCandidateJsonController extends BaseController
     protected $modelBase;
     protected $configuration;
 
-    public function __construct($pdo)
-    {
-        $this->configuration = new Config();
-        $this->modelBase = new BaseModel($pdo);
-    }
+   public function __construct($pdo)
+   {
+       $this->configuration = new Config();
+       $this->modelBase = new BaseModel($pdo);
+   }
     public function saveDataResumeCandidate($action, $dataRecive)
     {
         header('Content-Type: application/json');
@@ -432,5 +432,216 @@ class setDataCandidateJsonController extends BaseController
         }
 
         echo json_encode($response);
+    }
+    public function setDataCVCandidate($action, $dataRecive) {
+        header('Content-Type: application/json');
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: POST');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization');
+    
+        $userId = $_SESSION['user_id'] ?? 8; // Cambiar por autenticación real
+    
+        if (!$userId) {
+            echo json_encode(['success' => false, 'message' => 'Usuario no autenticado.']);
+            return;
+        }
+    
+        try {
+            switch ($action) {
+                case 'add_file':
+                    $this->handleAddFile($userId);
+                    break;
+                case 'delete_file':
+                    $this->handleDeleteFile($userId, $dataRecive);
+                    break;
+                default:
+                    echo json_encode(['success' => false, 'message' => 'Acción no válida.']);
+                    break;
+            }
+        } catch (Exception $e) {
+            error_log("Error en setDataCVCandidate: " . $e->getMessage());
+            echo json_encode(['success' => false, 'message' => 'Error procesando el archivo.']);
+        }
+    }
+    
+    private function handleAddFile($userId) {
+        $userUID = $_SESSION['user_uid'];
+        // Validar cantidad máxima de archivos (4)
+        $currentFiles = $this->modelBase->countRecords('candidate_cv', ['user_id' => $userId]);
+        if ($currentFiles >= 4) {
+            throw new Exception("Has alcanzado el máximo de 4 archivos.");
+        }
+    
+        // Validar archivos subidos
+        $files = $_FILES['attachments'] ?? [];
+        if (empty($files['name'][0])) {
+            throw new Exception("No se seleccionaron archivos.");
+        }
+    
+        $allowedTypes = [
+            'application/pdf',
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        ];
+        $maxFileSize = 1 * 1024 * 1024; // 1MB
+    
+        foreach ($files['name'] as $index => $fileName) {
+            $fileTmpName = $files['tmp_name'][$index];
+            $fileSize = $files['size'][$index];
+            $fileType = mime_content_type($fileTmpName); // Detectar MIME real
+            $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+    
+            // Validar tipo de archivo
+            if (!in_array($fileType, $allowedTypes)) {
+                throw new Exception("Tipo de archivo no permitido: $fileName.");
+            }
+    
+            // Validar tamaño
+            if ($fileSize > $maxFileSize) {
+                throw new Exception("Archivo demasiado grande: $fileName (máximo 1MB).");
+            }
+    
+            // Validar extensión real vs la declarada
+            $validExtensions = ['pdf', 'doc', 'docx'];
+            if (!in_array($fileExtension, $validExtensions)) {
+                throw new Exception("Extensión no válida para: $fileName.");
+            }
+    
+            // Generar nombre único para el sistema de archivos
+            $uniqueFileName = uniqid("cv_", true) . ".$fileExtension";
+            $uploadDir = "uploads/resumes/$userUID/";
+    
+            // Crear directorio si no existe
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+    
+            $uploadPath = $uploadDir . $uniqueFileName;
+    
+            // Mover archivo al directorio
+            if (!move_uploaded_file($fileTmpName, $uploadPath)) {
+                throw new Exception("Error al subir el archivo: $fileName.");
+            }
+    
+            // Guardar en la base de datos (mantener el nombre original)
+            $this->modelBase->insert('candidate_cv', [
+                'user_id' => $userId,
+                'path' => $uploadPath,
+                'filename' => $fileName, // Nombre original
+                'file_type' => $fileType, // MIME type
+                'file_size' => $fileSize,
+            ]);
+        }
+    
+        echo json_encode([
+            'success' => true,
+            'message' => 'Archivos subidos exitosamente.',
+            'files' => $this->modelBase->select('candidate_cv', ['user_id' => $userId])
+        ]);
+    }
+
+    private function handleDeleteFile($userId, $dataRecive) {
+        $fileId = isset($_POST['file_id']) ? filter_var($_POST['file_id'], FILTER_VALIDATE_INT) : null;
+        if (!$fileId) {
+            throw new Exception("ID de archivo no válido.");
+        }
+
+        // Obtener el archivo de la base de datos
+        $cvRecord = $this->modelBase->select('candidate_cv', ['id' => $fileId, 'user_id' => $userId]);
+        if (empty($cvRecord)) {
+            throw new Exception("Archivo no encontrado o no pertenece al usuario.");
+        }
+
+        // Eliminar archivo del sistema de archivos
+        $filePath = $cvRecord[0]['path'];
+        if (file_exists($filePath)) {
+            unlink($filePath);
+        }
+
+        // Eliminar registro de la base de datos
+        $this->modelBase->delete('candidate_cv', ['id' => $fileId, 'user_id' => $userId]);
+
+        $response = [
+            'success' => true,
+            'message' => 'Archivo eliminado exitosamente.',
+            'files' => $this->modelBase->select('candidate_cv', ['user_id' => $userId])
+        ];
+        echo json_encode($response);
+    }
+
+    public function setDataApplicationJob($action, $dataRecive) {
+        header('Content-Type: application/json');
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: POST');
+        header('Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With');
+    
+        $userId = $_SESSION['user_id'] ?? 8; // Cambiar por autenticación real
+    
+        $response = [
+            'success' => false,
+            'message' => 'Error general.',
+            'data' => $dataRecive,
+        ];
+    
+        if (!$userId) {
+            $response['message'] = 'Usuario no autenticado.';
+            echo json_encode($response);
+            return;
+        }
+    
+        try {
+            switch ($action) {
+                case 'apply_job':
+                    $this->handleApplyJob($userId, $dataRecive);
+                    break;
+                default:
+                    $response['message'] = 'Acción no válida.';
+                    echo json_encode($response);
+                    break;
+            }
+        } catch (Exception $e) {
+            error_log("Error en setDataApplicationJob: " . $e->getMessage());
+            $response['message'] = 'Error procesando la solicitud.';
+            echo json_encode($response);
+        }
+    }
+    
+    private function handleApplyJob($userId, $dataRecive) {
+        // Validar que los datos necesarios estén presentes
+        if (
+            empty($dataRecive['job_id']) ||
+            empty($dataRecive['cv_id'])
+        ) {
+            throw new Exception("Datos incompletos para aplicar al trabajo.");
+        }
+    
+        $jobId = filter_var($dataRecive['job_id'], FILTER_VALIDATE_INT);
+        $cvId = filter_var($dataRecive['cv_id'], FILTER_VALIDATE_INT);
+        $cover_letter = isset($dataRecive['cover_letter']) ? htmlspecialchars($dataRecive['cover_letter'], ENT_QUOTES, 'UTF-8') : '';
+    
+        if (!$jobId || !$cvId) {
+            throw new Exception("ID de trabajo o CV inválido.");
+        }
+    
+        // Guardar la aplicación en la base de datos
+        $applicationData = [
+            'job_id' => $jobId,
+            'user_id' => $userId,
+            'cv_id' => $cvId,
+            'cover_letter'=> $cover_letter,
+            'status' => 'aplicado',
+        ];
+    
+        $insertedId = $this->modelBase->insert('job_applications', $applicationData);
+    
+        if (!$insertedId) {
+            throw new Exception("Error al guardar la aplicación.");
+        }
+    
+        echo json_encode([
+            'success' => true,
+            'message' => 'Aplicación enviada exitosamente.',
+            'application_id' => $insertedId,
+        ]);
     }
 }

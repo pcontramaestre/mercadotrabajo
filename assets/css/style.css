@@ -1,4 +1,4 @@
- :root,[data-bs-theme=light] {
+ :root {
   --bs-blue: #0d6efd;
   --bs-indigo: #6610f2;
   --bs-purple: #6f42c1;
@@ -13300,7 +13300,7 @@ textarea.form-control-lg {
   content: ""
 }
 
-@font-face {
+/* @font-face {
   font-family: Flaticon;
   src: url(/_next/static/media/Flaticon.a4c45d06.eot);
   src: url(/_next/static/media/Flaticon.a4c45d06.eot) format("embedded-opentype"),url(/_next/static/media/Flaticon.00efc237.woff2) format("woff2"),url(/_next/static/media/Flaticon.684a0f34.woff) format("woff"),url(/_next/static/media/Flaticon.9374abf7.ttf) format("truetype"),url(/_next/static/media/Flaticon.5d18325d.svg) format("svg");
@@ -13313,7 +13313,7 @@ textarea.form-control-lg {
       font-family:Flaticon;
       src: url(/_next/static/media/Flaticon.5d18325d.svg) format("svg")
   }
-}
+} */
 
 [class*=" flaticon-"]:after,[class*=" flaticon-"]:before,[class^=flaticon-]:after,[class^=flaticon-]:before {
   font-family: Flaticon;
@@ -28014,7 +28014,7 @@ li,ul {
   left: 0;
   top: 2px;
   background-color: #fff;
-  border: 1px solid #ecedf2;
+  border: 1px solid #3043a4;
   border-radius: 10px;
   box-sizing: border-box;
   transition: all .25s;
@@ -33073,7 +33073,7 @@ section hr {
   position: relative;
   display: flex;
   align-items: center;
-  margin-left: 30px
+  margin-left: 20px
 }
 
 .main-header .menu-btn .icon {
@@ -33111,7 +33111,7 @@ section hr {
 }
 
 .main-header.header-style-two.fixed-header {
-  background-color: #22218c
+  background-color: #13358a;
 }
 
 .main-header.header-shaddow {
@@ -33129,11 +33129,11 @@ section hr {
 }
 
 .header-style-two .nav-outer {
-  width: 100%
+  width: 75%
 }
 
 .header-style-two .main-menu {
-  margin-left: auto;
+  /* margin-left: auto; */
   margin-right: 15px
 }
 
@@ -33323,7 +33323,7 @@ section hr {
   height: 18px;
   width: 18px;
   display: block;
-  background-image: url(/_next/static/media/user.3bb88c1a.svg);
+  background-image: url();
   background-repeat: no-repeat;
   background-position: 50%
 }
@@ -35717,7 +35717,7 @@ section hr {
   height: 18px;
   width: 18px;
   display: block;
-  background-image: url(/_next/static/media/user.3bb88c1a.svg);
+  background-image: url();
   background-repeat: no-repeat;
   background-position: 50%
 }
@@ -36397,9 +36397,14 @@ section hr {
   color: inherit
 }
 
-.manage-job-table .status {
-  color: #34a853
+.manage-job-table .status .active{
+  color: #34a853;
 }
+
+.manage-job-table .status .no-active{
+  color: #f63d3d;
+}
+
 
 .aplicants-upper-bar {
   position: relative;
@@ -38037,18 +38042,7 @@ section hr {
   margin-left: 20px
 }
 
-.file-edit-box .edit-btns button {
-  position: relative;
-  width: 30px;
-  height: 30px;
-  line-height: 30px;
-  text-align: center;
-  background: #fff;
-  border-radius: 8px;
-  margin-right: 10px;
-  min-width: auto;
-  color: #1967d2
-}
+
 
 .app-section {
   padding: 100px 0 50px
@@ -38549,6 +38543,11 @@ section hr {
   color: #fff
 }
 
+.option-list a.boton-view {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .option-box .delete-btn {
   position: relative;
   display: block;
