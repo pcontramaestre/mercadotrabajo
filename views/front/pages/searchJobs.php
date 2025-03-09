@@ -202,7 +202,7 @@ if (empty($search)) {
                         <div class="btn-box mt-4 job-block-seven">
                             <!-- x-if selectedJob.isApplied -->
                                 <!-- Mostrar el botón "Apply For Job" solo si no se ha aplicado -->
-                                <template x-if="!selectedJob.isApplied">
+                                <template x-if="selectedJob.isApplied == '0'">
                                     <a href="#" class="theme-btn btn-style-one" data-bs-toggle="modal"
                                     :data-bs-target="'#applyJobModal'+selectedJob.id"
                                     data-bs-target="#applyJobModal">
@@ -211,22 +211,22 @@ if (empty($search)) {
                                 </template>
 
                                 <!-- Mostrar un mensaje alternativo si ya se aplicó -->
-                                <template x-if="selectedJob.isApplied">
+                                <template x-if="selectedJob.isApplied == '1'">
                                     <a href="#" class="theme-btn btn-style-one disabled" aria-disabled="true">
                                         Ya aplicaste a este trabajo
                                     </a>
                                 </template>
 
                                 
-                            <button
-                                @click.stop="toggleSaveJob(selectedJob.id)"
-                                :class="{'text-blue-500': selectedJob.isSaved, 'text-gray-400': !selectedJob.isSaved}"
-                                class="bookmark-btn">
-                                <!-- <i class="flaticon-bookmark"></i> -->
-                                <i
-                                    :class="{'fas text-blue-500 hover:text-white': selectedJob.isSaved, 'far': !selectedJob.isSaved}"
-                                    class="fa-bookmark far"></i>
-                            </button>
+                                <button
+                                    @click.stop="toggleSaveJob(selectedJob.id)"
+                                    :class="{'text-blue-500': selectedJob.isSaved == '1', 'text-gray-400': selectedJob.isSaved == '0'}"
+                                    class="bookmark-btn">
+                                    <!-- <i class="flaticon-bookmark"></i> -->
+                                    <i
+                                        :class="{'fas text-blue-500 hover:text-white': selectedJob.isSaved == '1', 'far': selectedJob.isSaved == '0'}"
+                                        class="fa-bookmark far"></i>
+                                </button>
                         </div>
 
                     </div>
@@ -375,7 +375,7 @@ if (empty($search)) {
                 formData.append('cover_letter', coverLetter); // Carta de presentación
 
                 // Enviar los datos al backend
-                fetch('/api/v1/setdatacandidate', {
+                fetch('<?php echo SYSTEM_BASE_DIR ?>api/v1/setdatacandidate', {
                         method: 'POST',
                         body: formData,
                     })
@@ -414,7 +414,7 @@ if (empty($search)) {
     });
 
     function loadFiles() {
-        fetch('/api/v1/getdatacandidate')
+        fetch('<?php echo SYSTEM_BASE_DIR ?>api/v1/getdatacandidate')
             .then(response => response.json())
             .then(data => {
                 const uploadedFilesContainer = document.getElementById('uploaded-files');

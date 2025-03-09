@@ -26,7 +26,7 @@ $queryManual = "SELECT
 $categories = $controller->findRecordsManual($queryManual);
 
 ?>
-<form action="/searchjobs" method="post" id="form-search-jobs">
+<form action="<?php echo SYSTEM_BASE_DIR ?>searchjobs" method="post" id="form-search-jobs">
     <div class="row">
         <div class="form-group col-lg-4 col-md-12 col-sm-12">
             <!-- <span class="icon flaticon-search-1"></span> -->

@@ -88,7 +88,7 @@ include_once 'views/candidate/header.php';
 
 
     function loadFiles() {
-        fetch('/api/v1/getdatacandidate')
+        fetch('<?php echo SYSTEM_BASE_DIR ?>api/v1/getdatacandidate')
             .then(response => response.json())
             .then(data => {
                 const uploadedFilesContainer = document.getElementById('uploaded-files');
@@ -215,7 +215,7 @@ include_once 'views/candidate/header.php';
         formData.append('action', 'delete_file');
         formData.append('file_id', fileId);
 
-        fetch('/api/v1/setdatacandidate', {
+        fetch('<?php echo SYSTEM_BASE_DIR ?>api/v1/setdatacandidate', {
                 method: 'POST',
                 body: formData,
             })
@@ -243,7 +243,7 @@ include_once 'views/candidate/header.php';
             formData.append('attachments[]', file);
         });
 
-        fetch('/api/v1/setdatacandidate', {
+        fetch('<?php echo SYSTEM_BASE_DIR ?>api/v1/setdatacandidate', {
                 method: 'POST',
                 body: formData,
             })
