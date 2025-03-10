@@ -1,7 +1,12 @@
 <IfModule mod_rewrite.c>  
     RewriteEngine On  
+
+    # Block access to .gitignore and .env
+    RewriteRule (^\.gitignore|^\.env) - [F]
+    
     #RewriteBase /billing/  # Este es el directorio base  
     RewriteCond %{REQUEST_FILENAME} !-f  
     RewriteCond %{REQUEST_FILENAME} !-d  
     RewriteRule ^(.*)$ index.php [QSA,L]  # Redirige todo a index.php  
 </IfModule>
+
