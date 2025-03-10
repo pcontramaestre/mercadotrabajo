@@ -70,9 +70,19 @@ switch ($request) {
   case '/dashboard/candidate/dashboard':
     $controllerDataProfile = new getDataCandidateJsonController($db);
     $dataUserProfile = $controllerDataProfile->getUserProfile($id_user);
+    $dataUserJobsApplied = $controllerDataProfile->getAppliedJobs($id_user);
+    $numberAppliedJobs = count($controllerDataProfile->getAppliedJobs($id_user));
+    $numberSaveJobs = count($controllerDataProfile->getSaveJobs($id_user));
+    $dataCounts = [
+      'numberSaveJobs' => $numberSaveJobs,
+      'numberAppliedJobs'=> $numberAppliedJobs,
+      'jobsAlerts'=> 0,
+      'messagesAlerts'=> 0,
+      'dataAppliedJobs'=> $dataUserJobsApplied,
+    ];
 
     $controller = new CandidateDashboardController($db);
-    $controller->viewDashboard($dataUserProfile);
+    $controller->viewDashboard($dataUserProfile, $dataCounts);
     break;
 
   case '/dashboard/candidate/myresume':

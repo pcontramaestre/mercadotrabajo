@@ -11,8 +11,9 @@ class CandidateDashboardController extends BaseController {
         include_once  'views/candidate/myProfile.php';
     }
 
-    public function viewDashboard(?array $params = []) {
+    public function viewDashboard(?array $params = [], ?array $params2 = []) {
         $dataUserProfile = $params;
+        $dataJobsAplied = $params2;
         include_once  'views/candidate/dashboard.php';
     }
 

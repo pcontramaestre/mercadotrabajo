@@ -1,5 +1,5 @@
 <?php
-
+//Data $dataUserProfile, $dataJobsAplied
 if (empty($_SESSION['user_id'])) {
   echo "Acceso denegado. Por favor, inicia sesión.";
   die(); // Detener la ejecución del script
@@ -42,6 +42,7 @@ if (empty($_SESSION['user_id'])) {
   </script>
 
 <main class="flex-1 md:ml-64 md:pl-0 pl-0 pt-16 md:pt-0">
+        
         <div class="p-6">
           <div class="max-w-6xl mx-auto">
             <div class="mb-8">
@@ -59,7 +60,7 @@ if (empty($_SESSION['user_id'])) {
                   </div>
                   <div>
                     <div class="text-sm text-gray-500">Applied Jobs</div>
-                    <div class="text-xl font-bold text-blue-600">22</div>
+                    <div class="text-xl font-bold text-blue-600"><?php echo $dataJobsAplied['numberAppliedJobs']?></div>
                   </div>
                 </div>
               </div>
@@ -72,7 +73,7 @@ if (empty($_SESSION['user_id'])) {
                   </div>
                   <div>
                     <div class="text-sm text-gray-500">Job Alerts</div>
-                    <div class="text-xl font-bold text-red-600">9382</div>
+                    <div class="text-xl font-bold text-red-600"><?php echo $dataJobsAplied['jobsAlerts'] ?></div>
                   </div>
                 </div>
               </div>
@@ -85,7 +86,7 @@ if (empty($_SESSION['user_id'])) {
                   </div>
                   <div>
                     <div class="text-sm text-gray-500">Messages</div>
-                    <div class="text-xl font-bold text-yellow-600">74</div>
+                    <div class="text-xl font-bold text-yellow-600"><?php echo $dataJobsAplied['messagesAlerts'] ?></div>
                   </div>
                 </div>
               </div>
@@ -98,7 +99,7 @@ if (empty($_SESSION['user_id'])) {
                   </div>
                   <div>
                     <div class="text-sm text-gray-500">Shortlist</div>
-                    <div class="text-xl font-bold text-green-600">32</div>
+                    <div class="text-xl font-bold text-green-600"><?php echo $dataJobsAplied['numberSaveJobs'] ?></div>
                   </div>
                 </div>
               </div>
@@ -200,8 +201,104 @@ if (empty($_SESSION['user_id'])) {
             <!-- Recent Jobs -->
             <div class="bg-white rounded-lg shadow-sm p-6 mt-6">
               <h3 class="text-lg font-semibold mb-6">Jobs Applied Recently</h3>
+
+              <?php 
+                if (empty($dataJobsAplied['dataAppliedJobs'])) {
+                  echo '<div class="text-center text-gray-500 py-4">No recent job applications to display.</div>';
+                } else {
+                  ?>
+                    <div class="table-outer">
+                                    <div class="table-outer">
+                                        <table class="default-table manage-job-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Job Title</th>
+                                                    <th>Date Applied</th>
+                                                    <th>Status</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                  <?php
+                    foreach ($dataJobsAplied['dataAppliedJobs'] as $job) { ?>
+                      <tr>
+                                                        <td>
+                                                            <div class="job-block">
+                                                                <div class="inner-box">
+                                                                    <div class="content">
+                                                                        <span class="company-logo">
+                                                                            <img alt="logo" loading="lazy" width="48" height="48" decoding="async" data-nimg="1" 
+                                                                                src="<?php echo $job['logo']?>" 
+                                                                                class="max-w-[48px] max-h-[48px] object-cover"
+                                                                                style="color: transparent;">
+                                                                        </span>
+                                                                        <h4>
+                                                                            <a href="
+                                                                            <?php 
+                                                                                echo $job['is_active'] ? SYSTEM_BASE_DIR.'searchjobs?job='.$job['id'] : '#'
+                                                                            ?>"
+                                                                            >
+                                                                                <?php echo $job['title']?>
+                                                                            </a>
+                                                                        </h4>
+                                                                        <ul class="flex flex-row gap-4">
+                                                                            <li class="flex items-center text-sm text-gray-500">
+                                                                                <i class="fas fa-briefcase pr-1"></i>
+                                                                                <?php echo $job['category']?>
+                                                                            </li>
+                                                                            <li class="flex items-center text-sm text-gray-500">
+                                                                                <i class="fas fa-map-marker-alt pr-1"></i>
+                                                                                <?php echo $job['location']?>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <?php 
+                                                                $created_at = $job['create_at'];
+                                                                $date = new DateTime($created_at);
+                                                                $formatted_date = $date->format('M j, Y');
+                                                                echo $formatted_date;
+                                                            ?>
+                                                        </td>
+                                                        <td class="status">
+                                                            <?php 
+                                                                echo $job['is_active'] ? '<span class="active">Active</span>' : '<span class="no-active">No active</span>';
+                                                            ?>
+                                                        </td>
+                                                        <td>
+                                                            <div class="option-box">
+                                                                <ul class="option-list">
+                                                                    <li>
+                                                                        <a 
+                                                                            class="flex flex-row items-center justify-center boton-view"
+                                                                            data-text="View job" href="<?php echo $job['is_active'] ? SYSTEM_BASE_DIR.'searchjobs?job='.$job['id'] : '#'?>">
+                                                                            <i data-lucide="eye"></i>
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a 
+                                                                            class="flex flex-row items-center justify-center boton-view"
+                                                                            data-text="Delete favorite" href="#"
+                                                                            data-id="<?php echo $job['is_active'] ? $job['id'] : '' ?>"
+                                                                            >
+                                                                            <i data-lucide="trash-2"></i>    
+                                                                        </a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                  <?php } ?>
+                                          </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                  <?php } ?>
               <!-- Jobs list would go here -->
-              <div class="text-center text-gray-500 py-4">No recent job applications to display.</div>
+              
             </div>
           </div>
         </div>

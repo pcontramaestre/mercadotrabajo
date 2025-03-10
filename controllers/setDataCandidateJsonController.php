@@ -248,7 +248,7 @@ class setDataCandidateJsonController extends BaseController
             case 'save_description':
                 $description = isset($data['description']) ? htmlspecialchars($data['description'], ENT_QUOTES, 'UTF-8') : '';
 
-                $dataUpdate = ['description' => $description];
+                $dataUpdate = ['description_profile' => $description];
                 $conditions = ['user_id' => $userId];
                 $result = $this->modelBase->update('user_profile', $dataUpdate, $conditions);
 

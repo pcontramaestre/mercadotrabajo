@@ -5,7 +5,7 @@
   }
 
   include_once 'config/config.php';
-  include_once 'views/candidate/header.php';
+  include_once 'views/companie/header.php';
 ?>
 
 <!-- Main Content -->
@@ -705,5 +705,5 @@
     </script>
 
 <?php
-  include_once 'views/candidate/footer.php';
+  include_once 'views/companie/footer.php';
 ?>

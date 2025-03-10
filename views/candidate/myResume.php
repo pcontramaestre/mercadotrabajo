@@ -840,7 +840,7 @@
 
     // Funciones para editar elementos
     function editEducation(id) {
-      const education = educationData.find(item => item.id === id);
+      const education = educationData.find(item => parseInt(item.id) === parseInt(id));
       if (!education) return;
       
       document.getElementById('education-id').value = education.id;
@@ -854,7 +854,7 @@
     }
     
     function editExperience(id) {
-      const experience = experienceData.find(item => item.id === id);
+      const experience = experienceData.find(item => parseInt(item.id) === parseInt(id));
       if (!experience) return;
       
       document.getElementById('experience-id').value = experience.id;
@@ -868,7 +868,7 @@
     }
     
     function editAward(id) {
-      const award = awardsData.find(item => item.id === id);
+      const award = awardsData.find(item => parseInt(item.id) === parseInt(id));
       if (!award) return;
       
       document.getElementById('award-id').value = award.id;
@@ -881,7 +881,8 @@
     }
     
     function editSkill(id) {
-      const skill = skillsData.find(item => item.id === id);
+      const skill = skillsData.find(item => parseInt(item.id) === parseInt(id));
+
       if (!skill) return;
       
       document.getElementById('skill-id').value = skill.id;
@@ -1241,7 +1242,7 @@
                 });
               }
               
-              renderSkillItems();
+              loadResumeData();
               hideModal('skill-modal');
               showToast("Skill item added or edit");
             } else {
@@ -1473,7 +1474,6 @@
     // Agregar un event listener para guardar la descripción
     document.getElementById('save-changes-btn').addEventListener('click', function() {
       const description = document.getElementById('resume-description').value;
-      console.log("Esto es una prueba");
       console.log(description)
       this.textContent = 'Saving...';
       this.disabled = true;

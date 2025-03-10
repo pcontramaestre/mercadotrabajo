@@ -41,7 +41,7 @@ $results = $controller->findRecordsManual($sql);
                 </div>
                 <div class="content col-span-9">
                     <div class="company-info leading-6">
-                        <h2 class="font-medium text-xl"><a href="/companies/<?php echo $company['company_id']; ?>"><?php echo $company['company_name']; ?></a></h2>
+                        <h2 class="font-medium text-xl"><a href="<?php echo SYSTEM_BASE_DIR ?>companies/<?php echo $company['company_id']; ?>"><?php echo $company['company_name']; ?></a></h2>
                         <div>
                             <i class="fas fa-map-marker-alt"></i>
                             <span><?php echo $company['company_location']; ?></span>

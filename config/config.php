@@ -78,10 +78,13 @@ class Config {
         'id'=> $_SESSION['user_id']
     ];
 
-    $userUniqueid = $controller->findRecord('users', $conditions);
-    if (empty($userUniqueid)) {
+    $resultUser = $controller->findRecord('users', $conditions);
+    if (empty($resultUser)) {
         $_SESSION['user_uid'] = '';
+        $_SESSION['role_id'] = '';
+
     } else {
-        $_SESSION['user_uid'] = $userUniqueid['uid'];
+        $_SESSION['user_uid'] = $resultUser['uid'];
+        $_SESSION['role_id'] = $resultUser['role_id'];
     }
 ?>
