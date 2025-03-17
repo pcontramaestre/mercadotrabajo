@@ -2,6 +2,7 @@
 .iddea/
 .DS_Store
 node_modules/
+vendor/
 
 # Playwright
 node_modules/
