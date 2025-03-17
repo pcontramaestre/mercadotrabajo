@@ -18,7 +18,7 @@ $titleSectionText = [
     'translate_es' => 'Algunas de las empresas a las que hemos ayudado a reclutar excelentes candidatos a lo largo de los años.',
     'translate_en' => 'Some of the companies we have helped recruit excellent applicants over the years.'
 ];
-$titleSectionClass ="pt-16 pb-6 text-left pl-8";
+$titleSectionClass ="md:pt-16 pb-6 text-left pl-8";
 ?>
 <div class="top-companies style-two pt-8 mb-8">
     <?php
@@ -28,6 +28,8 @@ $titleSectionClass ="pt-16 pb-6 text-left pl-8";
     ?>
 </div>
 
+
 <?php
 include_once 'views/components/jobsByCategoryHome.php';
 include_once 'views/layout/footer.php';
+?>

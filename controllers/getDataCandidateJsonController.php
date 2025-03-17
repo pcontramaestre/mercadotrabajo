@@ -181,6 +181,39 @@ class getDataCandidateJsonController extends BaseController {
                 break;
         }
     }
+    /**
+     * Summary of getResumeData
+     * @param mixed $id_user
+     * @return array<array|null>|array{awards: array, cvs: array, education: array, experience: array, skills: array, success: bool, user_profile: array}
+     */
+    public function getResumeData($id_user){
+        if (!empty($id_user)) {
+            $response = [
+                'education' => [],
+                'experience' => [],
+                'awards' => [],
+                'skills' => [],
+                'user_profile' => [],
+                'cvs'=> [],
+                'success' => true, 
+            ];
+            $education = $this->getEducation($id_user);
+            $experience = $this->getExperience($id_user);
+            $awards = $this->getAwards($id_user);
+            $skills = $this->getSkills($id_user);
+            $userprofile = $this->getUserProfile($id_user);
+            $cvs = $this->getCvs($id_user);
+            $response['education'] = $education;
+            $response['experience'] = $experience;
+            $response['awards'] = $awards;
+            $response['skills'] = $skills;
+            $response['user_profile'] = $userprofile;
+            $response['cvs'] = $cvs;
+            return $response;
+        } else {
+            return [];
+        }
+    }
 
     public function getProfileDataJson($id_user) {
         switch ($id_user) {

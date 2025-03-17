@@ -64,7 +64,7 @@ class Config {
 }
     session_start();
     $_SESSION['user_id'] = 8;
-    
+    $_SESSION['company_id'] = 3;
 
     $config = new Config();
     define('SYSTEM_BASE_DIR', $config->getUrlBase());

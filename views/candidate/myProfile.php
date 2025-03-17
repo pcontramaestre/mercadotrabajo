@@ -13,8 +13,10 @@
     <section class="p-6">
       <div class="max-w-6xl mx-auto">
         <div class="mb-8">
-          <h1 class="text-2xl font-bold text-gray-800">My Profile!</h1>
-          <p class="text-gray-500 mt-1">Ready to jump back in?</p>
+          <h1 class="text-2xl font-bold text-gray-800" data-translate-es="Mi Perfil" data-translate-en="My Profile">
+            Mi Perfil
+          </h1>
+          <p class="text-gray-500 mt-1" data-translate-es="¡Hola, bienvenido de vuelta!" data-translate-en="Ready to jump back in?">¡Hola, bienvenido de vuelta!</p>
         </div>
 
         <!-- Profile Content -->
@@ -22,7 +24,9 @@
           class="bg-white rounded-lg shadow-sm p-6 mb-6 border border-gray-200"
         >
           <div class="widget-title mb-6">
-            <h4 class="text-lg font-medium text-gray-700">My Profile</h4>
+            <h4 class="text-lg font-medium text-gray-700" data-translate-es="Mi Perfil" data-translate-en="My Profile">
+              Mi Perfil
+            </h4>
           </div>
 
           <form id="profile-form" class="default-form" enctype="multipart/form-data">
@@ -39,7 +43,7 @@
                   accept="image/jpeg, image/png, image/webp"
                 />
                 <i data-lucide="upload" class="w-8 h-8 text-gray-400 mb-2"></i>
-                <p class="text-sm text-gray-500 font-medium">Browse Logo</p>
+                <p class="text-sm text-gray-500 font-medium" data-translate-es="Sube tu logo" data-translate-en="Upload Logo">Sube tu logo</p>
               </div>
               <p class="text-xs text-gray-500 mt-2">
                 Max file size is 1MB, Minimum dimension: 330x300 And Suitable
@@ -48,9 +52,9 @@
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div class="form-group">
-                <label class="block text-sm font-medium text-gray-700 mb-1"
-                  >Full Name</label
-                >
+                <label class="block text-sm font-medium text-gray-700 mb-1" data-translate-es="Nombre completo *" data-translate-en="Full Name *">
+                  Nombre completo *
+                </label>
                 <input
                   placeholder="Jerome"
                   required
@@ -62,9 +66,9 @@
               </div>
 
               <div class="form-group">
-                <label class="block text-sm font-medium text-gray-700 mb-1"
-                  >Job Title</label
-                >
+                <label class="block text-sm font-medium text-gray-700 mb-1" data-translate-es="Tu titulo de trabajo" data-translate-en="Job Title">
+                  Tu titulo de trabajo
+                </label>
                 <input
                   placeholder="UI Designer"
                   required
@@ -76,9 +80,9 @@
               </div>
 
               <div class="form-group">
-                <label class="block text-sm font-medium text-gray-700 mb-1"
-                  >Phone</label
-                >
+                <label class="block text-sm font-medium text-gray-700 mb-1" data-translate-es="Teléfono" data-translate-en="Phone">
+                  Teléfono
+                </label>
                 <input
                   placeholder="0 123 456 7890"
                   type="text"
@@ -89,11 +93,11 @@
               </div>
 
               <div class="form-group">
-                <label class="block text-sm font-medium text-gray-700 mb-1"
-                  >Email address</label
-                >
+                <label class="block text-sm font-medium text-gray-700 mb-1" data-translate-es="Correo Electrónico" data-translate-en="Email address">
+                Correo Electrónico *
+                </label>
                 <input
-                  placeholder="creativelayers"
+                  placeholder="nombre@correo.com"
                   required
                   type="email"
                   name="email_address"
@@ -103,12 +107,12 @@
               </div>
 
               <div class="form-group">
-                <label class="block text-sm font-medium text-gray-700 mb-1"
-                  >Website</label
-                >
+                <label class="block text-sm font-medium text-gray-700 mb-1" data-translate-es="Pagina Web" data-translate-en="Website">
+                  Pagina Web
+                </label>
                 <input
                   placeholder="https://www.mercadotrabajo.org"
-                  type="text"
+                  type="url"
                   name="website"
                   id="website"
                   class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
@@ -116,9 +120,9 @@
               </div>
 
               <div class="form-group">
-                <label class="block text-sm font-medium text-gray-700 mb-1"
-                  >Current Salary($)</label
-                >
+                <label class="block text-sm font-medium text-gray-700 mb-1" data-translate-es="Salario Actual" data-translate-en="Current Salary">
+                  Salario Actual
+                </label>
                 <select
                   class="form-select w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
                   name="current_salary_range_id"
@@ -134,9 +138,9 @@
               </div>
 
               <div class="form-group">
-                <label class="block text-sm font-medium text-gray-700 mb-1"
-                  >Expected Salary($)</label
-                >
+                <label class="block text-sm font-medium text-gray-700 mb-1" data-translate-es="Salario Esperado" data-translate-en="Expected Salary">
+                  Salario Esperado
+                </label>
                 <select
                   class="form-select w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
                   name="expected_salary_range_id"
@@ -152,9 +156,9 @@
               </div>
 
               <div class="form-group">
-                <label class="block text-sm font-medium text-gray-700 mb-1"
-                  >Experience</label
-                >
+                <label class="block text-sm font-medium text-gray-700 mb-1" data-translate-es="Experiencia" data-translate-en="Experience">
+                  Experiencia
+                </label>
                 <input
                   placeholder="5-10 Years"
                   required
@@ -166,46 +170,50 @@
               </div>
 
               <div class="form-group">
-                <label class="block text-sm font-medium text-gray-700 mb-1"
-                  >Age</label
-                >
+                <label class="block text-sm font-medium text-gray-700 mb-1" data-translate-es="Edad" data-translate-en="Age">
+                  Edad
+                </label>
                 <select
                   class="form-select w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
                   name="age"
                   id="age"
                   required
                 >
-                  <option value="21">18 - 23 Years</option>
-                  <option value="25">23 - 27 Years</option>
-                  <option value="26">24 - 28 Years</option>
-                  <option value="27">25 - 29 Years</option>
-                  <option value="29">26 - 30 Years</option>
-                  <option value="31">30 - 34 Years</option>
-                  <option value="36">34 - 38 Years</option>
-                  <option value="40">> 40 Years</option>
+                  <option value="18-23">18 - 23 Years</option>
+                  <option value="23-27">23 - 27 Years</option>
+                  <option value="24-28">24 - 28 Years</option>
+                  <option value="25-29">25 - 29 Years</option>
+                  <option value="26-30">26 - 30 Years</option>
+                  <option value="30-34">30 - 34 Years</option>
+                  <option value="34-38">34 - 38 Years</option>
+                  <option value=">40">> 40 Years</option>
                 </select>
               </div>
 
               <div class="form-group">
-                <label class="block text-sm font-medium text-gray-700 mb-1"
-                  >Education Levels</label
-                >
-                <input
-                  placeholder="Certificate"
-                  required
-                  type="text"
+                <label class="block text-sm font-medium text-gray-700 mb-1" data-translate-es="Niveles de Educación" data-translate-en="Education Levels">
+                  Niveles de Educación
+                </label>
+                <select
+                  class="form-select w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
                   name="education_levels"
                   id="education_levels"
-                  class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
-                />
+                  required
+                >
+                  <option value="Bachiller" data-translate-es="Bachiller" data-translate-en="High school">Bachiller</option>
+                  <option value="Técnico superior" data-translate-es="Técnico superior" data-translate-en="Associate Degree">Técnico superior</option>
+                  <option value="Universitario" data-translate-es="Universitario" data-translate-en="Bachelor's Degree">Universitario</option>
+                  <option value="Maestría" data-translate-es="Maestría" data-translate-en="Master's Degree">Maestría</option>
+                  <option value="Doctorado" data-translate-es="Doctorado" data-translate-en="Doctorate">Doctorado</option>
+                </select>
               </div>
 
               <div class="form-group">
-                <label class="block text-sm font-medium text-gray-700 mb-1"
-                  >Languages</label
-                >
+                <label class="block text-sm font-medium text-gray-700 mb-1" data-translate-es="Idiomas" data-translate-en="Languages">
+                  Idiomas
+                </label>
                 <input
-                  placeholder="English, Turkish"
+                  placeholder="Español, English, Turkish"
                   required
                   type="text"
                   name="languages"
@@ -345,7 +353,7 @@
                   >Facebook</label
                 >
                 <input
-                  placeholder="www.facebook.com/Invision"
+                  placeholder="https://www.facebook.com/usuario"
                   type="text"
                   name="facebook"
                   id="facebook"
@@ -358,7 +366,7 @@
                   >Twitter</label
                 >
                 <input
-                  placeholder=""
+                  placeholder="https://www.x.com/usuario"
                   type="text"
                   name="twitter"
                   id="twitter"
@@ -371,7 +379,7 @@
                   >Linkedin</label
                 >
                 <input
-                  placeholder=""
+                  placeholder="https://www.linkedin.com/in/usuario"
                   type="text"
                   name="linkedin"
                   id="linkedin"

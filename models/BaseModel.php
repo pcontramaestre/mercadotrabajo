@@ -49,7 +49,7 @@ class BaseModel {
         return $this->dbHelper->select($tableName, $conditions, $orderBy, $offset, $limit, $joinClause);
     }
 
-    public function selectWithFields($tableName, $fields, $conditions ='', $orderBy = 'id DESC', $offset = 0, $limit = null, $joinClause = null) {
+    public function selectWithFields($tableName, $fields, $conditions ='', $orderBy = null, $offset = 0, $limit = null, $joinClause = null) {
         return $this->dbHelper->selectWithFields($tableName, $fields, $conditions, $orderBy, $offset, $limit, $joinClause);
     }
 

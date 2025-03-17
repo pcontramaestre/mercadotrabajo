@@ -37,15 +37,15 @@ $jobsCompanyJson = json_encode($jobsCompany, JSON_UNESCAPED_UNICODE | JSON_PRETT
 
 <section class="companies-detail">
     <div class="company-detail-header bg-gray-100 p-4 mb-4">
-        <div class="auto-container grid grid-cols-12 gap-4 items-center">
-            <div class="company-detail-logo col-span-1">
+        <div class="md:auto-container grid grid-cols-12 gap-4 items-center">
+            <div class="company-detail-logo col-span-12 md:col-span-1 flex justify-center items-center">
                 <img src="<?php echo SYSTEM_BASE_DIR . $company['logo_url'] ?>" alt="<?php echo $company['name'] ?>">
             </div>
-            <div class="company-name col-span-11">
+            <div class="company-name col-span-12 md:col-span-11">
                 <div class="company-name-inner">
-                    <h1 class="text-2xl font-semibold"><?php echo $company['name'] ?></h1>
+                    <h1 class="text-2xl font-semibold pb-3 md:pb-0"><?php echo $company['name'] ?></h1>
                 </div>
-                <div class="company-data flex flex-row items-center text-sm text-gray-500 gap-4">
+                <div class="company-data flex flex-row items-center text-sm text-gray-500 gap-4 flex-wrap">
                     <div>
                         <i class="fas fa-briefcase"></i>
                         <span><?php echo $company['primary_industry'] ?></span>
@@ -56,7 +56,7 @@ $jobsCompanyJson = json_encode($jobsCompany, JSON_UNESCAPED_UNICODE | JSON_PRETT
                     </div>
                     <div>
                         <i class="fas fa-map"></i>
-                        <span><?php echo $company['Ubicación'] ?></span>
+                        <span><?php echo $company['location'] ?></span>
                     </div>
                     <div>
                         <i class="fas fa-phone"></i>
@@ -86,7 +86,7 @@ $jobsCompanyJson = json_encode($jobsCompany, JSON_UNESCAPED_UNICODE | JSON_PRETT
                 </div>
                 <div class="company-detail-jobs">
                     <h2 class="text-2xl font-semibold mt-4 mb-4" data-translate-en="Jobs at <?php echo $company['name'] ?>" data-translate-es="Trabajos en <?php echo $company['name'] ?>">Trabajos en <?php echo $company['name'] ?></h2>
-                    <div x-data="jobsData" class="grid grid-cols-2 gap-4 mb-4">
+                    <div x-data="jobsData" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <template x-for="job in displayedJobs" :key="job.id">
                             <div class="job-item">
                                 <div
@@ -103,26 +103,6 @@ $jobsCompanyJson = json_encode($jobsCompany, JSON_UNESCAPED_UNICODE | JSON_PRETT
                                     </div>
                                     <div class="col-span-10">
                                         <div class="col-span-10 pr-12 relative pb-2">
-                                            <!-- Iconos de favoritos y guardar -->
-                                            <div class="flex justify-end space-x-4 absolute right-0 top-0">
-                                                <!-- Icono de corazón (favoritos) -->
-                                                <button
-                                                    @click.stop="job.isFavorite = !job.isFavorite"
-                                                    class="text-gray-400 hover:text-red-500 transition-colors">
-                                                    <i
-                                                        :class="{'fas text-red-500': job.isFavorite, 'far': !job.isFavorite}"
-                                                        class="fa-heart"></i>
-                                                </button>
-                                                <!-- Icono de guardar (bookmark) -->
-                                                <button
-                                                    @click.stop="job.isSaved = !job.isSaved"
-                                                    class="text-gray-400 hover:text-blue-500 transition-colors">
-                                                    <i
-                                                        :class="{'fas text-blue-500': job.isSaved, 'far': !job.isSaved}"
-                                                        class="fa-bookmark"></i>
-                                                </button>
-                                            </div>
-
                                             <h2 class="text-lg font-semibold leading-6" x-text="job.title"></h2>
                                         </div>
 
@@ -191,7 +171,7 @@ $jobsCompanyJson = json_encode($jobsCompany, JSON_UNESCAPED_UNICODE | JSON_PRETT
                     <!-- location -->
                     <h3 class="col-span-1 font-semibold" data-translate-en="Location" data-translate-es="Ubicación">Location</h3>
                     <div class="col-span-1 text-right">
-                        <span><?php echo $company['Ubicación'] ?></span>
+                        <span><?php echo $company['location'] ?></span>
                     </div>
                     <!-- Social networks -->
                     <h3 class="col-span-1 font-semibold" data-translate-en="Social networks" data-translate-es="Redes sociales">Social networks</h3>

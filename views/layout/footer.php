@@ -3,12 +3,12 @@
         <div class="widgets-section aos-init aos-animate" data-aos="fade-up">
             <div class="newsletter-form wow fadeInUp">
                 <div class="sec-title light text-center">
-                    <h2 data-translate-en="Subscribe Our Newsletter" data-translate-es="Suscríbete a nuestro boletín">Subscribe Our Newsletter</h2>
+                    <h2 data-translate-en="Subscribe Our Newsletter" data-translate-es="Suscribirte a nuestro boletín">Subscribe Our Newsletter</h2>
                     <div class="text" data-translate-en="We don’t send spam so don’t worry." data-translate-es="No enviamos spam así que no te preocupes.">
                         We don’t send spam so don’t worry.
                     </div>
                 </div>
-                <form>
+                <form id="newsletter-form">
                     <div class="form-group">
                         <div class="response"></div>
                     </div>
@@ -22,12 +22,12 @@
             <div class="row">
                 <div class="big-column col-xl-3 col-lg-3 col-md-12">
                     <div class="footer-column about-widget">
-                        <div class="logo"><a href="<?php echo SYSTEM_BASE_DIR ?>"><img alt="brand" loading="lazy" width="154" height="50" decoding="async" data-nimg="1" src="<?php ?>assets/img/logo2.png" style="color: transparent;"></a></div>
-                        <p class="phone-num">
+                        <div class="logo"><a href="<?php echo SYSTEM_BASE_DIR ?>"><img alt="brand" loading="lazy" width="154" height="50" decoding="async" data-nimg="1" src="<?php echo SYSTEM_BASE_DIR ?>assets/img/logo2.png" style="color: transparent;"></a></div>
+                        <!-- <p class="phone-num">
                             <span data-translate-en="Call us" data-translate-es="Llámanos">Call us </span>
                             <a href="thebeehost@support.com">123 456 7890</a>
-                        </p>
-                        <p class="address">329 FL Street, North Melbourne VIC<br> 3051, USA. <br><a href="mailto:support@mercadotrabajo.com" class="email">support@mercadotrabajo.com</a></p>
+                        </p> -->
+                        <p class="address">PO BOX 521234<br> Miami, FL 331152.<br><a href="mailto:support@mercadotrabajo.com" class="email">support@mercadotrabajo.com</a></p>
                     </div>
                 </div>
                 <div class="big-column col-xl-9 col-lg-9 col-md-12">
@@ -37,12 +37,31 @@
                                 <h4 class="widget-title" data-translate-en="For Candidates" data-translate-es="Para Candidatos">For Candidates</h4>
                                 <div class="widget-content">
                                     <ul class="list">
-                                        <li><a href="<?php echo SYSTEM_BASE_DIR ?>">Browse Jobs</a></li>
-                                        <li><a href="#">Browse Categories</a></li>
-                                        <li><a href="#">Browse Employers</a></li>
-                                        <li><a href="#">Candidate Dashboard</a></li>
-                                        <li><a href="#">Job Alerts</a></li>
-                                        <li><a href="#">My Bookmarks</a></li>
+                                        <li>
+                                            <a data-translate-en="Browse Jobs" data-translate-es="Buscar Trabajos" href="<?php echo SYSTEM_BASE_DIR ?>">
+                                                Browse Jobs
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a data-translate-en="Browse Categories" data-translate-es="Buscar Categorias" href="#jobsByCategory">
+                                                Browse Categories
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a data-translate-en="Browse Employers" data-translate-es="Buscar Empresas" href="<?php echo SYSTEM_BASE_DIR ?>companies">
+                                                Browse Employers
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a data-translate-en="Candidate Dashboard" data-translate-es="Dashboard Candidato" href="<?php echo SYSTEM_BASE_DIR ?>dashboard/candidate/dashboard">
+                                                Candidate Dashboard
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a data-translate-en="My Bookmarks" data-translate-es="Mis Favoritos" href="<?php echo SYSTEM_BASE_DIR ?>dashboard/candidate/shorlistedjobs">
+                                                My Bookmarks
+                                            </a>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -52,10 +71,21 @@
                                 <h4 class="widget-title" data-translate-en="For Employers" data-translate-es="Para empresas">For Employers</h4>
                                 <div class="widget-content">
                                     <ul class="list">
-                                        <li><a href="#">Browse Candidates</a></li>
-                                        <li><a href="#">Employer Dashboard</a></li>
-                                        <li><a href="#">Add Job</a></li>
-                                        <li><a href="#">Job Packages</a></li>
+                                        <li>
+                                            <a data-translate-en="Employer Dashboard" data-translate-es="Dashboard Empresa" href="<?php echo SYSTEM_BASE_DIR ?>dashboard/company/dashboard">
+                                                Employer Dashboard
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a data-translate-en="Add Job" data-translate-es="Agregar Trabajo" href="#">
+                                                Add Job
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a data-translate-en="Job Packages" data-translate-es="Paquetes de Trabajo" href="#">
+                                                Job Packages
+                                            </a>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -65,36 +95,30 @@
                                 <h4 class="widget-title" data-translate-en="About Us" data-translate-es="Sobre nosotros">About Us</h4>
                                 <div class="widget-content">
                                     <ul class="list">
-                                        <li><a href="#">About Us</a></li>
-                                        <li><a href="#">Terms Page</a></li>
-                                        <li><a href="#">Blog</a></li>
-                                        <li><a href="#">Contact</a></li>
+                                        <li>
+                                            <a data-translate-en="About Us" data-translate-es="Sobre nosotros" href="#">
+                                                About Us
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a data-translate-en="Terms Page" data-translate-es="Página de Términos" href="#">
+                                                Terms Page
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a data-translate-en="Blog" data-translate-es="Blog" href="#">
+                                                Blog
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a data-translate-en="Contact" data-translate-es="Contacto" href="#">
+                                                Contact
+                                            </a>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
-                        <!-- <div class="footer-column col-lg-3 col-md-6 col-sm-12">
-                            <div class="footer-widget">
-                                <h4 class="widget-title">Mobile Apps</h4>
-                                <div class="widget-content">
-                                    <div class="download-btns">
-                                        <div class="text">Click and Get started in seconds</div><a href="#" class="app-btn">
-                                            <div class="app-icon"><i class="fab fa-apple"></i></div>
-                                            <div class="inner">
-                                                <div class="sub">Download on the</div>
-                                                <div class="name-app">Apple Store</div>
-                                            </div>
-                                        </a><a href="#" class="app-btn">
-                                            <div class="app-icon"><i class="fab fa-apple"></i></div>
-                                            <div class="inner">
-                                                <div class="sub">Get in on</div>
-                                                <div class="name-app">Google Play</div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
                     </div>
                 </div>
             </div>
@@ -103,7 +127,15 @@
     <div class="footer-bottom">
         <div class="auto-container">
             <div class="outer-box">
-                <div class="copyright-text">© 2025 Mercadotrabajo by <a href="https://mercadotrabajo.com" target="_blank" rel="noopener noreferrer">MercadoTrabajo</a>. All Right Reserved.</div>
+                <div class="copyright-text">
+                    Copyright © 2025 Mercado Trabajo Inc. 
+                    <a href="https://mercadotrabajo.org" target="_blank" rel="noopener noreferrer">Mercado Trabajo Inc.</a>
+                    <span data-translate-en="All Right Reserved." data-translate-es="Todos los derechos reservados."> All Right Reserved.</span>
+                    <span data-translate-en="Terms & Conditions" data-translate-es="Términos y Condiciones">
+                        Terms & Conditions
+                    </span>
+                    <span data-translate-en="Privacy Policy" data-translate-es="Política de Privacidad">Privacy Policy</span>
+                </div>
                 <div class="social-links">
                     <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">
                         <i class="fab fa-facebook-f"></i>

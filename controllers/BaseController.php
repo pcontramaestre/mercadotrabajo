@@ -13,11 +13,11 @@ class BaseController {
         $this->modelBase = new BaseModel($pdo);
     }
 
-    protected function jsonResponse($data, $statusCode = 200) {
+    public function jsonResponse($data, $statusCode = 200) {
       http_response_code($statusCode);
       header('Content-Type: application/json');
-      echo json_encode($data);
-      exit;
+      header('Cache-Control: max-age=3600, must-revalidate');
+      return json_encode($data);
     }
 
     protected function redirect($url) {
@@ -154,7 +154,7 @@ class BaseController {
     }
 
     /**
-     * Metodo para llamar a la vista de la pagina de searchJobs
+     * Método para llamar a la vista de la página de searchJobs
     * @param int|null $idJob, Id job 
     */
     public function viewSearchJobs(
@@ -216,7 +216,32 @@ class BaseController {
         include_once 'views/front/pages/searchJobs.php';
     }
 
-    //metodo para ver el blog
+    //Función para buscar estados
+    public function getEstados(){
+        $states = $this->modelBase->selectWithFields('estados', 'id_estado, estado','', 'id_estado ASC');
+        return $states;
+    }
+
+    //Función  para obtener los municipios de un estado
+    public function getMunicipios($id_estado) {
+        $municipios = $this->modelBase->selectWithFields('municipios', 'id_municipio, municipio', "id_estado = $id_estado", 'id_municipio ASC');
+        return $municipios;
+    }
+
+    //Función  para obtener las ciudades de un municipio
+    public function getCities($id_estado) {
+        $cities = $this->modelBase->selectWithFields('ciudades', 'id_ciudad, ciudad', "id_estado = $id_estado");
+        return $cities;
+    }
+
+    //Función  para obtener las parroquias de un municipio
+    public function getParroquias($id_municipio) {
+        $parroquias = $this->modelBase->selectWithFields('parroquias', 'id_parroquia, parroquia', "id_municipio = $id_municipio", 'id_parroquia ASC');
+        return $parroquias;
+    }
+
+        
+    //método para ver el blog
     public function viewBlog(){
         include_once 'views/front/pages/blog.php';
     }

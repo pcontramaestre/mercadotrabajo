@@ -108,18 +108,18 @@ $categories = $controller->findRecordsManual($queryManual);
     ?>
 
     <!-- Pestañas -->
-    <div class="flex justify-center space-x-2 mb-6 aos-init aos-animate" data-aos="fade-up">
+    <div class="section-pestanas flex justify-center space-x-2 mb-6 flex-wrap gap-2">
         <button
             @click="activeTab = 'All'"
             :class="{'bg-gray-200': activeTab === 'All'}"
-            class="px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors">
+            class="px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors border md:border-none">
             All
         </button>
         <?php foreach ($categories as $category): ?>
             <button
                 @click="activeTab = '<?php echo $category['category_name']; ?>'"
                 :class="{'bg-gray-200': activeTab === '<?php echo $category['category_name']; ?>'}"
-                class="px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors">
+                class="px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors border md:border-none">
                 <?php echo $category['category_name']; ?>
             </button>
         <?php endforeach; ?>

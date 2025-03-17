@@ -11,7 +11,7 @@ $sql = "
         c.name AS company_name,
         c.logo_url AS company_logo,
         c.website AS company_website,
-        c.Ubicación	AS company_location,
+        c.location	AS company_location,
         COUNT(j.id) AS total_jobs_published
     FROM 
         companies c
@@ -34,14 +34,20 @@ $results = $controller->findRecordsManual($sql);
     <?php foreach ($results as $company): ?>
         <div class="border p-4 bg-white rounded-lg shadow-md p-4 border hover:shadow-lg transition-shadow cursor-pointer">
             <div class="single-company grid lg:grid-cols-12 md:grid-cols-1 gap-2" data-url-company="<?php echo SYSTEM_BASE_DIR ?>companies/<?php echo $company['company_id']; ?>">
-                <div class="image-box col-span-3 grid align-content-center justify-center">
-                    <figure class="image"><a href="companies/<?php echo $company['company_id']; ?>">
-                        <img src="<?php echo SYSTEM_BASE_DIR.$company['company_logo'] ?>" alt=""></a>
+                <div class="image-box col-span-12 md:col-span-3 grid align-content-center justify-center">
+                    <figure class="image">
+                        <a href="<?php echo SYSTEM_BASE_DIR ?>companies/<?php echo $company['company_id']; ?>">
+                            <img src="<?php echo SYSTEM_BASE_DIR.$company['company_logo'] ?>" alt="<?php echo $company['company_name']; ?>" class="h-20 w-20 object-cover">
+                       </a>
                     </figure>
                 </div>
-                <div class="content col-span-9">
+                <div class="content col-span-12 md:col-span-9">
                     <div class="company-info leading-6">
-                        <h2 class="font-medium text-xl"><a href="<?php echo SYSTEM_BASE_DIR ?>companies/<?php echo $company['company_id']; ?>"><?php echo $company['company_name']; ?></a></h2>
+                        <h2 class="font-medium text-xl">
+                            <a href="<?php echo SYSTEM_BASE_DIR ?>companies/<?php echo $company['company_id']; ?>">
+                                <?php echo $company['company_name']; ?>
+                            </a>
+                        </h2>
                         <div>
                             <i class="fas fa-map-marker-alt"></i>
                             <span><?php echo $company['company_location']; ?></span>

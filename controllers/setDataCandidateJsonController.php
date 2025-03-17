@@ -276,7 +276,7 @@ class setDataCandidateJsonController extends BaseController
 
         // Obtener el user_id de la sesión (ejemplo)
 
-        $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 8;
+        $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
 
         $response = [
             'success' => false,

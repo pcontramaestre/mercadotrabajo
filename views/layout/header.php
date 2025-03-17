@@ -35,7 +35,8 @@
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
   <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- <script src="https://unpkg.com/lucide@latest"></script> -->
+  <script src="<?php echo SYSTEM_BASE_DIR; ?>assets/js/lucide.min.js"></script>
 </head>
 <script>
         tailwind.config = {
@@ -105,6 +106,9 @@
                         },
                         blue2: {
                             100: '#e3ebfa',
+                        },
+                        bluemenu: {
+                            100: '#143a90',
                         }
                     }
                 }

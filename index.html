@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTDXHTML1.0Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Mercado Trabajo</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link
+        href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Jost:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+        <!-- fontawesome -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"><!-- Tailwind -->
+        <!-- Tailwind CSS desde CDN -->
+        <script src="https://cdn.tailwindcss.com"> </script>
+    </head>
+
+    <style>
+        .auto-container {
+            max-width: 1310px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        .banner-section-four {
+            position: relative;
+            display: block;
+            background-repeat: no-repeat;
+            background-position: bottom;
+            background-size: cover;
+            height: 100vh;
+            min-height: 700px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 120px 0;
+        }
+        .main-header {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: auto;
+            z-index: 99;
+            transition: all 0.3s ease;
+        }
+        .main-header .logo {
+            position: relative;
+            z-index: 9;
+            padding: 15px 0;
+            margin-right: 50px;
+            transition: all 0.3s ease;
+        }
+    </style>
+
+    <body>
+        <header class="main-header">
+            <div class="auto-container">
+                <div class="grid grid-cols-12 items-center">
+                    <div class="col-span-4 lg:col-span-2 xl:col-span-2 logo">
+                        <img src="/assets/img/logo2.png" alt="Logo">
+                    </div>
+                    <!-- <div class="col-span-4 lg:col-span-2 xl:col-span-2">
+                                            <div class="translate-options">
+                                                <ul class="flex gap-2">
+                                                    <li class="language-item">
+                                                        <span data-translate="es">
+                                                            <img src="/assets/img/flag/espanol.png" alt="es" width="30" height="20">
+                                                        </span>
+                                                    </li>
+                                                    <li class="language-item">
+                                                        <span data-translate="en">
+                                                            <img src="/assets/img/flag/usa.png" alt="es" width="30" height="20">
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div> -->
+                </div>
+            </div>
+        </header>
+        <main class="banner-section-four" style="background-image: url('/assets/img/banner-home2.webp'); background-size: cover; background-repeat: no-repeat;">
+            <div class="auto-container">
+                <div class="grid grid-cols-12">
+                    <div class="col-span-12">
+                        <h1 class="text-4xl font-bold text-white text-shadow">Encuentra el trabajo de tus sueños</h1>
+                        <p class="text-lg pt-4 text-white text-shadow">Pulsa sobre la bandera para acceder al país de tu preferencia</p>
+                    </div>
+                    <div class="col-span-12 mt-6">
+                        <div class="flex justify-center gap-8 items-center flex-wrap">
+                            <div class="text-center">
+                                <a href="https://co.mercadotrabajo.org">
+                                    <img src="/assets/img/flag/colombia.png" alt="colombia" width="30" height="20" class="cursor-pointer mx-auto pb-1">
+                                    <span class="text-white">Colombia</span>
+                                </a>
+                            </div>
+                            
+                            <div class="text-center">
+                                <a href="https://us.mercadotrabajo.org">
+                                    <img src="/assets/img/flag/estados-unidos.png" alt="estados-unidos" width="30" height="20" class="cursor-pointer mx-auto pb-1">
+                                    <span class="text-white">Estados Unidos</span>
+                                </a>
+                            </div>
+                            <div class="text-center">
+                                <a href="https://ve.mercadotrabajo.org">
+                                    <img src="/assets/img/flag/venezuela.png" alt="venezuela" width="30" height="20" class="cursor-pointer mx-auto pb-1">
+                                    <span class="text-white">Venezuela</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>

@@ -69,9 +69,7 @@ class DatabaseHelper {
         }
         
         
-        try {
-
-            
+        try {            
             $columns = implode(", ", array_keys($data));
             $placeholders = ":" . implode(", :", array_keys($data));
 
@@ -83,7 +81,7 @@ class DatabaseHelper {
             }
             $stmt->execute();
 
-            //si hay un error al insertar mostrar el error
+            //si hay un error al inserter mostrar el error
             if ($this->connection->errorCode() != 0) {
                 error_log("Error: " . $this->connection->errorInfo());
 
@@ -370,7 +368,7 @@ class DatabaseHelper {
             'que', 'se', 'sin', 'sobre', 'tras', 'un', 'una', 'unos', 'unas', 'y',
             'para', 'mediante', 'entre', 'desde', 'hacia', 'durante', 'con', 'sin', 'sobre',
             'empleo', 'trabajo', 'vacante', 'oferta', 'puesto', 'cargo', 'posición',
-            'remoto', 'presencial', 'hibrido', 'temporal', 'permanente',
+            'remoto', 'presencial', 'híbrido', 'temporal', 'permanente',
             'experiencia', 'senior', 'junior', 'semi', 'busco', 'deseo', 'quiero',
             'aplicar', 'postular', 'salario', 'sueldo', 'remuneración', 'beneficios'
         ];
@@ -628,12 +626,12 @@ class DatabaseHelper {
      * Usage:
      * ```php
      * // Sin JOIN
-     * $results = $dbHelper->selectWithFields('users', 'user.id, user.name, user.created_at', ['status' => 1], 0, 10); // Fetch first 10 active users
+     * $results = $dbHelper->selectWithFields('users', 'user.id, user.name, user.created_at', "status = 1", 0, 10); // Fetch first 10 active users
      * with fields user.id, user.name, user.created_at
      *
      * // Con JOIN
      * $joinClause = "INNER JOIN profiles ON users.id = profiles.user_id";
-     * $results = $dbHelper->selectWithFields('users','user.id, user.name, user.created_at', ['status' => 1], 0, 10, $joinClause); // Fetch users with profiles
+     * $results = $dbHelper->selectWithFields('users','user.id, user.name, user.created_at', "status = 1", 0, 10, $joinClause); // Fetch users with profiles
      * ```
      *
      * Security Note: The use of PDO with placeholders (e.g., :column) prevents SQL injection.
@@ -652,7 +650,7 @@ class DatabaseHelper {
         string $table,
         string $fields,
         string $conditions = '',
-        ?string $orderBy = 'id DESC',
+        ?string $orderBy = null,
         int $offset = 0,
         ?int $limit = null,
         ?string $joinClause = null
@@ -678,10 +676,11 @@ class DatabaseHelper {
                 $query .= " $joinClause"; // Agregar JOIN si está presente
             }
             $query .= " $whereClause";
-            if ($orderBy) {
+            if ($orderBy !== null) {
                 $query .= " ORDER BY $orderBy";
             }
             $query .= " $limitClause";
+
 
             //ejecutar consulta sin prepare
             $stmt = $this->connection->prepare($query);

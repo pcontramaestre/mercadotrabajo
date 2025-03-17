@@ -16,7 +16,7 @@
  $titleSectionClassDiv = $titleSectionClass ?? $titleSectionClass = '';
 ?>
 
-<div class="text-center mb-6 aos-init aos-animate auto-container <?php echo $titleSectionClassDiv ?>" data-aos="fade-up">
+<div class="title-container text-center mb-6 aos-init aos-animate auto-container <?php echo $titleSectionClassDiv ?>" data-aos="fade-up">
     <h1 class="text-3xl font-bold text-gray-800" data-translate-es="<?php echo $titleSection['translate_es'] ?>" data-translate-en="<?php echo $titleSection['translate_en'] ?>">
         <?php echo $titleSectionText['translate_en'] ?>
     </h1>

@@ -1,18 +1,12 @@
 document.addEventListener('DOMContentLoaded', function () {
   // Inicializar AOS (Animate On Scroll)
-  AOS.init();
+  applyAos();
   
-
   // Detectar el idioma del navegador
   let userLang = navigator.language || navigator.userLanguage;
   let isSpanish = userLang.startsWith('es');
 
-
-  changeLanguage();
-  // Seleccionar los elementos <li> de los idiomas
-  const languageItems = document.querySelectorAll('.language-item'); // Asegúrate de añadir la clase language-item a tus <li>
-
-  // Agregar un evento de clic a cada elemento
+  const languageItems = document.querySelectorAll('.language-item'); 
   languageItems.forEach(item => {
     item.addEventListener('click', function () {
       // Obtener el valor del atributo data-translate
@@ -21,31 +15,26 @@ document.addEventListener('DOMContentLoaded', function () {
       // Guardar el idioma en localStorage
       localStorage.setItem('selectedLanguage', language);
 
-      // Opcional: Recargar la página o aplicar la traducción inmediatamente
-      // location.reload(); // Recargar la página para aplicar la traducción
-      applyLanguage(language); // Función para aplicar la traducción sin recargar
+      applyLanguage(language); 
     });
   });
 
-    // Función para aplicar la traducción (opcional)
-    function applyLanguage(lang) {
-      // Aquí puedes implementar la lógica para aplicar la traducción según el idioma seleccionado
-      console.log('Idioma seleccionado:', lang);
-      // Por ejemplo, puedes llamar a la función changeLanguage() que tienes
-      changeLanguage(lang);
+  // Función para aplicar la traducción (opcional)
+  function applyLanguage(lang) {
+    changeLanguage(lang);
+  }
+
+  // Función para obtener el idioma guardado en localStorage al cargar la página
+  function getStoredLanguage() {
+    const storedLanguage = localStorage.getItem('selectedLanguage');
+    if (storedLanguage) {
+      applyLanguage(storedLanguage); // Aplicar el idioma guardado
+    } else {
+      changeLanguage();
     }
+  }
 
-      // Función para obtener el idioma guardado en localStorage al cargar la página
-    function getStoredLanguage() {
-      const storedLanguage = localStorage.getItem('selectedLanguage');
-      if (storedLanguage) {
-        applyLanguage(storedLanguage); // Aplicar el idioma guardado
-      }
-    }
-
-    getStoredLanguage(); // Llamar a la función al cargar la página
-
-
+  getStoredLanguage(); 
 
   function changeLanguage(lang) {
     if (lang) {
@@ -67,10 +56,39 @@ document.addEventListener('DOMContentLoaded', function () {
       } else {
         element.textContent = translation; // Para cualquier otro tipo de elemento
       }
+
+      // Aplicar la traducción al atributo value para los select
+      if (element.tagName === 'SELECT') {
+        element.options.forEach(option => {
+          const translationKey = isSpanish ? 'data-translate-es' : 'data-translate-en';
+          const translation = option.getAttribute(translationKey);
+          option.textContent = translation;
+        });
+      }
     });
   }
-});
 
+  // Función para inicializar AOS
+  function applyAos() {
+    if (typeof AOS !== 'undefined') {
+      //detectar si el tamańio de la pantalla es menor a 768px, si es menor, no inicializar AOS
+      if (window.innerWidth < 768) {
+        //buscar todos los elemento con data-aos y eliminar el atributo
+        const elements = document.querySelectorAll('[data-aos]');
+        elements.forEach(element => {
+          element.removeAttribute('data-aos');
+        });
+        //buscar elementos con las clases de AOS y eliminarlas
+        const aosElements = document.querySelectorAll('.aos-init, .aos-animate');
+        aosElements.forEach(element => {
+          element.classList.remove('aos-init', 'aos-animate');
+        });
+        return;
+      }
+      AOS.init();
+    }
+  }
+});
 
 document.addEventListener('scroll', function() {
   const header = document.querySelector('.main-header.header-style-two.alternate');

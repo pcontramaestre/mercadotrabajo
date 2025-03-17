@@ -41,7 +41,7 @@ class JobCards {
                 <img
                     :src="job.logo"
                     alt="Company Logo"
-                    class="w-16 h-16 rounded-lg object-cover mr-2" />
+                    class="w-16 h-auto md:h-16 rounded-lg object-cover mr-2" />
             </div>
             <div class="col-span-10">
                 <div class="col-span-10 pr-12 relative pb-2">

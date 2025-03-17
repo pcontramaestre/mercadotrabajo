@@ -15,8 +15,10 @@ if (empty($search)) {
     $search = [];
 } else {
     $countR = count($search);
+    $totalJobs = count($search);
     $searchJson = json_encode($search, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
     $relatedJobsJson = json_encode($related, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+    $clases = $countR == 1 ? 'one-job' : 'multiple-jobs';
 }
 ?>
 
@@ -43,40 +45,23 @@ if (empty($search)) {
 
 
 
-    <div class="grid grid-cols-10 gap-6">
+    <div class="grid grid-cols-10 gap-6 <?php echo $clases; ?>">
         <!-- Lista de trabajos -->
-        <div class="col-span-4 listado-trabajos" x-show="paginatedJobs.length > 0">
+        <div class="col-span-10 lg:col-span-4 listado-trabajos" x-show="paginatedJobs.length > 0">
             <template x-for="(job, index) in paginatedJobs" :key="job.id">
 
                 <div
                     :id="'job-' + job.id"
                     :tabindex="0"
                     :ref="index === 0 ? 'firstJob' : null"
+                    :data-url="'<?php echo SYSTEM_BASE_DIR ?>searchjobs?job=' + job.id"
                     :class="{ 'bg-blue2-100': selectedJob && selectedJob.id === job.id }"
                     class="grid grid-cols-12 grid-rows-1 gap-3 relative rounded-lg shadow-md p-4 border hover:shadow-lg transition-shadow cursor-pointer p-2 hover:bg-gray-100 mb-6 cursor-pointer p-2 hover:bg-gray-100 job-item"
-                    @click="selectJob(job)">
+                    @click="selectJob(job)"
+                    data-url=""
+                    >
                     <div class="col-span-12">
                         <div class="col-span-12 pr-12 relative">
-                            <!-- Iconos de favoritos y guardar -->
-                            <div class="flex justify-end space-x-4 absolute right-0 top-0">
-                                <!-- Icono de corazón (favoritos) -->
-                                <!-- <button
-                                    @click="job.isFavorite = !job.isFavorite"
-                                    class="text-gray-400 hover:text-red-500 transition-colors">
-                                    <i
-                                        :class="{'fas text-red-500': job.isFavorite, 'far': !job.isFavorite}"
-                                        class="fa-heart"></i>
-                                </button> -->
-                                <!-- Icono de guardar (bookmark) -->
-                                <!-- <button
-                                    @click="job.isSaved = !job.isSaved"
-                                    class="text-gray-400 hover:text-blue-500 transition-colors">
-                                    <i
-                                        :class="{'fas text-blue-500': job.isSaved, 'far': !job.isSaved}"
-                                        class="fa-bookmark"></i>
-                                </button> -->
-                            </div>
-
                             <h2 class="text-lg font-semibold" x-text="job.title"></h2>
                         </div>
 
@@ -125,10 +110,6 @@ if (empty($search)) {
                                 <template x-if="job.priority === 'High'">
                                     <span class="px-2 py-1 rounded-lg text-xs bg-green-100" x-text="job.priority"></span>
                                 </template>
-                                <!-- <span
-                                    :class="{'bg-blue-100': job.priority === 'Normal', 'bg-green-100': job.priority === 'High', 'bg-red-100': job.priority === 'Urgent'}"
-                                    class="px-2 py-1 rounded-lg text-xs bg-green-100"
-                                    x-text="job.priority"></span> -->
                             </div>
                         </div>
                     </div>
@@ -145,7 +126,7 @@ if (empty($search)) {
 
 
             <!-- Botones de paginación -->
-            <div class="flex justify-between mt-4">
+            <div class="flex justify-between mt-4 pagination">
                 <!-- Botón Anterior -->
                 <button
                     class="px-4 py-2 rounded"
@@ -167,7 +148,7 @@ if (empty($search)) {
         </div>
 
         <!-- Detalles del trabajo seleccionado -->
-        <div class="col-span-6 descripcion-trabajos">
+        <div class="col-span-10 lg:col-span-6 descripcion-trabajos">
             <template x-if="selectedJob">
                 <div>
                     <div class="bg-blue2-100 p-4 flex flex-column items-center">
@@ -176,7 +157,7 @@ if (empty($search)) {
                             <p class="mt-1 mb-1" x-text="'Company: ' + selectedJob.company"></p>
                         </div>
                         <h2 class="text-xl font-bold text-center" x-text="selectedJob.title"></h2>
-                        <div class="flex flex-row gap-3 justify-center">
+                        <div class="flex flex-row gap-2 md:gap-3 justify-center flex-wrap py-4 md:py-0">
                             <div class="flex flex-row items-center gap-1">
                                 <i class="fas fa-map-marker-alt mr-1 text-gray-400"></i>
                                 <span class="text-gray-600 text-[14px]" x-text="selectedJob.location"></span>
@@ -200,9 +181,8 @@ if (empty($search)) {
                         </div>
 
                         <div class="btn-box mt-4 job-block-seven">
-                            <!-- x-if selectedJob.isApplied -->
                                 <!-- Mostrar el botón "Apply For Job" solo si no se ha aplicado -->
-                                <template x-if="selectedJob.isApplied == '0'">
+                                <template x-if="$store.selectedJobIsApplied == '0'">
                                     <a href="#" class="theme-btn btn-style-one" data-bs-toggle="modal"
                                     :data-bs-target="'#applyJobModal'+selectedJob.id"
                                     data-bs-target="#applyJobModal">
@@ -211,7 +191,7 @@ if (empty($search)) {
                                 </template>
 
                                 <!-- Mostrar un mensaje alternativo si ya se aplicó -->
-                                <template x-if="selectedJob.isApplied == '1'">
+                                <template x-if="$store.selectedJobIsApplied == '1'">
                                     <a href="#" class="theme-btn btn-style-one disabled" aria-disabled="true">
                                         Ya aplicaste a este trabajo
                                     </a>
@@ -222,7 +202,6 @@ if (empty($search)) {
                                     @click.stop="toggleSaveJob(selectedJob.id)"
                                     :class="{'text-blue-500': selectedJob.isSaved == '1', 'text-gray-400': selectedJob.isSaved == '0'}"
                                     class="bookmark-btn">
-                                    <!-- <i class="flaticon-bookmark"></i> -->
                                     <i
                                         :class="{'fas text-blue-500 hover:text-white': selectedJob.isSaved == '1', 'far': selectedJob.isSaved == '0'}"
                                         class="fa-bookmark far"></i>
@@ -388,6 +367,10 @@ if (empty($search)) {
                             showToast('Application submitted successfully!', 'success');
                             form.reset(); // Limpiar el formulario
                             closeModal(form.closest('.modal')); // Cerrar el modal
+
+                            // Actualizar el estado de isApplied en Alpine.js
+                            Alpine.store('selectedJobIsApplied', 1);
+                            console.log('Alpine store selectedJobIsApplied:', Alpine.store('selectedJobIsApplied'));
                         } else {
                             showToast('Error: ' + (data.message || 'Unknown error'), 'error');
                         }
@@ -474,10 +457,11 @@ if (empty($search)) {
         }
     }
 
-
+    
 
     document.addEventListener("alpine:init", () => {
         Alpine.store('selectedJobId', 0);
+        Alpine.store('selectedJobIsApplied', 0);
         console.log('Alpine initialized');
         console.log('Alpine store:', Alpine.store('selectedJobId'));
 
@@ -486,7 +470,6 @@ if (empty($search)) {
             selectedJob: null, // Trabajo seleccionado
             currentPage: 1, // Página actual
             perPage: 10, // Número de trabajos por página
-
             // Calcular el número total de páginas
             get totalPages() {
                 return Math.ceil(this.jobs.length / this.perPage);
@@ -494,7 +477,6 @@ if (empty($search)) {
 
             toggleSaveJob(jobId) {
                 const job = this.jobs.find(j => j.id === jobId);
-                // comvertir jobId en numerico
                 jobId = parseInt(jobId)
 
                 fetch('<?php echo SYSTEM_BASE_DIR ?>save-job', {
@@ -529,17 +511,31 @@ if (empty($search)) {
             },
 
             // Seleccionar un trabajo
-            selectJob(job) {
-                this.selectedJob = job;
-                this.$store.selectedJobId = job.id;
-                console.log('Alpine store:', Alpine.store('selectedJobId'));
+            selectJob(job, firstJob = false, totalJobs = 0) {
+                if (window.innerWidth < 768) {
+                    if (firstJob && totalJobs == 1) {
+                        this.selectedJob = job;
+                        this.$store.selectedJobId = job.id;
+                        this.$store.selectedJobIsApplied = job.isApplied;
+                        return;
+                    }
+                    window.location.href = "<?php echo SYSTEM_BASE_DIR ?>searchjobs?job=" + job.id;
+                } else {
+                    this.selectedJob = job;
+                    this.$store.selectedJobId = job.id;
+                    this.$store.selectedJobIsApplied = job.isApplied;
+                }
+
+
             },
 
             // Ir a la página anterior
             prevPage() {
                 if (this.currentPage > 1) {
                     this.currentPage--;
-                    this.selectFirstJob(); // Seleccionar el primer trabajo de la nueva página
+                    if (window.innerWidth > 768) {
+                        this.selectFirstJob();
+                    }
                     this.scrollToFirstJob();
                 }
             },
@@ -548,7 +544,9 @@ if (empty($search)) {
             nextPage() {
                 if (this.currentPage < this.totalPages) {
                     this.currentPage++;
-                    this.selectFirstJob(); // Seleccionar el primer trabajo de la nueva página
+                    if (window.innerWidth > 768) {
+                        this.selectFirstJob();
+                    }
                     this.scrollToFirstJob();
                 }
             },
@@ -556,8 +554,9 @@ if (empty($search)) {
             // Seleccionar el primer trabajo de la página actual
             selectFirstJob() {
                 const firstJob = this.paginatedJobs[0];
+                let totalJobs = this.jobs.length;
                 if (firstJob) {
-                    this.selectJob(firstJob);
+                    this.selectJob(firstJob, true, totalJobs);
                     this.scrollToFirstJob();
                 }
             },
@@ -586,10 +585,19 @@ if (empty($search)) {
 
             // Inicializar
             init() {
-                if (this.jobs.length > 0) {
-                    this.selectFirstJob(); // Seleccionar el primer trabajo automáticamente al cargar la página
+                if (window.innerWidth > 768) {
+                    if (this.jobs.length > 0) {
+                        this.selectFirstJob();
+                    }
+                } else {
+                    if (this.jobs.length == 1) {
+                        this.selectFirstJob(); 
+                    }
                 }
+
                 this.$store.selectedJobId = this.selectedJob ? this.selectedJob.id : null;
+                this.$store.selectedJobIsApplied = this.selectedJob ? this.selectedJob.isApplied : null;
+                console.log(this.jobs);
             },
         }));
 

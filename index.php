@@ -6,6 +6,9 @@ require_once 'controllers/BaseController.php';
 require_once 'controllers/getDataCandidateJsonController.php';
 require_once 'controllers/setDataCandidateJsonController.php';
 require_once 'controllers/candidateDashboardController.php';
+require_once 'controllers/companyDashboardController.php';
+require_once 'controllers/getDataCompanyJsonController.php';
+require_once 'controllers/setDataCompanyJsonController.php';
 
 // header('Content-Type: application/json');
 // header('Access-Control-Allow-Origin: *');
@@ -25,7 +28,8 @@ $request = $_SERVER['REQUEST_URI'];
 
 $request = str_replace($ruta_base, '', $request);
 //$_SESSION['user_id'] = 8;
-$id_user = 8; //$_SESSION['user_id'];
+$id_user = $_SESSION['user_id'];
+$id_company = $_SESSION['company_id'];
 chdir(__DIR__); 
 
 switch ($request) {
@@ -64,6 +68,47 @@ switch ($request) {
   case '/blog':
     $controller = new BaseController($db);
     $controller->viewBlog();
+    break;
+
+  //Dashboard company
+  case '/dashboard/company/dashboard':
+    $controllerDataProfileCompany = new getDataCompanyJsonController($db);
+    $dataUserProfileCompany = $controllerDataProfileCompany->getCompanyProfile($id_company);
+    $dataJobsApplied = $controllerDataProfileCompany->getRecentApplicants($id_company);
+    
+
+    $controller = new companyDashboardController($db);
+    $controller->viewDashboard($dataUserProfileCompany, $dataJobsApplied);
+    break;
+  
+  case preg_match('/^\/dashboard\/company\/candidate-detail(?:\/(\d+))?$/', $request, $matches) ? true : false:
+    $candidateId = $matches[1];
+
+    
+    // Datos del candidato
+    $controllerDataUserProfile  = new getDataCandidateJsonController($db);
+    $dataUserProfile = $controllerDataUserProfile->getResumeData($candidateId);
+
+    // Datos de la empresa
+    $controllerDataProfileCompany = new getDataCompanyJsonController($db);
+    $dataUserProfileCompany = $controllerDataProfileCompany->getCompanyProfile($id_company);
+
+    // Mostrar la vista
+    $controller = new companyDashboardController($db);
+    $controller->viewCandidateDetail($dataUserProfile, $dataUserProfileCompany);
+    break;
+  
+  case '/dashboard/company/myprofile':
+    $controllerDataProfile = new getDataCompanyJsonController($db);
+    $dataUserProfile = $controllerDataProfile->getCompanyProfile($id_company);
+
+    // Datos de la empresa
+    $controllerDataProfileCompany = new getDataCompanyJsonController($db);
+    $dataUserProfileCompany = $controllerDataProfileCompany->getCompanyProfile($id_company);
+
+
+    $controller = new companyDashboardController($db);
+    $controller->viewProfile($dataUserProfile, $dataUserProfileCompany);
     break;
 
   //Dashboard candidate
@@ -189,4 +234,78 @@ switch ($request) {
     $id_user = 8;
     $controller = new setDataCandidateJsonController($db);
     $controller->setDataProfileCandidate($_POST['action'],$_POST['data']);
+    break;
+
+  //Consulta y guardado de datos de empresas
+  case '/api/v1/setdataprofilecompany':
+    $controller = new setDataCompanyJsonController($db);
+    $controller->setDataProfileCompany($_POST['action'],$_POST['data']);
+    break;
+
+  // Llamadas a estados, municipios y parroquias
+  case '/api/v1/getestados':
+    //Listado de estados
+    $controller = new BaseController($db);
+    $estados = $controller->getEstados();
+    
+    header('Content-Type: application/json');
+    header('Cache-Control: max-age=3600, must-revalidate');
+
+    if ($estados) {
+      echo json_encode(['success'=> true,'estados'=> $estados]);
+    } else {
+      echo json_encode(['success'=> false, 'message' => 'No se encontraron estados']);
+    }
+
+    break;
+  
+  case preg_match('/^\/api\/v1\/getmunicipios(?:\/(\\d+))?$/', $request, $matches) ? true : false:
+    $id_estado = $matches[1];
+
+    $controller = new BaseController($db);
+    $municipios = $controller->getMunicipios($id_estado);
+    
+    header('Content-Type: application/json');
+    header('Cache-Control: max-age=3600, must-revalidate');
+
+    if ($municipios) {
+      echo json_encode(['success'=> true,'municipios'=> $municipios]);
+    } else {
+      echo json_encode(['success'=> false, 'message' => 'No se encontraron municipios']);
+    }
+    break;
+  
+  case preg_match('/^\/api\/v1\/getparroquias(?:\/(\\d+))?$/', $request, $matches) ? true : false:
+    $id_municipio = $matches[1];
+    $controller = new BaseController($db);
+    $parroquias = $controller->getParroquias($id_municipio);
+    
+    header('Content-Type: application/json');
+    header('Cache-Control: max-age=3600, must-revalidate');
+
+    if ($parroquias) {
+      echo json_encode(['success'=> true,'parroquias'=> $parroquias]);
+    } else {
+      echo json_encode(['success'=> false, 'message' => 'No se encontraron parroquias']);
+    }
+    break;
+  
+  case preg_match('/^\/api\/v1\/getciudades(?:\/(\\d+))?$/', $request, $matches) ? true : false:
+    $id_estado = $matches[1];
+    $controller = new BaseController($db);  
+    $ciudades = $controller->getCities($id_estado);
+    
+    header('Content-Type: application/json');
+    header('Cache-Control: max-age=3600, must-revalidate');
+
+    if ($ciudades) {
+      echo json_encode(['success'=> true,'ciudades'=> $ciudades]);
+    } else {
+      echo json_encode(['success'=> false, 'message' => 'No se encontraron ciudades']);
+    }
+    break;
+  
+  default:
+    include 'views/error.php';
+    break;
 }

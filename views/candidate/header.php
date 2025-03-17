@@ -18,7 +18,8 @@
     <!-- Tailwind CSS desde CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- <script src="https://unpkg.com/lucide@latest"></script> -->
+    <script src="<?php echo SYSTEM_BASE_DIR; ?>assets/js/lucide.min.js"></script>
 
     <!-- Select 2 -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
@@ -101,6 +102,12 @@
                             700: '#374151',
                             800: '#1f2937',
                             900: '#111827'
+                        },
+                        blue2: {
+                            100: '#e3ebfa',
+                        },
+                        bluemenu: {
+                            100: '#143a90',
                         }
                     }
                 }
