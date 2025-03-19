@@ -444,6 +444,7 @@ class DatabaseHelper {
                 jobs.skills_experience,
                 jobs.priority,
                 0 AS isFavorite,
+                0 AS isExternal,
                 ".$saveJob.",
                 ".$ApplyJob.",
                 CONCAT('$', FORMAT(IFNULL(jobs.salary_min, 0), 2),' - $',FORMAT(IFNULL(jobs.salary_max, 0), 2)) AS salary,

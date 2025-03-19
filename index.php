@@ -27,7 +27,6 @@ $ruta_base = substr($ruta_base, 0, strrpos($ruta_base, '/'));
 $request = $_SERVER['REQUEST_URI'];
 
 $request = str_replace($ruta_base, '', $request);
-//$_SESSION['user_id'] = 8;
 $id_user = $_SESSION['user_id'];
 $id_company = $_SESSION['company_id'];
 chdir(__DIR__); 
@@ -68,6 +67,12 @@ switch ($request) {
   case '/blog':
     $controller = new BaseController($db);
     $controller->viewBlog();
+    break;
+  case '/terms':
+    include_once 'views/front/pages/terms.php';
+    break;
+  case '/about':
+    include_once 'views/front/pages/about.php';
     break;
 
   //Dashboard company
@@ -181,7 +186,7 @@ switch ($request) {
     break;
 
   case '/api/v1/getdatacandidate':
-    $id_user = 8;
+    $id_user = $_SESSION['user_id'];
     $controller = new getDataCandidateJsonController($db);
     $controller->getResumeDataJson($id_user);
     break;
@@ -226,12 +231,12 @@ switch ($request) {
     }
     break;
   case '/api/v1/getdataprofilecandidate':
-    $id_user = 8;
+    $id_user = $_SESSION['user_id'];
     $controller = new getDataCandidateJsonController($db);
     $controller->getProfileDataJson($id_user);
     break;
   case '/api/v1/setdataprofilecandidate':
-    $id_user = 8;
+    $id_user = $_SESSION['user_id'];
     $controller = new setDataCandidateJsonController($db);
     $controller->setDataProfileCandidate($_POST['action'],$_POST['data']);
     break;
@@ -303,6 +308,20 @@ switch ($request) {
     } else {
       echo json_encode(['success'=> false, 'message' => 'No se encontraron ciudades']);
     }
+    break;
+
+  //Linkedin searchLinkedInJobsAPI($dataEntityUrn) . Parametro: $dataEntityUrn
+  case preg_match('/^\/api\/v1\/searchlinkedinjobs(?:\/(\\d+))?$/', $request, $matches) ? true : false:
+    $dataEntityUrn = $matches[1];
+    $controller = new BaseController($db);
+    $controller->searchLinkedInJobsAPI($dataEntityUrn);
+    break;
+
+  //Computrabajo searchComputrabajoJobsAPI($dataEntityUrn) . Parametro: FDE13457825C3F3561373E686DCF3405
+  case preg_match('/^\/api\/v1\/searchcomputrabajojob(?:\/([A-Z0-9]+))?$/', $request, $matches) ? true : false:
+    $dataEntityUrn = $matches[1];
+    $controller = new BaseController($db);
+    $controller->searchComputrabajoJobsAPI($dataEntityUrn);
     break;
   
   default:

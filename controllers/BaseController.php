@@ -3,39 +3,50 @@
 require_once 'functions/functions.php';
 require_once 'config/config.php';
 require_once 'models/BaseModel.php';
+require 'vendor/autoload.php';
+use GuzzleHttp\Client;
+use GuzzleHttp\Promise;
+use Symfony\Component\DomCrawler\Crawler;
 
-class BaseController {
+class BaseController
+{
     protected $modelBase;
     protected $configuration;
 
-    public function __construct($pdo) {
+    public function __construct($pdo)
+    {
         $this->configuration = new Config();
         $this->modelBase = new BaseModel($pdo);
     }
 
-    public function jsonResponse($data, $statusCode = 200) {
-      http_response_code($statusCode);
-      header('Content-Type: application/json');
-      header('Cache-Control: max-age=3600, must-revalidate');
-      return json_encode($data);
+    public function jsonResponse($data, $statusCode = 200)
+    {
+        http_response_code($statusCode);
+        header('Content-Type: application/json');
+        header('Cache-Control: max-age=3600, must-revalidate');
+        return json_encode($data);
     }
 
-    protected function redirect($url) {
+    protected function redirect($url)
+    {
         header("Location: $url");
         exit;
     }
 
-    protected function render($view, $path_view, $data) {
+    protected function render($view, $path_view, $data)
+    {
         extract($data);
         require_once "$path_view/$view.php";
     }
 
-    protected function renderError($error) {
+    protected function renderError($error)
+    {
         require_once "views/error.php";
     }
 
     // Método para procesar la petición
-    public function index() {
+    public function index()
+    {
         include_once 'views/front/home.php';
         // $data = [];
         // $errors = [];
@@ -69,7 +80,7 @@ class BaseController {
         //             break;
         //     }
         // }
-        
+
 
         // //Si hay errores mostrarlos
         // if (!empty($errors)) {
@@ -80,11 +91,13 @@ class BaseController {
     }
 
     //Metodo para llamar a la vista de la pagina de companies
-    public function viewCompanies() {
+    public function viewCompanies()
+    {
         include_once 'views/front/pages/companies.php';
     }
 
-    public function viewCompany($id) {
+    public function viewCompany($id)
+    {
         $id = (int) $id;
         $company = $this->modelBase->select('companies', ['id' => $id]);
         $company = $company[0] ?? null;
@@ -129,7 +142,7 @@ class BaseController {
 
 
 
-        
+
         if (empty($company)) {
             $this->renderError(['No se encontró la empresa con el ID proporcionado.']);
         } else {
@@ -143,7 +156,7 @@ class BaseController {
                 50,
                 $joinClause
             );
-            
+
             $jobsCompany = [];
             foreach ($results as $job) {
                 $jobsCompany[] = $job;
@@ -155,11 +168,11 @@ class BaseController {
 
     /**
      * Método para llamar a la vista de la página de searchJobs
-    * @param int|null $idJob, Id job 
-    */
+     * @param int|null $idJob, Id job 
+     */
     public function viewSearchJobs(
-            ?int $idJob = null)
-        {
+        ?int $idJob = null
+    ) {
         $results = [];
         $relatedJobs = [];
         if ($idJob !== null) {
@@ -174,27 +187,37 @@ class BaseController {
             $field_job = trim($_POST['field_job'] ?? '');
             $field_postal = trim($_POST['field_postal'] ?? ''); // Código postal o ciudad
             $field_category = trim($_POST['field_category'] ?? '');
-        
+
             // Sanitizar los datos para evitar XSS
             $field_job = htmlspecialchars($field_job, ENT_QUOTES, 'UTF-8');
             $field_postal = htmlspecialchars($field_postal, ENT_QUOTES, 'UTF-8');
-        
+
             // Validar que $field_category sea un número entero
             if (!empty($field_category) && !is_numeric($field_category)) {
                 error_log("Error: El campo 'field_category' debe ser un número válido.");
                 echo json_encode(['error' => 'El campo categoría contiene datos inválidos.']);
                 exit;
             }
-        
+
             // Convertir $field_category a entero si no está vacío
-            $field_category = !empty($field_category) ? (int)$field_category : null;
-        
+            $field_category = !empty($field_category) ? (int) $field_category : null;
+
             try {
                 // Llamar a la función searchJobs con los parámetros sanitizados
                 $results = $this->modelBase->searchJobs($field_job, $field_postal, $field_category, 50, null);
+
                 foreach ($results as $result) {
                     $idJob = $result['id'];
                     $relatedJobs[$idJob] = $this->modelBase->getRelatedJobs($idJob, 5);
+                }
+
+                $resultsExternal = $this->searchExternal('linkedin', $field_job, $field_postal, $field_category);
+                if ($resultsExternal) {
+                    $results = array_merge($results, $resultsExternal);
+                }
+                $resultsExternal = $this->searchExternal('computrabajo', $field_job, $field_postal, $field_category);
+                if ($resultsExternal) {
+                    $results = array_merge($results, $resultsExternal);
                 }
             } catch (Exception $e) {
                 error_log("Error en la consulta SQL: " . $e->getMessage());
@@ -203,11 +226,21 @@ class BaseController {
         } else {
             $results = [];
             $limit = 50;
-            $results = $this->modelBase->searchJobs('','',null, $limit,null);
+            $results = $this->modelBase->searchJobs('', '', null, $limit, null);
+
+
             if ($results) {
                 foreach ($results as $result) {
                     $idJob = $result['id'];
                     $relatedJobs[$idJob] = $this->modelBase->getRelatedJobs($idJob, 5);
+                }
+                $resultsExternal = $this->searchExternal('linkedin', '', '', '');
+                if ($resultsExternal) {
+                    $results = array_merge($results, $resultsExternal);
+                }
+                $resultsExternal = $this->searchExternal('computrabajo', '', '', '');
+                if ($resultsExternal) {
+                    $results = array_merge($results, $resultsExternal);
                 }
             } else {
                 $results = [];
@@ -216,55 +249,478 @@ class BaseController {
         include_once 'views/front/pages/searchJobs.php';
     }
 
+    /**
+     * Funcion para buscar trabajos externos en otras paginas.
+     * @param string $type Tipo de busqueda (linkedin, computrabajo)
+     * @param string $field_job Palabras clave de la búsqueda
+     * @param string $field_postal Ubicación de la búsqueda
+     * @param string $field_category Categoría de la búsqueda
+     */
+    public function searchExternal($type, $field_job, $field_postal, $field_category)
+    {
+        $results = [];
+        $search = '';
+        if ($type == 'linkedin') {
+            $keywords = $field_job.'%20' . $field_postal . '%20' . $field_category;
+        $location = $field_postal;
+
+        if (empty($field_postal)) {
+            $location = 'Venezuela';
+        }
+        $category = $field_category;
+        } else if ($type == 'computrabajo') {
+            // Define search URL based on provided fields
+            $search = 'empleos-en-extranjero'; // Default search
+            
+            // Clean and format search terms
+            $keywords = !empty($field_job) ? str_replace(' ', '-', trim($field_job)) : '';
+            $location = !empty($field_postal) ? str_replace(' ', '-', trim($field_postal)) : '';
+            
+            // Build search query based on available parameters
+            if (!empty($keywords) && !empty($location)) {
+                $search = 'trabajo-de-' . $keywords . '-en-' . $location;
+            } elseif (!empty($keywords)) {
+                $search = 'trabajo-de-' . $keywords;
+            } elseif (!empty($location)) {
+                $search = 'empleos-en-' . $location;
+            }
+        }
+        
+
+       // $urlLinkedIn = "https://www.linkedin.com/jobs/search?keywords=$keywords&location=$location&geoId=101490751&trk=public_jobs_jobs-search-bar_search-submit&position=1&pageNum=0";
+       $urlLinkedIn = "https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=$keywords&location=$location&geoId=101490751&trk=public_jobs_jobs-search-bar_search-submit&position=1&pageNum=0&start=0";
+        $urls = [
+            'linkedin' => $urlLinkedIn,
+            'computrabajo' => 'https://ve.computrabajo.com/' . $search,
+        ];
+
+        if ($type == 'linkedin') {
+            $client = new Client();
+            try {
+                // Crear un array de promesas
+                $promises = [];
+                foreach ($urls as $type => $url) {
+                    $promises[$type] = $client->getAsync($url, [
+                        'headers' => [
+                            'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+                            'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+                            'Accept-Language' => 'es-ES,es;q=0.9',
+                            'Connection' => 'close',
+                            'Cache-Control' => 'max-age=3600, must-revalidate',
+                            'Pragma' => 'cache',
+                        ],
+                    ]);
+                }
+
+                // Esperar a que todas las promesas se resuelvan
+                $results = Promise\Utils::settle($promises)->wait();
+
+                // Procesar los resultados
+                $allJobs = [];
+                foreach ($results as $type => $result) {
+                    if ($result['state'] === 'fulfilled') {
+                        // Obtener el contenido HTML
+                        $html = $result['value']->getBody()->getContents();
+
+                        // Analizar el HTML con DomCrawler
+                        $crawler = new Crawler($html);
+
+                        // Extraer los datos relevantes
+                        if ($type === 'linkedin') {
+                            $count = 60;
+                            $jobs = $crawler->filter('.job-search-card')->slice(0, 10)->each(function (Crawler $node) use (&$count) {
+                                $count++;
+                                $linkJob = "";
+                                $dataEntityUrn = $node->attr('data-entity-urn');
+                                $jobId = '';
+                                
+                                if ($dataEntityUrn !== null) {
+                                    // Extraer solo los números del formato "urn:li:jobPosting:4137048490"
+                                    preg_match('/urn:li:jobPosting:(\d+)/', $dataEntityUrn, $matches);
+                                    if (isset($matches[1])) {
+                                        $jobId = $matches[1];
+                                        $dataEntityUrn = $jobId;
+                                        $linkJobLink = "https://www.linkedin.com/jobs/view/" . $jobId;
+                                        $linkJob = "https://www.linkedin.com/jobs-guest/jobs/api/jobPosting/" . $jobId;
+                                    }
+                                }
+
+                                $title = $node->filter('.base-search-card__title')->text();
+                                $company = $node->filter('.base-search-card__subtitle')->text();
+                                $location = 'No disponible';
+                                $description ='';
+                                if ($node->filter('.job-search-card__location')->count() > 0) {
+                                    $location = $node->filter('.job-search-card__location')->text();
+                                }
+                                $listDate = 'No disponible';
+                                if ($node->filter('time')->count() > 0) {
+                                    $listDate = $node->filter('time')->text();
+                                }
+
+                                // if ($linkJob) {
+                                //     $client2 = new Client();
+                                //     $responseJob = $client2->request('GET', $linkJob, [
+                                //         'headers' => [
+                                //             'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+                                //             'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+                                //             'Accept-Language' => 'es-ES,es;q=0.9',
+                                //             'Connection' => 'close',
+                                //             'Cache-Control' => 'max-age=3600, must-revalidate',
+                                //             'Pragma' => 'cache',
+                                //         ],
+                                //     ]);
+                                //     $htmlJob = $responseJob->getBody()->getContents();
+                                //     $crawlerJob = new Crawler($htmlJob);
+                                //     $description = $crawlerJob->filter('.show-more-less-html__markup')->html();
+                                //     $descriptionList = $crawlerJob->filter('.description__job-criteria-list')->html();
+                                //     $buttonLinkHtml = "<a href='" . $linkJobLink . "' target='_blank' class='mt-6 text-blue-500 font-bold'>Postularse</a>";
+
+                                //     $description = 
+                                //         "<div class='description'>".
+                                //         $description.
+                                //         "</div>".
+                                //         "<div class='description__job-criteria-list pt-4'><ul>" . $descriptionList . "</ul></div>".
+                                //         $buttonLinkHtml;
+                                // } else {
+                                //     $description = '<p>
+                                //         Para más información, visita el sitio web de LinkedIn en el siguiente 
+                                //         <a href="' . $linkJobLink . '" target="_blank" class="text-blue-500 font-bold">enlace</a>.
+                                //     </p>';
+                                // }
+
+                                // $description = '<p>
+                                // Para más información, visita el sitio web de LinkedIn en el siguiente 
+                                // <a href="' . $linkJob . '" target="_blank" class="text-blue-500 font-bold">enlace</a>.
+                                // </p>';
+                                return [
+                                    'dataEntityUrn' => $dataEntityUrn,
+                                    'title' => trim($title),
+                                    'company_logo' => '/assets/companies/img/linkedin.svg',
+                                    'description' => $description,
+                                    'skills_experience'=> '',
+                                    'salary'=> 'No disponible',
+                                    'priority'=> 'Urgente',
+                                    'logo' => SYSTEM_BASE_DIR . 'assets/companies/img/linkedin.svg',
+                                    'key_responsibilities'=> '',
+                                    'linkJob' => $linkJobLink,
+                                    'company' => trim($company),
+                                    'location' => trim($location),
+                                    'timeAgo' => $listDate,
+                                    'isExternal' => true,
+                                    'isLinkedin' => true,
+                                    'isComputrabajo' => false,
+                                    'isSaved'=> 0,
+                                    'isFavorite'=> 0,
+                                    'isApplied'=> 0,
+                                    'employment_type_name'=> 'LinkedIn',
+                                    'job_type_name'=> 'Enlace externo',
+                                    'category'=> 'LinkedIn',
+                                    'id'=> $count,
+                                ];
+                            });
+                        } else {
+                            $jobs = [];
+                        }
+
+                        // Agregar los trabajos al array global
+                        $allJobs = array_merge($allJobs, $jobs);
+                    } else {
+                        echo "Error al procesar la URL: $url\n";
+                    }
+                }
+                $results = $allJobs;
+                return $results;
+            } catch (Exception $e) {
+                error_log("Error en la consulta SQL: " . $e->getMessage());
+                $results = [];
+            }
+        }
+
+        if ($type == 'computrabajo') {
+            $client = new Client();
+            try {
+                // Crear un array de promesas
+                $promises = [];
+                foreach ($urls as $type => $url) {
+                    $promises[$type] = $client->getAsync($url, [
+                        'headers' => [
+                            'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+                            'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+                            'Accept-Language' => 'es-ES,es;q=0.9',
+                            'Connection' => 'close',
+                            'Cache-Control' => 'no-cache',
+                            'Pragma' => 'no-cache',
+                        ],
+                    ]);
+                }
+
+                // Esperar a que todas las promesas se resuelvan
+                $results = Promise\Utils::settle($promises)->wait();
+
+                // Procesar los resultados
+                $allJobs = [];
+                foreach ($results as $type => $result) {
+                    if ($result['state'] === 'fulfilled') {
+                        // Obtener el contenido HTML
+                        $html = $result['value']->getBody()->getContents();
+
+                        // Analizar el HTML con DomCrawler
+                        $crawler = new Crawler($html);
+
+                        // Extraer los datos relevantes
+                        if ($type === 'computrabajo') {
+                            $count = 150;
+                            $jobs = $crawler->filter('.box_offer')->slice(0, 10)->each(function (Crawler $node) use (&$count) {
+                                $count++;
+                                $linkJob = "";
+                                $title = $node->filter('h2 > a.js-o-link')->text();
+                                $linkJob1 = $node->filter('h2 > a.js-o-link')->attr('href');
+                                $linkJob2 = $node->filter('h2 > a.js-o-link')->attr('href');
+                                $dataId = $node->attr('data-id');
+                                $company = '';
+                                if ($node->filter('p.dFlex.vm_fx.fs16.fc_base.mt5 a.fc_base.t_ellipsis')->count() > 0) {
+                                    $company = $node->filter('p.dFlex.vm_fx.fs16.fc_base.mt5 a.fc_base.t_ellipsis')->text();
+                                } else {
+                                    $company = 'No disponible';
+                                }
+                                $location = 'No disponible';
+                                if ($node->filter('p.fs16.fc_base.mt5 span')->count() > 0) {
+                                    $location = $node->filter('p.fs16.fc_base.mt5 span')->text();
+                                } else {
+                                    $location = 'No disponible';
+                                }
+                                $listDate = ""; //p.fs13.fc_aux
+                                if ($node->filter('p.fs13.fc_aux')->count() > 0) {
+                                    $listDate = $node->filter('p.fs13.fc_aux')->text();
+                                    $listDate = trim($listDate);
+                                } else {
+                                    $listDate = 'No disponible';
+                                }
+
+
+                                if ($linkJob1) {
+                                    $linkJob = "https://ve.computrabajo.com" . $linkJob1;
+                                }
+                                if ($linkJob2) {
+                                    $linkJob = "https://ve.computrabajo.com" . $linkJob2;
+                                }
+
+                                // Extraer el salario
+                                $salary = '';
+                                if ($node->filter('.fs13.mt15 .icon.i_salary')->count() > 0) {
+                                    // El salario está en el texto dentro del mismo contenedor que el ícono
+                                    $salary = $node->filter('.fs13.mt15 span.dIB')->eq(0)->text();
+                                    $salary = trim(preg_replace('/\s+/', ' ', $salary)); // Limpiar espacios extra
+                                } else {
+                                    $salary = 'No disponible';
+                                }
+
+                                return [
+                                    'title' => trim($title),
+                                    'company_logo' => '/assets/companies/img/computrabajo.webp',
+                                    'dataEntityUrn' => $dataId,
+                                    'description' => '<p>
+                                        Para más información, visita el sitio web de Computrabajo en el siguiente 
+                                        <a href="' . $linkJob . '" target="_blank" class="text-blue-500 font-bold">enlace</a>.
+                                    </p>',
+                                    'skills_experience'=> '',
+                                    'salary'=> $salary,
+                                    'priority'=> 'Urgente',
+                                    'logo' => SYSTEM_BASE_DIR . 'assets/companies/img/computrabajo.webp',
+                                    'key_responsibilities'=> '',
+                                    'linkJob' => $linkJob,
+                                    'company' => trim($company),
+                                    'location' => trim($location),
+                                    'timeAgo' => $listDate,
+                                    'isExternal' => true,
+                                    'isLinkedin' => false,
+                                    'isComputrabajo' => true,
+                                    'isSaved'=> 0,
+                                    'isFavorite'=> 0,
+                                    'isApplied'=> 0,
+                                    'employment_type_name'=> 'Computrabajo',
+                                    'job_type_name'=> 'Enlace externo',
+                                    'category'=> 'Computrabajo',
+                                    'id'=> $count,
+                                ];
+                            });
+                        } else {
+                            $jobs = [];
+                        }
+
+                        // Agregar los trabajos al array global
+                        $allJobs = array_merge($allJobs, $jobs);
+                    } else {
+                        echo "Error al procesar la URL: $url\n";
+                    }
+                }
+                $results = $allJobs;
+                return $results;
+            } catch (Exception $e) {
+                error_log("Error en la consulta SQL: " . $e->getMessage());
+                $results = [];
+            }
+        }
+    }
+
+    //funcion api para buscar trabajos de linkedin
+    public function searchLinkedInJobsAPI($dataEntityUrn){
+        try {
+            $client = new Client();
+            $linkJobLink = "https://www.linkedin.com/jobs/view/" . $dataEntityUrn;
+            $response = $client->request('GET', 'https://www.linkedin.com/jobs-guest/jobs/api/jobPosting/' . $dataEntityUrn, [
+                'headers' => [
+                    'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+                    'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+                    'Accept-Language' => 'es-ES,es;q=0.9',
+                    'Connection' => 'close',
+                    'Cache-Control' => 'max-age=3600, must-revalidate',
+                    'Pragma' => 'cache',
+                ],
+            ]);
+            $htmlJob = $response->getBody()->getContents();
+            $crawlerJob = new Crawler($htmlJob);
+            $descriptionHTML = $crawlerJob->filter('.show-more-less-html__markup')->html();
+            $descriptionList = $crawlerJob->filter('.description__job-criteria-list')->html();
+            $buttonLinkHtml = "<a href='" . $linkJobLink . "' target='_blank' class='mt-6 text-blue-500 font-bold'>Postularse</a>";
+            $description = 
+                "<div class='description description-linkedin'>".
+                $descriptionHTML.
+                "</div>".
+                "<div class='description__job-criteria-list pt-4'><ul>" . $descriptionList . "</ul></div>".
+                $buttonLinkHtml;
+            $response = [
+                'description' => $description,
+                'linkJob' => $linkJobLink,
+                'success'=> true,
+            ];
+            header('Content-Type: application/json');
+            header('Access-Control-Allow-Origin: *');
+            header('Access-Control-Allow-Methods: GET');
+            header('Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With');
+
+            echo json_encode($response,JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+        } catch (Exception $e) {
+            error_log("Error en la consulta SQL: " . $e->getMessage());
+            $response = [
+                'success' => false,
+                'message' => 'Error al buscar el trabajo. ' . $e->getMessage(),
+            ];
+            header('Content-Type: application/json');
+            header('Access-Control-Allow-Origin: *');
+            header('Access-Control-Allow-Methods: GET');
+            header('Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With');
+
+            echo json_encode($response);
+        }
+    }
+
+    //Función para buscar trabajos de computrabajo
+    public function searchComputrabajoJobsAPI($dataEntityUrn){
+        try {
+            $client = new Client();
+            $response = $client->request('GET', 'https://ve.computrabajo.com/OffersDetail/Print?oi=' . $dataEntityUrn, [
+                'headers' => [
+                    'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+                    'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+                    'Accept-Language' => 'es-ES,es;q=0.9',
+                    'Connection' => 'close',
+                    'Cache-Control' => 'max-age=3600, must-revalidate',
+                    'Pragma' => 'cache',
+                ],
+            ]);
+            $htmlJob = $response->getBody()->getContents();
+            $crawlerJob = new Crawler($htmlJob);
+            $descriptionHTML = $crawlerJob->filter('article')->html();
+
+
+            $description = 
+                "<div class='description description-computrabajo'>".
+                $descriptionHTML.
+                "</div>";
+            $response = [
+                'description' => $description,
+                'success'=> true,
+            ];
+            header('Content-Type: application/json');
+            header('Access-Control-Allow-Origin: *');
+            header('Access-Control-Allow-Methods: GET');
+            header('Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With');
+
+            echo json_encode($response,JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+        } catch (Exception $e) {
+            $response = [
+                'success' => false,
+                'message' => 'Error al buscar en computrabajo. ' . $e->getMessage(),
+            ];
+            header('Content-Type: application/json');
+            header('Access-Control-Allow-Origin: *');
+            header('Access-Control-Allow-Methods: GET');
+            header('Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With');
+
+            echo json_encode($response);
+        }
+    }
+
+
+    
+
     //Función para buscar estados
-    public function getEstados(){
-        $states = $this->modelBase->selectWithFields('estados', 'id_estado, estado','', 'id_estado ASC');
+    public function getEstados()
+    {
+        $states = $this->modelBase->selectWithFields('estados', 'id_estado, estado', '', 'id_estado ASC');
         return $states;
     }
 
     //Función  para obtener los municipios de un estado
-    public function getMunicipios($id_estado) {
+    public function getMunicipios($id_estado)
+    {
         $municipios = $this->modelBase->selectWithFields('municipios', 'id_municipio, municipio', "id_estado = $id_estado", 'id_municipio ASC');
         return $municipios;
     }
 
     //Función  para obtener las ciudades de un municipio
-    public function getCities($id_estado) {
+    public function getCities($id_estado)
+    {
         $cities = $this->modelBase->selectWithFields('ciudades', 'id_ciudad, ciudad', "id_estado = $id_estado");
         return $cities;
     }
 
     //Función  para obtener las parroquias de un municipio
-    public function getParroquias($id_municipio) {
+    public function getParroquias($id_municipio)
+    {
         $parroquias = $this->modelBase->selectWithFields('parroquias', 'id_parroquia, parroquia', "id_municipio = $id_municipio", 'id_parroquia ASC');
         return $parroquias;
     }
 
-        
+
     //método para ver el blog
-    public function viewBlog(){
+    public function viewBlog()
+    {
         include_once 'views/front/pages/blog.php';
     }
 
     // Método para validar datos básicos
-    protected function validateData($data, $rules) {
-      $errors = [];
-      foreach ($rules as $field => $rule) {
-          if (isset($rule['required']) && $rule['required'] && empty($data[$field])) {
-              $errors[] = "El campo {$field} es obligatorio.";
-          }
-          if (isset($rule['pattern']) && !preg_match($rule['pattern'], $data[$field])) {
-              $errors[] = "El formato del campo {$field} no es válido.";
-          }
-      }
-      return $errors;
+    protected function validateData($data, $rules)
+    {
+        $errors = [];
+        foreach ($rules as $field => $rule) {
+            if (isset($rule['required']) && $rule['required'] && empty($data[$field])) {
+                $errors[] = "El campo {$field} es obligatorio.";
+            }
+            if (isset($rule['pattern']) && !preg_match($rule['pattern'], $data[$field])) {
+                $errors[] = "El formato del campo {$field} no es válido.";
+            }
+        }
+        return $errors;
     }
 
     //Método para agregar un registro en la base de datos
-    protected function addRecord($table, $data, $rules) {
+    protected function addRecord($table, $data, $rules)
+    {
         $errors = $this->validateData($data, $rules);
         if (empty($errors)) {
-            $this->modelBase->insert($table,$data);
+            $this->modelBase->insert($table, $data);
             return true;
         } else {
             return $errors;
@@ -272,8 +728,9 @@ class BaseController {
     }
 
     //Método para buscar un registro en la base de datos
-    public function findRecord(string $tableName, array $conditions): array {
-        $record = $this->modelBase->select($tableName,$conditions);
+    public function findRecord(string $tableName, array $conditions): array
+    {
+        $record = $this->modelBase->select($tableName, $conditions);
         if (empty($record)) {
             return [];
         } else {
@@ -282,7 +739,8 @@ class BaseController {
     }
 
     //Método para buscar varios registros en la base de datos
-    public function findRecords(string $tableName,array $conditions = []): array {
+    public function findRecords(string $tableName, array $conditions = []): array
+    {
         $records = $this->modelBase->select($tableName, $conditions);
         if (empty($records)) {
             return [];
@@ -292,7 +750,8 @@ class BaseController {
     }
 
     //Metedo para buscar registros con campos específicos
-    public function findRecordsWithFields(string $tableName, string $fields, string $conditions = '', $orderBy = 'id DESC', $offset = 0, $limit = null, $joinClause = null): array {
+    public function findRecordsWithFields(string $tableName, string $fields, string $conditions = '', $orderBy = 'id DESC', $offset = 0, $limit = null, $joinClause = null): array
+    {
         $records = $this->modelBase->selectWithFields($tableName, $fields, $conditions, $orderBy, $offset, $limit, $joinClause);
         if (empty($records)) {
             return ['Sin datos controller'];
@@ -301,7 +760,8 @@ class BaseController {
         }
     }
 
-    public function findRecordsManual(string $query, int $offset = 0, ?int $limit = null): array {
+    public function findRecordsManual(string $query, int $offset = 0, ?int $limit = null): array
+    {
         $records = $this->modelBase->selectManual($query, $offset, $limit);
         if (empty($records)) {
             return [];
@@ -310,32 +770,33 @@ class BaseController {
         }
     }
 
-    public function saveJobAction() {
+    public function saveJobAction()
+    {
         header('Content-Type: application/json');
-    
+
         // Leer el cuerpo de la solicitud
         $rawData = file_get_contents('php://input');
         $data = json_decode($rawData, true);
-    
+
         // Verificar si se recibió el ID del trabajo
         if (!isset($data['job_id']) || !is_numeric($data['job_id'])) {
             echo json_encode(['success' => false, 'message' => 'ID de trabajo inválido o no proporcionado.']);
             return;
         }
-    
-        $jobId = (int)$data['job_id'];
-    
+
+        $jobId = (int) $data['job_id'];
+
         // Continuar con el resto del código...
         $userId = $_SESSION['user_id'] ?? 8;
-    
+
         if (!$userId) {
             echo json_encode(['success' => false, 'message' => 'Usuario no autenticado.']);
             return;
         }
-    
+
         try {
             $isSaved = $this->modelBase->saveJob($userId, $jobId);
-    
+
             if ($isSaved) {
                 echo json_encode(['success' => true, 'message' => 'Trabajo guardado exitosamente.']);
             } else {

@@ -1582,7 +1582,100 @@ a[data-text]:hover:before, button[data-text]:hover:before, a[data-text]:hover:af
     }
     .one-job .listado-trabajos .pagination {
         display: none;
-    }
-
-    
+    }    
   }
+
+  .description-computrabajo {
+    padding-top: 1rem;
+    h1 {
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+  }
+
+  .description-computrabajo ul {
+        margin: 0 0 0 15px;
+        padding: 0
+    }
+    
+    .description-computrabajo span,.description-computrabajo p {
+        display: list-item;
+        white-space: pre-line;
+        float: left;
+        width: 100%;
+        margin: 0 0 5px
+    }
+    
+    .description-computrabajo p::marker {
+        content: '';
+        color: transparent;
+    }
+    
+    .description-computrabajo .bullet {
+        margin-left: 15px;
+        width: 95%;
+        padding-top: 0.5rem;
+    }
+    
+    .description-computrabajo .t_o {
+        color: #ff1a00;
+        font-size: 15px;
+        list-style: none;
+        font-weight: bold;
+        margin: 0 0 5px;
+        float: left;
+        width: 80%
+    }
+    
+    .description-computrabajo .d_p {
+        float: right;
+        width: 20%;
+        text-align: right;
+        list-style: none;
+        margin-top: 3px
+    }
+    
+    .description-computrabajo ul {
+        clear: both
+    }
+    
+    .description-computrabajo ul li {
+        margin: 0 0 5px
+    }
+    
+    .description-computrabajo h1 {
+        font-size: 17px;
+        margin: 0 0 15px;
+        float: left;
+        width: 100%
+    }
+    
+    .description-computrabajo .l_e {
+        width: 15%;
+        margin: 0 5% 0 0;
+        float: left
+    }
+    
+    .description-computrabajo .t_e {
+        margin: 0 0 15px;
+        border-bottom: 1px solid #ccc;
+        padding: 0 0 15px;
+        float: left;
+        width: 100%
+    }
+    
+    .description-computrabajo .t_e h2 {
+        font-size: 16px;
+        margin: 0 0 5px
+    }
+    
+    .description-computrabajo .t_e p {
+        margin: 5px 0 0 15px
+    }
+    
+    .description-computrabajo h3 {
+        font-weight: 600;
+        margin: 15px 0 15px;
+        float: left;
+        width: 100%
+    }

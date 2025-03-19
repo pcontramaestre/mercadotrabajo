@@ -12,12 +12,14 @@
  * @var array $titleSection
  * @var array $titleSectionText
  * @var string $titleSectionClass
+ * @var string $titleSectionClassH1
  */
  $titleSectionClassDiv = $titleSectionClass ?? $titleSectionClass = '';
+ $titleSectionClassH1 = $titleSectionClassH1 ?? $titleSectionClassH1 = '';
 ?>
 
 <div class="title-container text-center mb-6 aos-init aos-animate auto-container <?php echo $titleSectionClassDiv ?>" data-aos="fade-up">
-    <h1 class="text-3xl font-bold text-gray-800" data-translate-es="<?php echo $titleSection['translate_es'] ?>" data-translate-en="<?php echo $titleSection['translate_en'] ?>">
+    <h1 class="text-3xl font-bold text-gray-800 <?php echo $titleSectionClassH1 ?>" data-translate-es="<?php echo $titleSection['translate_es'] ?>" data-translate-en="<?php echo $titleSection['translate_en'] ?>">
         <?php echo $titleSectionText['translate_en'] ?>
     </h1>
     <p class="text-gray-500" data-translate-es="<?php echo $titleSectionText['translate_es'] ?>" data-translate-en="<?php echo $titleSectionText['translate_en'] ?>">

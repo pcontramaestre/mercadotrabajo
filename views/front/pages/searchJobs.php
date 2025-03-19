@@ -54,11 +54,13 @@ if (empty($search)) {
                     :id="'job-' + job.id"
                     :tabindex="0"
                     :ref="index === 0 ? 'firstJob' : null"
+                    :data-dataEntityUrn="job.dataEntityUrn == null ? null : job.dataEntityUrn"
                     :data-url="'<?php echo SYSTEM_BASE_DIR ?>searchjobs?job=' + job.id"
                     :class="{ 'bg-blue2-100': selectedJob && selectedJob.id === job.id }"
                     class="grid grid-cols-12 grid-rows-1 gap-3 relative rounded-lg shadow-md p-4 border hover:shadow-lg transition-shadow cursor-pointer p-2 hover:bg-gray-100 mb-6 cursor-pointer p-2 hover:bg-gray-100 job-item"
                     @click="selectJob(job)"
                     data-url=""
+                    data-dataEntityUrn=""
                     >
                     <div class="col-span-12">
                         <div class="col-span-12 pr-12 relative">
@@ -91,14 +93,24 @@ if (empty($search)) {
                             <!-- Employment type -->
                             <div class="mt-2 flex space-x-2">
                                 <span
-                                    :class="{'bg-blue-100': job.employment_type_name === 'Full-time', 'bg-green-100': job.employment_type_name === 'Part-time', 'bg-yellow-100': job.employment_type_name === 'Contract'}"
+                                    :class="{'bg-blue-100': job.employment_type_name === 'Full-time', 
+                                    'bg-green-100': job.employment_type_name === 'Part-time', 
+                                    'bg-yellow-100': job.employment_type_name === 'Contract', 
+                                    'bg-red-100': job.employment_type_name === 'Temporary',
+                                    'bg-yellow-100': job.employment_type_name === 'LinkedIn',
+                                    'bg-blue-200': job.employment_type_name === 'Computrabajo'
+                                    }"
                                     class="px-2 py-1 rounded-lg text-xs bg-green-100"
                                     x-text="job.employment_type_name"></span>
                             </div>
                             <!-- Job Type -->
                             <div class="mt-2 flex space-x-2">
                                 <span
-                                    :class="{'bg-blue-100': job.job_type_name === 'Hybrid', 'bg-green-100': job.job_type_name === 'On-site', 'bg-yellow-100': job.job_type_name === 'Remote', 'bg-red-100': job.job_type_name === 'Freelance', 'bg-red-100': job.job_type_name === 'Temporary'}"
+                                    :class="{'bg-blue-100': job.job_type_name === 'Hybrid', 
+                                    'bg-green-100': job.job_type_name === 'On-site', 
+                                    'bg-yellow-100': job.job_type_name === 'Remote', 
+                                    'bg-red-100': job.job_type_name === 'Freelance', 
+                                    'bg-green-100': job.job_type_name === 'Enlace externo'}"
                                     class="bg-green-100 px-2 py-1 rounded-lg text-xs"
                                     x-text="job.job_type_name"></span>
                             </div>
@@ -162,10 +174,12 @@ if (empty($search)) {
                                 <i class="fas fa-map-marker-alt mr-1 text-gray-400"></i>
                                 <span class="text-gray-600 text-[14px]" x-text="selectedJob.location"></span>
                             </div>
-                            <div class="flex flex-row items-center gap-1">
-                                <i class="fas fa-money-bill-alt mr-1 text-gray-400"></i>
-                                <span class="text-gray-600 text-[14px]" x-text="selectedJob.salary"></span>
-                            </div>
+                            <template x-if="selectedJob.isExternal == '0'">
+                                <div class="flex flex-row items-center gap-1">
+                                    <i class="fas fa-money-bill-alt mr-1 text-gray-400"></i>
+                                    <span class="text-gray-600 text-[14px]" x-text="selectedJob.salary"></span>
+                                </div>
+                            </template>
                             <div class="flex flex-row items-center gap-1">
                                 <i class="far fa-clock mr-1 text-gray-400"></i>
                                 <p class="text-gray-600 text-[14px]" x-text="selectedJob.timeAgo"></p>
@@ -181,47 +195,71 @@ if (empty($search)) {
                         </div>
 
                         <div class="btn-box mt-4 job-block-seven">
-                                <!-- Mostrar el botón "Apply For Job" solo si no se ha aplicado -->
-                                <template x-if="$store.selectedJobIsApplied == '0'">
-                                    <a href="#" class="theme-btn btn-style-one" data-bs-toggle="modal"
-                                    :data-bs-target="'#applyJobModal'+selectedJob.id"
-                                    data-bs-target="#applyJobModal">
-                                        Aplicar al trabajo
-                                    </a>
-                                </template>
+                                    <!-- Mostrar el botón "Apply For Job" solo si no se ha aplicado -->
+                                    <template x-if="$store.selectedJobIsApplied == '0' && $store.isExternal == '0'">
+                                        <a href="#" class="theme-btn btn-style-one" data-bs-toggle="modal"
+                                        :data-bs-target="'#applyJobModal'+selectedJob.id"
+                                        data-bs-target="#applyJobModal">
+                                            Aplicar al trabajo
+                                        </a>
+                                    </template>
 
-                                <!-- Mostrar un mensaje alternativo si ya se aplicó -->
-                                <template x-if="$store.selectedJobIsApplied == '1'">
-                                    <a href="#" class="theme-btn btn-style-one disabled" aria-disabled="true">
-                                        Ya aplicaste a este trabajo
-                                    </a>
-                                </template>
+                                    <!-- Mostrar el botón "Apply For Job" solo si es de linkedin -->
+                                    <template x-if="$store.selectedJobIsLinkedin == '1'">
+                                        <a  
+                                        :href="'https://www.linkedin.com/jobs/view/' + selectedJob.dataEntityUrn"
+                                        class="theme-btn btn-style-one" target="_blank">
+                                            Aplicar al trabajo
+                                        </a>
+                                    </template>
 
-                                
-                                <button
-                                    @click.stop="toggleSaveJob(selectedJob.id)"
-                                    :class="{'text-blue-500': selectedJob.isSaved == '1', 'text-gray-400': selectedJob.isSaved == '0'}"
-                                    class="bookmark-btn">
-                                    <i
-                                        :class="{'fas text-blue-500 hover:text-white': selectedJob.isSaved == '1', 'far': selectedJob.isSaved == '0'}"
-                                        class="fa-bookmark far"></i>
-                                </button>
-                        </div>
+                                    <!-- Mostrar el botón "Apply For Job" solo si es de computrabajo -->
+                                    <template x-if="$store.selectedJobIsComputrabajo == '1'">
+                                        <a  
+                                        :href="selectedJob.linkJob"
+                                        class="theme-btn btn-style-one" target="_blank">
+                                            Aplicar al trabajo
+                                        </a>
+                                    </template>
+
+                                    <!-- Mostrar un mensaje alternativo si ya se aplicó -->
+                                    <template x-if="$store.selectedJobIsApplied == '1' && $store.isExternal == '0'">
+                                        <a href="#" class="theme-btn btn-style-one disabled" aria-disabled="true">
+                                            Ya aplicaste a este trabajo
+                                        </a>
+                                    </template>
+
+                                    <!-- Mostrar el botón de guardar solo si no es externo -->
+                                    <template x-if="$store.isExternal == '0'">
+                                        <button
+                                            @click.stop="toggleSaveJob(selectedJob.id)"
+                                            :class="{'text-blue-500': selectedJob.isSaved == '1', 'text-gray-400': selectedJob.isSaved == '0'}"
+                                            class="bookmark-btn">
+                                            <i
+                                                :class="{'fas text-blue-500 hover:text-white': selectedJob.isSaved == '1', 'far': selectedJob.isSaved == '0'}"
+                                                class="fa-bookmark far"></i>
+                                        </button>
+                                    </template>
+                            </div>
 
                     </div>
 
                     <div class="mt-4">
-                        <h3 class="font-semibold" data-translate-es="Descripción:" data-translate-en="Description:">Description:</h3>
+                        <h3 class="font-semibold pb-2" data-translate-es="Descripción:" data-translate-en="Description:">Description:</h3>
                         <p x-html="selectedJob.description"></p>
                     </div>
-                    <div class="mt-4">
-                        <h3 class="font-semibold" data-translate-es="Responsabilidades clave:" data-translate-en="Key Responsibilities:">Key Responsibilities:</h3>
-                        <p x-html="selectedJob.key_responsibilities"></p>
-                    </div>
-                    <div class="mt-4">
-                        <h3 class="font-semibold" data-translate-es="Habilidades y experiencia:" data-translate-en="Skills & Experience:">Skills & Experience:</h3>
-                        <p x-html="selectedJob.skills_experience"></p>
-                    </div>
+                    <template x-if="selectedJob.key_responsibilities">
+                        <div class="mt-4">
+                            <h3 class="font-semibold" data-translate-es="Responsabilidades clave:" data-translate-en="Key Responsibilities:">Key Responsibilities:</h3>
+                            <p x-html="selectedJob.key_responsibilities"></p>
+                        </div>
+                    </template>
+                    <template x-if="selectedJob.skills_experience">
+                        <div class="mt-4">
+                            <h3 class="font-semibold" data-translate-es="Habilidades y experiencia:" data-translate-en="Skills & Experience:">Skills & Experience:</h3>
+                            <p x-html="selectedJob.skills_experience"></p>
+                        </div>
+                    </template>
                 </div>
             </template>
 
@@ -231,7 +269,13 @@ if (empty($search)) {
                 <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                     <div class="apply-modal-content modal-content">
                         <div class="text-center">
-                            <h3 class="title" x-text="'Apply for '+selectedJob.title">Apply for this job</h3>
+                            <h3 
+                                :data-translate-es="'Aplicar a' + selectedJob.title"
+                                :data-translate-en="'Apply for job ' + selectedJob.title"
+                                class="title" x-text="'Aplicar a '+selectedJob.title"
+                                >
+                                Aplicar a {{selectedJob.title}}
+                            </h3>
                             <button type="button" class="closed-modal" data-bs-dismiss="modal" aria-label="Close">
 
                             </button>
@@ -260,15 +304,17 @@ if (empty($search)) {
                                     <div class="input-group checkboxes square">
                                         <input id="rememberMe" type="checkbox" name="remember-me">
                                         <label for="rememberMe" class="remember">
-                                            <span class="custom-checkbox"></span> You accept our
+                                            <span class="custom-checkbox"></span> <span data-translate-es="Aceptas nuestros" data-translate-en="Accept our"></span>
                                             <span data-bs-dismiss="modal">
-                                                <a href="/terms" target="_blank">Terms and Conditions and Privacy Policy</a>
+                                                <a href="/terms" target="_blank" data-translate-es="Términos y condiciones y política de privacidad" data-translate-en="Terms and Conditions and Privacy Policy">Terms and Conditions and Privacy Policy</a>
                                             </span>
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col-lg-12 col-md-12 col-sm-12 form-group">
-                                    <button class="theme-btn btn-style-one w-100" type="submit" name="submit-form">Apply Job</button>
+                                    <button class="theme-btn btn-style-one w-100" type="submit" name="submit-form">
+                                        <span data-translate-es="Aplicar al trabajo" data-translate-en="Apply for job"></span>
+                                    </button>
                                 </div>
                             </div>
                         </form>
@@ -297,7 +343,7 @@ if (empty($search)) {
                 </template>
 
                 <!-- Mensaje si no hay trabajos relacionados -->
-                <template x-if="!relatedJobs || !relatedJobs[$store.selectedJobId]">
+                <template x-if="!relatedJobs || !relatedJobs[$store.selectedJobId] && $store.isExternal == '0'">
                     <p>No hay trabajos relacionados disponibles.</p>
                 </template>
             </div>
@@ -462,6 +508,9 @@ if (empty($search)) {
     document.addEventListener("alpine:init", () => {
         Alpine.store('selectedJobId', 0);
         Alpine.store('selectedJobIsApplied', 0);
+        Alpine.store('selectedJobIsLinkedin', 0);
+        Alpine.store('selectedJobIsComputrabajo', 0);
+        Alpine.store('isExternal', 0);
         console.log('Alpine initialized');
         console.log('Alpine store:', Alpine.store('selectedJobId'));
 
@@ -469,7 +518,7 @@ if (empty($search)) {
             jobs: <?php echo $searchJson; ?>, // Los 50 trabajos recibidos en el JSON
             selectedJob: null, // Trabajo seleccionado
             currentPage: 1, // Página actual
-            perPage: 10, // Número de trabajos por página
+            perPage: 20, // Número de trabajos por página
             // Calcular el número total de páginas
             get totalPages() {
                 return Math.ceil(this.jobs.length / this.perPage);
@@ -517,13 +566,61 @@ if (empty($search)) {
                         this.selectedJob = job;
                         this.$store.selectedJobId = job.id;
                         this.$store.selectedJobIsApplied = job.isApplied;
+                        this.$store.isExternal = job.isExternal;
                         return;
                     }
+
+                    if (job.isExternal == '1') {
+                        window.open(job.linkJob, '_blank');
+                        return;
+                    }
+
                     window.location.href = "<?php echo SYSTEM_BASE_DIR ?>searchjobs?job=" + job.id;
                 } else {
                     this.selectedJob = job;
                     this.$store.selectedJobId = job.id;
                     this.$store.selectedJobIsApplied = job.isApplied;
+                    this.$store.isExternal = job.isExternal;
+
+                    if (job.isLinkedin == 'true' || job.isLinkedin == true) {
+                        this.$store.selectedJobIsComputrabajo = 0;
+                        this.$store.selectedJobIsLinkedin = 1;
+                        job.description = '<br> Cargando...';
+
+                        fetch('<?php echo SYSTEM_BASE_DIR ?>api/v1/searchlinkedinjobs/' + job.dataEntityUrn)
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    job.description = data.description;
+                                } else {
+                                    job.description = 'No se pudo cargar la descripción';
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                job.description = 'Ocurrió un error al cargar la descripción';
+                            });
+                    }
+
+                    if (job.isComputrabajo == 'true' || job.isComputrabajo == true) {
+                        this.$store.selectedJobIsComputrabajo = 1;
+                        this.$store.selectedJobIsLinkedin = 0;
+                        job.description = '<br> Cargando...';
+
+                        fetch('<?php echo SYSTEM_BASE_DIR ?>api/v1/searchcomputrabajojob/' + job.dataEntityUrn)
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    job.description = data.description;
+                                } else {
+                                    job.description = 'No se pudo cargar la descripción';
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                job.description = 'Ocurrió un error al cargar la descripción';
+                            });
+                    }
                 }
 
 

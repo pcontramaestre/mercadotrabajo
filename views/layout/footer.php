@@ -96,12 +96,12 @@
                                 <div class="widget-content">
                                     <ul class="list">
                                         <li>
-                                            <a data-translate-en="About Us" data-translate-es="Sobre nosotros" href="#">
+                                            <a data-translate-en="About Us" data-translate-es="Sobre nosotros" href="<?php echo SYSTEM_BASE_DIR ?>about">
                                                 About Us
                                             </a>
                                         </li>
                                         <li>
-                                            <a data-translate-en="Terms Page" data-translate-es="Página de Términos" href="#">
+                                            <a data-translate-en="Terms Page" data-translate-es="Página de Términos" href="<?php echo SYSTEM_BASE_DIR ?>terms">
                                                 Terms Page
                                             </a>
                                         </li>
@@ -131,10 +131,16 @@
                     Copyright © 2025 Mercado Trabajo Inc. 
                     <a href="https://mercadotrabajo.org" target="_blank" rel="noopener noreferrer">Mercado Trabajo Inc.</a>
                     <span data-translate-en="All Right Reserved." data-translate-es="Todos los derechos reservados."> All Right Reserved.</span>
-                    <span data-translate-en="Terms & Conditions" data-translate-es="Términos y Condiciones">
-                        Terms & Conditions
-                    </span>
-                    <span data-translate-en="Privacy Policy" data-translate-es="Política de Privacidad">Privacy Policy</span>
+                    <a href="<?php echo SYSTEM_BASE_DIR ?>terms">
+                        <span data-translate-en="Terms & Conditions | " data-translate-es="Términos y Condiciones | ">
+                            Terms & Conditions
+                        </span>
+                    </a>
+                    <a href="<?php echo SYSTEM_BASE_DIR ?>terms">
+                        <span data-translate-en="Privacy Policy" data-translate-es="Política de Privacidad">
+                            Privacy Policy
+                        </span>
+                    </a>
                 </div>
                 <div class="social-links">
                     <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">
