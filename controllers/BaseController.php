@@ -3,6 +3,7 @@
 require_once 'functions/functions.php';
 require_once 'config/config.php';
 require_once 'models/BaseModel.php';
+require_once 'controllers/getDataExternalController.php';
 require 'vendor/autoload.php';
 use GuzzleHttp\Client;
 use GuzzleHttp\Promise;
@@ -12,6 +13,7 @@ class BaseController
 {
     protected $modelBase;
     protected $configuration;
+    
 
     public function __construct($pdo)
     {
@@ -227,25 +229,27 @@ class BaseController
             $results = [];
             $limit = 50;
             $results = $this->modelBase->searchJobs('', '', null, $limit, null);
-
+            
+            $resultsExternal = $this->searchExternal('linkedin', '', '', '');
+            if ($resultsExternal) {
+                $results = array_merge($results, $resultsExternal);
+            }
+            $resultsExternal = $this->searchExternal('computrabajo', '', '', '');
+            if ($resultsExternal) {
+                $results = array_merge($results, $resultsExternal);
+            }
 
             if ($results) {
                 foreach ($results as $result) {
                     $idJob = $result['id'];
                     $relatedJobs[$idJob] = $this->modelBase->getRelatedJobs($idJob, 5);
                 }
-                $resultsExternal = $this->searchExternal('linkedin', '', '', '');
-                if ($resultsExternal) {
-                    $results = array_merge($results, $resultsExternal);
-                }
-                $resultsExternal = $this->searchExternal('computrabajo', '', '', '');
-                if ($resultsExternal) {
-                    $results = array_merge($results, $resultsExternal);
-                }
             } else {
                 $results = [];
             }
         }
+        $dataExternalController = new getDataExternalController();
+        $dataExternal = $dataExternalController->searchExternalJobs('', '', '');
         include_once 'views/front/pages/searchJobs.php';
     }
 

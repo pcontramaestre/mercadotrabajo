@@ -9,7 +9,8 @@ require_once 'controllers/candidateDashboardController.php';
 require_once 'controllers/companyDashboardController.php';
 require_once 'controllers/getDataCompanyJsonController.php';
 require_once 'controllers/setDataCompanyJsonController.php';
-
+require_once 'controllers/setJobsDataController.php';
+require_once 'controllers/getDataExternalController.php';
 // header('Content-Type: application/json');
 // header('Access-Control-Allow-Origin: *');
 // header('Access-Control-Allow-Methods: GET');
@@ -310,18 +311,30 @@ switch ($request) {
     }
     break;
 
-  //Linkedin searchLinkedInJobsAPI($dataEntityUrn) . Parametro: $dataEntityUrn
+  //Linkedin 
   case preg_match('/^\/api\/v1\/searchlinkedinjobs(?:\/(\\d+))?$/', $request, $matches) ? true : false:
     $dataEntityUrn = $matches[1];
     $controller = new BaseController($db);
     $controller->searchLinkedInJobsAPI($dataEntityUrn);
     break;
 
-  //Computrabajo searchComputrabajoJobsAPI($dataEntityUrn) . Parametro: FDE13457825C3F3561373E686DCF3405
+  //Computrabajo 
   case preg_match('/^\/api\/v1\/searchcomputrabajojob(?:\/([A-Z0-9]+))?$/', $request, $matches) ? true : false:
     $dataEntityUrn = $matches[1];
     $controller = new BaseController($db);
     $controller->searchComputrabajoJobsAPI($dataEntityUrn);
+    break;
+
+  case '/api/v1/savejobexternal':
+    $controller = new SetJobsDataController($db);
+    echo $controller->setJobsData($_POST['type'], $_POST['data']);
+    break;
+
+  case '/api/v1/getjobexternal':
+    $controller = new getDataExternalController();
+    $result = $controller->searchExternalJobs('','','');
+    header('Content-Type: application/json');
+    echo json_encode($result);
     break;
   
   default:

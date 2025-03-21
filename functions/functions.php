@@ -58,6 +58,21 @@ function getUsername() {
     return $username;
 }
 
+ /**
+ * Sanitizes HTML content to prevent XSS attacks
+ * @param string $html The HTML content to sanitize
+ * @return string The sanitized HTML content
+ */
+function sanitizeHtml($html) {
+    // Remove potentially harmful HTML tags
+    $html = strip_tags($html, '<p><br><a><strong><em><ul><ol><li><h1><h2><h3><h4><h5><h6><br><div><em><span>');
+    
+    // Convert special characters to HTML entities
+    //$html = htmlspecialchars($html, ENT_QUOTES, 'UTF-8');
+    
+    return $html;
+}
+
 function sendEmail($to, $subject, $message, $headers = [], $attachments = []) {  
     $config = new Config();
     // Crear un separador único para los archivos adjuntos  

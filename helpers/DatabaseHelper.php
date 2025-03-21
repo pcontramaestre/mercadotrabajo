@@ -407,6 +407,7 @@ class DatabaseHelper {
         ?int $idJob = null
     ): array {
         try {
+            $isInternalExternal = "0 AS isInternalExternal";
             if ($_SESSION['user_id']){
                 $saveJob = "
                     CASE 
@@ -429,6 +430,12 @@ class DatabaseHelper {
                         ELSE 0 
                     END AS isApplied
                 ";
+                $isInternalExternal = "
+                    CASE 
+                        WHEN jobs.is_external = 1 AND jobs.external_id != '' THEN 1 
+                        ELSE 0 
+                    END AS isInternalExternal
+                ";
                 // $ApplyJob = "0 AS isApplied";
             } else {
                 $saveJob = "0 AS isSaved";
@@ -444,7 +451,9 @@ class DatabaseHelper {
                 jobs.skills_experience,
                 jobs.priority,
                 0 AS isFavorite,
-                0 AS isExternal,
+                jobs.Fuente AS fuente,
+                jobs.external_url AS externalUrl,
+                ".$isInternalExternal.",
                 ".$saveJob.",
                 ".$ApplyJob.",
                 CONCAT('$', FORMAT(IFNULL(jobs.salary_min, 0), 2),' - $',FORMAT(IFNULL(jobs.salary_max, 0), 2)) AS salary,

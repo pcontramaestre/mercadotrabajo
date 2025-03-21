@@ -196,7 +196,7 @@ if (empty($search)) {
 
                         <div class="btn-box mt-4 job-block-seven">
                                     <!-- Mostrar el botón "Apply For Job" solo si no se ha aplicado -->
-                                    <template x-if="$store.selectedJobIsApplied == '0' && $store.isExternal == '0'">
+                                    <template x-if="$store.selectedJobIsApplied == '0' && $store.isExternal == '0' && $store.isInternalExternal == '0'">
                                         <a href="#" class="theme-btn btn-style-one" data-bs-toggle="modal"
                                         :data-bs-target="'#applyJobModal'+selectedJob.id"
                                         data-bs-target="#applyJobModal">
@@ -208,6 +208,15 @@ if (empty($search)) {
                                     <template x-if="$store.selectedJobIsLinkedin == '1'">
                                         <a  
                                         :href="'https://www.linkedin.com/jobs/view/' + selectedJob.dataEntityUrn"
+                                        class="theme-btn btn-style-one" target="_blank">
+                                            Aplicar al trabajo
+                                        </a>
+                                    </template>
+
+                                    <!-- Mostrar el botón "Apply For Job" solo si es de linkedin y es interno-externo -->
+                                    <template x-if="$store.isInternalExternal == '1'">
+                                        <a  
+                                        :href="selectedJob.externalUrl"
                                         class="theme-btn btn-style-one" target="_blank">
                                             Aplicar al trabajo
                                         </a>
@@ -230,7 +239,7 @@ if (empty($search)) {
                                     </template>
 
                                     <!-- Mostrar el botón de guardar solo si no es externo -->
-                                    <template x-if="$store.isExternal == '0'">
+                                    <template x-if="$store.isInternalExternal == '1'">
                                         <button
                                             @click.stop="toggleSaveJob(selectedJob.id)"
                                             :class="{'text-blue-500': selectedJob.isSaved == '1', 'text-gray-400': selectedJob.isSaved == '0'}"
@@ -511,6 +520,7 @@ if (empty($search)) {
         Alpine.store('selectedJobIsLinkedin', 0);
         Alpine.store('selectedJobIsComputrabajo', 0);
         Alpine.store('isExternal', 0);
+        Alpine.store('isInternalExternal', 0);
         console.log('Alpine initialized');
         console.log('Alpine store:', Alpine.store('selectedJobId'));
 
@@ -561,12 +571,33 @@ if (empty($search)) {
 
             // Seleccionar un trabajo
             selectJob(job, firstJob = false, totalJobs = 0) {
+                dataExternal = {};
+                if (job.isExternal == '1' || job.isExternal == true || job.isExternal == 'true') {
+                    if (job.isLinkedin == 'true' || job.isLinkedin == true) {
+                        dataExternal.company_id = 8;
+                        dataExternal.category_id  = 7;
+                        dataExternal.Fuente = 'linkedin';
+                    } else if (job.isComputrabajo == 'true' || job.isComputrabajo == true) {
+                        dataExternal.company_id = 7;
+                        dataExternal.category_id  = 8;
+                        dataExternal.Fuente = 'computrabajo';
+                    }
+                    dataExternal.title = job.title;
+                    dataExternal.job_type_id = 6;
+                    dataExternal.employment_type_id = 6;
+                    dataExternal.external_url = job.linkJob;
+                    dataExternal.city = job.location;
+                    dataExternal.is_external = 1;
+                    dataExternal.external_id = job.dataEntityUrn;
+                    dataExternal.job_description = '';
+                }
                 if (window.innerWidth < 768) {
                     if (firstJob && totalJobs == 1) {
                         this.selectedJob = job;
                         this.$store.selectedJobId = job.id;
                         this.$store.selectedJobIsApplied = job.isApplied;
                         this.$store.isExternal = job.isExternal;
+                        this.$store.isInternalExternal = job.isInternalExternal;
                         return;
                     }
 
@@ -581,7 +612,7 @@ if (empty($search)) {
                     this.$store.selectedJobId = job.id;
                     this.$store.selectedJobIsApplied = job.isApplied;
                     this.$store.isExternal = job.isExternal;
-
+                    this.$store.isInternalExternal = job.isInternalExternal;
                     if (job.isLinkedin == 'true' || job.isLinkedin == true) {
                         this.$store.selectedJobIsComputrabajo = 0;
                         this.$store.selectedJobIsLinkedin = 1;
@@ -592,6 +623,8 @@ if (empty($search)) {
                             .then(data => {
                                 if (data.success) {
                                     job.description = data.description;
+                                    dataExternal.job_description = data.description;
+                                    this.saveJob('linkedin', dataExternal);
                                 } else {
                                     job.description = 'No se pudo cargar la descripción';
                                 }
@@ -612,6 +645,8 @@ if (empty($search)) {
                             .then(data => {
                                 if (data.success) {
                                     job.description = data.description;
+                                    dataExternal.job_description = data.description;
+                                    this.saveJob('computrabajo', dataExternal);
                                 } else {
                                     job.description = 'No se pudo cargar la descripción';
                                 }
@@ -624,6 +659,30 @@ if (empty($search)) {
                 }
 
 
+            },
+
+            async saveJob(type, data) {
+                console.log(type, data);
+                const formData = new FormData();
+                formData.append('type', type);
+                formData.append('data', JSON.stringify(data));
+                try {
+                    const response = await fetch('<?php echo SYSTEM_BASE_DIR ?>api/v1/savejobexternal', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    });
+                    const result = await response.json();
+                    if (result.success) {
+                        console.log(result);
+                    } else {
+                        console.error('Error al guardar el trabajo:', result);
+                    }
+                } catch (error) {
+                    console.error('Error al guardar el trabajo:', error);
+                }
             },
 
             // Ir a la página anterior

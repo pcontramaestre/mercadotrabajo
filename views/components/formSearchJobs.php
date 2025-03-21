@@ -22,7 +22,7 @@ $queryManual = "SELECT
                     categories.id, categories.name
                 ORDER BY 
                     job_count DESC
-                LIMIT 5";
+                LIMIT 10";
 $categories = $controller->findRecordsManual($queryManual);
 
 ?>
@@ -31,7 +31,7 @@ $categories = $controller->findRecordsManual($queryManual);
         <div class="form-group col-lg-4 col-md-12 col-sm-12">
             <!-- <span class="icon flaticon-search-1"></span> -->
             <i class="icon fas fa-search"></i>
-            <input type="text" placeholder="Job title, keywords, or company" data-translate-es="Títutlo del trabajo, palabras clave, compañia" data-translate-en="Job title, keywords, or company" name="field_job">
+            <input type="text" placeholder="Job title, keywords, or company" data-translate-es="Título del trabajo, palabras clave, compañía" data-translate-en="Job title, keywords, or company" name="field_job">
         </div>
         <div class="form-group col-lg-3 col-md-12 col-sm-12 location">
             <!-- <span class="icon flaticon-map-locator"></span> -->
