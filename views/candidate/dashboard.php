@@ -1,6 +1,6 @@
 <?php
 //Data $dataUserProfile, $dataJobsAplied
-if (empty($_SESSION['user_id'])) {
+if (empty($_SESSION['user_id']) || $_SESSION['role_id'] != 2) {
   echo "Acceso denegado. Por favor, inicia sesión.";
   die(); // Detener la ejecución del script
 }

@@ -48,32 +48,25 @@
         </nav>
       </div>
       <?php 
-        if (!isset($_SESSION['user_id'])) {
+        if ($_SESSION['user_id'] == 0) {
       ?>
         <div class="outer-box">
           <div class="d-flex align-items-center btn-box2">
-            <a href="#" class="theme-btn btn-style-six call-modal" data-bs-toggle="modal" data-bs-target="#loginPopupModal" data-translate-es="Login / Registrarse" data-translate-en="Login / Register">Login / Register</a>
+            <a href="<?php echo SYSTEM_BASE_DIR ?>login" class="theme-btn btn-style-six call-modal" data-translate-es="Login / Registrarse" data-translate-en="Login / Register">Login / Register</a>
           </div>
         </div>
       <?php
         }
       ?>
       <?php
-        if (isset($_SESSION['user_id'])) {
+        if ($_SESSION['user_id'] != 0 && $_SESSION['role_id'] == 2) {
       ?>
         <div class="outer-box text-white">
-          <button class="menu-btn text-white">
-            <span class="count">1</span>
-            <i data-lucide="mail" class="w-6 h-6"></i>
-          </button>
-          <button class="menu-btn text-white">
-            <i data-lucide="bell" class="w-6 h-6"></i>
-          </button>
           <div class="dropdown dashboard-option">
             <a class="dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="true">
-              <img alt="avatar" loading="lazy" width="50" height="50" decoding="async" data-nimg="1" class=""
-                src="<?php echo SYSTEM_BASE_DIR ?>uploads/candidates/candidate-1.webp" style="color: transparent;">
-              <span class="name text-white">My Account</span>
+              <img alt="avatar" class="rounded-full h-12 w-12 object-cover"
+                src="<?php echo $_SESSION['avatar'] ?>" style="color: transparent;">
+              <span class="name text-white" data-translate-es="Mi Cuenta" data-translate-en="My Account">My Account</span>
               <i data-lucide="chevron-down" class="w-5 h-5"></i>
             </a>
             <ul x-data="{ currentPath: window.location.pathname }" class="dropdown-menu"
@@ -126,14 +119,82 @@
               </li>
 
               <li>
-                <a href="#"
+                <a href="<?php echo SYSTEM_BASE_DIR ?>changePassword"
                   class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
                   <i data-lucide="lock" class="w-5 h-5"></i>
                   Change Password
                 </a>
               </li>
               <li>
-                <a href="#"
+                <a href="<?php echo SYSTEM_BASE_DIR ?>logout"
+                  class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
+                  <i data-lucide="log-out" class="w-5 h-5"></i>
+                  Logout
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      <?php
+        }
+      ?>
+
+
+<?php
+        if ($_SESSION['role_id'] == 3) {
+      ?>
+        <div class="outer-box text-white">
+          <div class="dropdown dashboard-option">
+            <a class="dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="true">
+              <img alt="avatar" class="rounded-full h-12 w-12 object-cover"
+                src="<?php echo $_SESSION['avatar'] ?>" style="color: transparent;">
+              <span class="name text-white" data-translate-es="Mi Cuenta" data-translate-en="My Account">My Account</span>
+              <i data-lucide="chevron-down" class="w-5 h-5"></i>
+            </a>
+            <ul x-data="{ currentPath: window.location.pathname }" class="dropdown-menu"
+              data-popper-placement="bottom-start"
+              style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(-71px, 52px);">
+
+              <li>
+                <a href="<?php echo SYSTEM_BASE_DIR ?>dashboard/company/dashboard"
+                  class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-blue-600 bg-blue-50 rounded-md">
+                  <i data-lucide="home" class="w-5 h-5"></i>
+                  Dashboard
+                </a>
+              </li>
+              <li>
+                <a href="<?php echo SYSTEM_BASE_DIR ?>dashboard/company/myprofile"
+                  x-bind:class="{ 'bg-blue-50': currentPath === '/dashboard/company/myprofile' }"
+                  class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
+                  <i data-lucide="user" class="w-5 h-5"></i>
+                  My Profile
+                </a>
+              </li>
+              <li>
+                <a href="<?php echo SYSTEM_BASE_DIR ?>dashboard/company/postjobs"
+                  x-bind:class="{ 'bg-blue-50': currentPath === '/dashboard/company/postjobs' }"
+                  class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
+                  <i data-lucide="briefcase" class="w-5 h-5"></i>
+                  Post Jobs
+                </a>
+              </li>
+              <li>
+                <a href="<?php echo SYSTEM_BASE_DIR ?>dashboard/company/myjobs"
+                  x-bind:class="{ 'bg-blue-50': currentPath === '/dashboard/company/myjobs' }"
+                  class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
+                  <i data-lucide="briefcase" class="w-5 h-5"></i>
+                  My Jobs
+                </a>
+              </li>
+              <li>
+                <a href="<?php echo SYSTEM_BASE_DIR ?>changePassword"
+                  class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
+                  <i data-lucide="lock" class="w-5 h-5"></i>
+                  Change Password
+                </a>
+              </li>
+              <li>
+                <a href="<?php echo SYSTEM_BASE_DIR ?>logout"
                   class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
                   <i data-lucide="log-out" class="w-5 h-5"></i>
                   Logout

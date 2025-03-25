@@ -11,6 +11,18 @@ class getDataExternalController {
 
 
   /**
+   * Summary of getDatabase
+   * @return PDO
+   */
+  private function getDatabase() {
+    $configuration = new Config();
+    $database = new Database($configuration);
+    //$database = new Database();
+    $db = $database->getConnection();
+    return $db;
+  }
+
+  /**
    * Summary of searchExternalJobs
    * @param mixed $type
    * @param mixed $field_job
@@ -66,53 +78,274 @@ class getDataExternalController {
         if (!empty($parts)) {
             $search .= '-' . implode('-', $parts);
         }
-        $searchEmplate = "https://www.emplate.com/venezuela/empleos_encontrados/1/$search";
+        $searchEmplate = "https://www.empleate.com/venezuela/ofertas/empleos_encontrados/1/$search";
 
         //Bumeran
-        $searchBumeran = "https://www.bumeran.com.ve/empleos.html";
+        $search = "empleos.html";
+        $location = !empty($field_postal) ? "en-$field_postal/" : '';
+        $keywords = !empty($field_job) ? "empleos-busqueda-".str_replace(' ', '-', trim($field_job)).".html" : '';
+        
+        if (!empty($location) && !empty($keywords)) {
+            $search = $location . $keywords;
+        }
+        if (!empty($location) && empty($keywords)) {
+            $search = $location . "empleos.html";
+        }
+        if (empty($location) && !empty($keywords)) {
+            $search = $keywords;
+        }
+
+        $searchBumeran = "https://www.bumeran.com.ve/$search";
     
     $urls = [
         'linkedin' => $searchLinkedIn,
         'computrabajo' => $searchComputrabajo,
         'empleate' => $searchEmplate,
-        'bumeran' => $searchBumeran,
+        // 'bumeran' => $searchBumeran,
     ];
 
     $client = new Client();
+    $responseJson = [];
+    
     try {
+        // Configuración para timeout y manejo de errores
+        $requestOptions = [
+            'timeout' => 5, // Timeout de 5 segundos por solicitud
+            'connect_timeout' => 3, // Timeout de conexión de 3 segundos
+            'http_errors' => false, // No lanzar excepciones por errores HTTP
+            'headers' => [
+                'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+                'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+                'Accept-Language' => 'es-ES,es;q=0.9',
+                'Connection' => 'close',
+                'Cache-Control' => 'max-age=3600, must-revalidate',
+                'Pragma' => 'cache',
+            ]
+        ];
+        
         // Crear un array de promesas
         $promises = [];
         foreach ($urls as $type => $url) {
-            $promises[$type] = $client->getAsync($url, [
-                'headers' => [
-                    'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-                    'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-                    'Accept-Language' => 'es-ES,es;q=0.9',
-                    'Connection' => 'close',
-                    'Cache-Control' => 'max-age=0'
-                ]
-            ]);
+            $promises[$type] = $client->getAsync($url, $requestOptions);
         }
-
-        // Esperar a que todas las promesas se resuelvan
-        $responses = Promise\Utils::settle($promises)->wait();
-
+        
+        // Establecer un tiempo máximo para todas las solicitudes (10 segundos)
+        $results = Promise\Utils::settle($promises)->wait(true);
+        
         // Procesar las respuestas
-        foreach ($responses as $type => $response) {
-            if ($response['state'] === 'fulfilled') {
-                // $html[$type] = $response['value']->getBody()->getContents();
-                // $response['data'][$type] = $html[$type];
-                $responseJson[$type]['type'] = $type;
-                // $crawler = new Crawler($html[$type]);
-                //$results[$type] = $this->parseJobs($crawler, $type);
+        foreach ($results as $type => $result) {
+            // $responseJson[$type] = ['type' => $type];
+            
+            if ($result['state'] === 'fulfilled') {
+                $response = $result['value'];
+                $statusCode = $response->getStatusCode();
+                
+                if ($statusCode >= 200 && $statusCode < 300) {
+                    // Éxito - solo guardamos la URL para mostrar al usuario
+                    //$responseJson[$type]['url'] = $urls[$type];
+                    //$responseJson['success'] = true;
+                    switch ($type) {
+                        case 'linkedin':
+                            $count = 600000;
+                            $crawler = $response->getBody()->getContents();
+                            $crawler = new Crawler($crawler);
+                            $crawler->filter('.job-search-card')->slice(0, 10)->each(function (Crawler $node) use (&$count, &$responseJson, $type) {
+                                $count++;
+                                $linkJob = "";
+                                $dataEntityUrn = $node->attr('data-entity-urn');
+                                $jobId = '';
+                                
+                                if ($dataEntityUrn !== null) {
+                                    // Extraer solo los números del formato "urn:li:jobPosting:4137048490"
+                                    preg_match('/urn:li:jobPosting:(\d+)/', $dataEntityUrn, $matches);
+                                    if (isset($matches[1])) {
+                                        $jobId = $matches[1];
+                                        $dataEntityUrn = $jobId;
+                                        $linkJobLink = "https://www.linkedin.com/jobs/view/" . $jobId;
+                                        $linkJob = "https://www.linkedin.com/jobs-guest/jobs/api/jobPosting/" . $jobId;
+                                    }
+                                }
+
+                                $title = $node->filter('.base-search-card__title')->text();
+                                $company = $node->filter('.base-search-card__subtitle')->text();
+                                $location = 'No disponible';
+                                $description ='';
+                                if ($node->filter('.job-search-card__location')->count() > 0) {
+                                    $location = $node->filter('.job-search-card__location')->text();
+                                }
+                                $listDate = 'No disponible';
+                                if ($node->filter('time')->count() > 0) {
+                                    $listDate = $node->filter('time')->text();
+                                }
+                                $responseJson[$count] =[
+                                    'id'=> $count,
+                                    'type'=> $type,
+                                    'dataEntityUrn' => $dataEntityUrn,
+                                    'title' => trim($title),
+                                    'company_logo' => '/assets/companies/img/linkedin.svg',
+                                    'description' => $description,
+                                    'skills_experience'=> '',
+                                    'salary'=> 'No disponible',
+                                    'priority'=> 'Urgente',
+                                    'logo' => SYSTEM_BASE_DIR . 'assets/companies/img/linkedin.svg',
+                                    'key_responsibilities'=> '',
+                                    'linkJob' => $linkJobLink,
+                                    'company' => trim($company),
+                                    'location' => trim($location),
+                                    'timeAgo' => $listDate,
+                                    'isExternal' => true,
+                                    'isLinkedin' => true,
+                                    'isComputrabajo' => false,
+                                    'isSaved'=> 0,
+                                    'isFavorite'=> 0,
+                                    'isApplied'=> 0,
+                                    'isInternalExternal'=> 0,
+                                    'employment_type_name'=> 'LinkedIn',
+                                    'job_type_name'=> 'Enlace externo',
+                                    'category'=> 'LinkedIn',
+                                ];
+                            });
+                        
+                        case 'computrabajo':
+                            $count = 700000;
+                            $crawler = $response->getBody()->getContents();
+                            $crawler = new Crawler($crawler);
+                            $crawler->filter('.box_offer')->slice(0, 10)->each(function ($node) use (&$count, &$crawler, &$responseJson, &$type) {
+                                $count++;
+                                $linkJob = "";
+                                $title = $node->filter('h2 > a.js-o-link')->text();
+                                $linkJob1 = $node->filter('h2 > a.js-o-link')->attr('href');
+                                $linkJob2 = $node->filter('h2 > a.js-o-link')->attr('href');
+                                $dataId = $node->attr('data-id');
+                                $company = '';
+                                if ($node->filter('p.dFlex.vm_fx.fs16.fc_base.mt5 a.fc_base.t_ellipsis')->count() > 0) {
+                                    $company = $node->filter('p.dFlex.vm_fx.fs16.fc_base.mt5 a.fc_base.t_ellipsis')->text();
+                                } else {
+                                    $company = 'No disponible';
+                                }
+                                $location = 'No disponible';
+                                if ($node->filter('p.fs16.fc_base.mt5 span')->count() > 0) {
+                                    $location = $node->filter('p.fs16.fc_base.mt5 span')->text();
+                                } else {
+                                    $location = 'No disponible';
+                                }
+                                $listDate = ""; //p.fs13.fc_aux
+                                if ($node->filter('p.fs13.fc_aux')->count() > 0) {
+                                    $listDate = $node->filter('p.fs13.fc_aux')->text();
+                                    $listDate = trim($listDate);
+                                } else {
+                                    $listDate = 'No disponible';
+                                }
+
+
+                                if ($linkJob1) {
+                                    $linkJob = "https://ve.computrabajo.com" . $linkJob1;
+                                }
+                                if ($linkJob2) {
+                                    $linkJob = "https://ve.computrabajo.com" . $linkJob2;
+                                }
+
+                                // Extraer el salario
+                                $salary = '';
+                                if ($node->filter('.fs13.mt15 .icon.i_salary')->count() > 0) {
+                                    // El salario está en el texto dentro del mismo contenedor que el ícono
+                                    $salary = $node->filter('.fs13.mt15 span.dIB')->eq(0)->text();
+                                    $salary = trim(preg_replace('/\s+/', ' ', $salary)); // Limpiar espacios extra
+                                } else {
+                                    $salary = 'No disponible';
+                                }
+                                $responseJson[$count] = [
+                                    'id'=> $count,
+                                    'type'=> $type,
+                                    'dataEntityUrn' => $dataId,
+                                    'title' => trim($title),
+                                    'company_logo' => '/assets/companies/img/computrabajo.webp',    
+                                    'isInternalExternal'=> 0,
+                                    'description' => '',
+                                    'skills_experience'=> '',
+                                    'salary'=> $salary,
+                                    'priority'=> 'Urgente',
+                                    'logo' => SYSTEM_BASE_DIR . 'assets/companies/img/computrabajo.webp',
+                                    'key_responsibilities'=> '',
+                                    'linkJob' => $linkJob,
+                                    'company' => trim($company),
+                                    'location' => trim($location),
+                                    'timeAgo' => $listDate,
+                                    'isExternal' => true,
+                                    'isLinkedin' => false,
+                                    'isComputrabajo' => true,
+                                    'isSaved'=> 0,
+                                    'isFavorite'=> 0,
+                                    'isApplied'=> 0,
+                                    'employment_type_name'=> 'Computrabajo',
+                                    'job_type_name'=> 'Enlace externo',
+                                    'category'=> 'Computrabajo',
+                                ];
+                            });
+                        
+                        case 'empleate':
+                            $count = 800000;
+                            $crawler = $response->getBody()->getContents();
+                            $crawler = new Crawler($crawler);
+                            $crawler->filter('.card.w-100.align-middle.mt-3.mb-3.shadow')->slice(0, 10)->each(function ($node) use (&$count, &$crawler, &$responseJson, &$type) {
+                                $count++;
+                                $linkJob = $node->filter('a')->attr('href');
+                                $title = $node->filter('.cargo-titulo')->text();
+                                $company = $node->filter('.nombre-empresa')->text();
+                                $location = $node->filter('.ubicacion-empresa')->text();
+                                $description = $node->filter('.descripcion-cargo')->text();
+                                $timeago = $node->filter('.fecha-publi')->text();
+                                $dataEntityUrnArray = explode('/', $linkJob);
+                                $dataEntityUrn = $dataEntityUrnArray[4];
+
+
+
+
+                                $responseJson[$count] = [
+                                    'id'=> $count,
+                                    'type'=> $type,
+                                    'title'=> $title,
+                                    'dataEntityUrn' => $dataEntityUrn,
+                                    'company' => trim($company),
+                                    'location' => trim($location),
+                                    'description' => trim($description),
+                                    'skills_experience' => '',
+                                    'salary'=> 'N/A',
+                                    'priority'=> 'Normal',
+                                    'logo' => SYSTEM_BASE_DIR . 'assets/companies/img/empleate.png',
+                                    'key_responsibilities'=> '',
+                                    'linkJob' => $linkJob,
+                                    'timeAgo' => $timeago,
+                                    'isExternal' => true,
+                                    'isLinkedin' => false,
+                                    'isComputrabajo' => false,
+                                    'isEmpleate'=> true,
+                                    'isInternalExternal'=> 0,
+                                    'isSaved'=> 0,
+                                    'isFavorite'=> 0,
+                                    'isApplied'=> 0,
+                                    'employment_type_name'=> 'Empleate',
+                                    'job_type_name'=> 'Enlace externo',
+                                    'category'=> 'Empleate',
+                                ];
+                            });
+                        default:
+                            break;
+                    }
+                } else {
+                    // Error HTTP
+                    $responseJson[$type]['status'] = 'error';
+                    $responseJson[$type]['url'] = $urls[$type];
+                    $responseJson[$type]['message'] = 'Error HTTP: ' . $statusCode;
+                }
             } else {
-                //$html[$type] = [];
-                $responseJson[$type]['data'][$type] = [];
-                $responseJson[$type]['type'] = $type;
-                $responseJson[$type]['messages'] = 'Error al obtener datos externos';
+                // Error en la solicitud
+                $responseJson[$type]['status'] = 'error';
+                $responseJson[$type]['message'] = $result['reason']->getMessage();
             }
         }
-        return $responseJson;
+        $results = $responseJson;
+        return $results;
 
     } catch (\Exception $e) {
         error_log('Error al obtener datos externos: ' . $e->getMessage());

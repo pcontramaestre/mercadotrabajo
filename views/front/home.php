@@ -8,7 +8,6 @@ include_once 'views/components/bannerHome.php';
 include_once 'views/components/popularJobs.php';
 include_once 'views/components/howItWorks.php';
 
-
 //titleSection companies
 $titleSection = [
     'translate_es' => 'Empresas más populares',

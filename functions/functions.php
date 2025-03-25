@@ -1,7 +1,5 @@
 <?php
-require_once 'config/config.php';
-// functions/functions.php
-
+include_once 'config/config.php';
 function getIpAddress() {
     if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
         $ip = $_SERVER['HTTP_CLIENT_IP'];

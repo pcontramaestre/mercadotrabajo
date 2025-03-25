@@ -36,7 +36,34 @@ $categories = $controller->findRecordsManual($queryManual);
         <div class="form-group col-lg-3 col-md-12 col-sm-12 location">
             <!-- <span class="icon flaticon-map-locator"></span> -->
             <i class="icon fas fa-map-marker-alt"></i>
-            <input type="text" placeholder="City or postcode" data-translate-en="City" data-translate-es="Ciudad" name="field_postal">
+            <!-- <input type="text" placeholder="City or postcode" data-translate-en="City" data-translate-es="Ciudad" name="field_postal"> -->
+            <select class="chosen-single form-select" name="field_postal" id="field_postal">
+                <option data-translate-en="All Locations" data-translate-es="Todas las Ubicaciones" value="">All Locations</option>
+                <option data-translate-en="Amazonas" data-translate-es="Amazonas" value="amazonas">Amazonas</option>
+                <option data-translate-en="Anzoátegui" data-translate-es="Anzoátegui" value="anzoategui">Anzoátegui</option>
+                <option data-translate-en="Apure" data-translate-es="Apure" value="apure">Apure</option>
+                <option data-translate-en="Aragua" data-translate-es="Aragua" value="aragua">Aragua</option>
+                <option data-translate-en="Barinas" data-translate-es="Barinas" value="barinas">Barinas</option>
+                <option data-translate-en="Bolívar" data-translate-es="Bolívar" value="bolivar">Bolívar</option>
+                <option data-translate-en="Carabobo" data-translate-es="Carabobo" value="carabobo">Carabobo</option>
+                <option data-translate-en="Caracas" data-translate-es="Caracas" value="caracas">Caracas</option>
+                <option data-translate-en="Cojedes" data-translate-es="Cojedes" value="cojedes">Cojedes</option>
+                <option data-translate-en="Delta Amacuro" data-translate-es="Delta Amacuro" value="delta-amacuro">Delta Amacuro</option>
+                <option data-translate-en="Falcón" data-translate-es="Falcón" value="falcon">Falcón</option>
+                <option data-translate-en="Guárico" data-translate-es="Guárico" value="guarico">Guárico</option>
+                <option data-translate-en="Lara" data-translate-es="Lara" value="lara">Lara</option>
+                <option data-translate-en="Mérida" data-translate-es="Mérida" value="merida">Mérida</option>
+                <option data-translate-en="Miranda" data-translate-es="Miranda" value="miranda">Miranda</option>
+                <option data-translate-en="Monagas" data-translate-es="Monagas" value="monagas">Monagas</option>
+                <option data-translate-en="Nueva Esparta" data-translate-es="Nueva Esparta" value="nueva-esparta">Nueva Esparta</option>
+                <option data-translate-en="Portuguesa" data-translate-es="Portuguesa" value="portuguesa">Portuguesa</option>
+                <option data-translate-en="Sucre" data-translate-es="Sucre" value="sucre">Sucre</option>
+                <option data-translate-en="Táchira" data-translate-es="Táchira" value="tachira">Táchira</option>
+                <option data-translate-en="Trujillo" data-translate-es="Trujillo" value="trujillo">Trujillo</option>
+                <option data-translate-en="Yaracuy" data-translate-es="Yaracuy" value="yaracuy">Yaracuy</option>
+                <option data-translate-en="Zulia" data-translate-es="Zulia" value="zulia">Zulia</option>
+            </select>
+            
         </div>
         <div class="form-group col-lg-3 col-md-12 col-sm-12 category">
             <!-- <span class="icon flaticon-briefcase"></span> -->

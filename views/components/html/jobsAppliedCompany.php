@@ -110,7 +110,7 @@ class JobsAppliedCompany {
                         . $job['job_title'] 
                         . '</a>' 
                         . '</td>';
-            $html .= '<td class="px-6 py-4"> <img class="w-16 h-16 rounded-full" src="' . SYSTEM_BASE_DIR.$job['user_profile_avatar'] . '" alt="' . $job['user_profile_fullname'] . '" class="w-8 h-8 rounded-full"> </td>';
+            $html .= '<td class="px-6 py-4"> <img class="w-16 h-16 rounded-full object-cover" src="' . $job['user_profile_avatar'] . '" alt="' . $job['user_profile_fullname'] . '" class="w-8 h-8 rounded-full"> </td>';
             $html .= '<td class="px-6 py-4"><a href="' . SYSTEM_BASE_DIR.'dashboard/company/candidate-detail/' . $job['user_id'] . '" target="_blank" class="text-blue-500">' . $job['user_profile_fullname'] . '</a></td>';
             $html .= '<td class="flex gap-2 px-6 py-4"> 
                         <a href="mailto:' . $job['user_profile_email'] . '" target="_blank" class="text-blue-500">

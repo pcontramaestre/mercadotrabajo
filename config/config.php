@@ -62,13 +62,20 @@ class Config {
         return $this->emailFrom;
     }
 }
+    
     session_start();
-    $_SESSION['user_id'] = 8;
-    $_SESSION['company_id'] = 3;
+    //$_SESSION['user_id'] = 0;
+    
+
+    $_SESSION['user_id'] = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0;
+
+    $_SESSION['company_id'] = isset($_SESSION['company_id']) ? $_SESSION['company_id'] : 0;
 
     $config = new Config();
     define('SYSTEM_BASE_DIR', $config->getUrlBase());
     define('SYSTEM_HOME_URL', $config->getHomeUrl());
+
+    $_SESSION['avatar'] = isset($_SESSION['avatar']) ? $_SESSION['avatar'] : SYSTEM_BASE_DIR . 'assets/img/avatars/default.png';
 
     $database = new Database($config);
     //$database = new Database();
@@ -80,10 +87,23 @@ class Config {
 
     $resultUser = $controller->findRecord('users', $conditions);
     if (empty($resultUser)) {
-        $_SESSION['user_uid'] = '';
-        $_SESSION['role_id'] = '';
+        $_SESSION['user_uid'] = isset($_SESSION['user_uid']) ? $_SESSION['user_uid'] : '';
+        $_SESSION['role_id'] = isset($_SESSION['role_id']) ? $_SESSION['role_id'] : '';
 
     } else {
+        if($resultUser['role_id'] == 2) {
+            $conditions = [
+                'user_id' => $_SESSION['user_id']
+            ];
+            $resultAvatar = $controller->findRecord('user_profile', $conditions);
+            $_SESSION['avatar'] = $resultAvatar['logo_path'];
+        } else if($resultUser['role_id'] == 3) {
+            $conditions = [
+                'id' => (int)$_SESSION['company_id']
+            ];
+            $resultAvatar = $controller->findRecord('companies', $conditions);
+            $_SESSION['avatar'] = $resultAvatar['logo_url_completa'];
+        }
         $_SESSION['user_uid'] = $resultUser['uid'];
         $_SESSION['role_id'] = $resultUser['role_id'];
     }

@@ -8,6 +8,7 @@ class CandidateDashboardController extends BaseController {
     }
     public function viewProfile(?array $params = []) {
         $dataUserProfile = $params;
+        $estados = $this->getEstados();
         include_once  'views/candidate/myProfile.php';
     }
 

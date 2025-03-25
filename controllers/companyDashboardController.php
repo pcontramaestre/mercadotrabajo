@@ -18,6 +18,21 @@ class companyDashboardController extends BaseController {
         include_once  'views/company/dashboard.php';
     }
 
+    public function viewJobs(?array $params = []) {
+        $dataJobsApplied = $params;
+        include_once  'views/company/myJobs.php';
+    }
+
+    public function viewPostJobs(?array $params = []) {
+        $dataJobsApplied = $params;
+        include_once  'views/company/postJob.php';
+    }
+
+    public function viewMyJobs(?array $params = []) {
+        $dataJobsApplied = $params;
+        include_once  'views/company/myJobs.php';
+    }
+
     public function viewCvManager(?array $params = []) {
         $dataUserProfile = $params;
         include_once  'views/candidate/MyCvManager.php';

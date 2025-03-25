@@ -34,7 +34,7 @@ class SetJobsDataController extends BaseController {
                 'message' => 'Error'
             ];
             
-            $typeAccepted = ['linkedin','computrabajo'];
+            $typeAccepted = ['linkedin','computrabajo','empleate'];
             if (!in_array($type, $typeAccepted)) {
                 $response['success'] = false;
                 $response['message'] = 'Invalid type';
@@ -48,14 +48,19 @@ class SetJobsDataController extends BaseController {
             //     $response['data'] = $data;
             //     return json_encode($response);
             // }
-            
+            if ($type == 'empleate') {
+                $external_url = "https://www.empleate.com/venezuela/ofertas/empleo/" . $data['external_id'];
+            } else {
+                $external_url = $data['external_url'];
+            }
+
+
             $company_id = (int) $data['company_id'];
             $title = htmlspecialchars($data['title'], ENT_QUOTES, 'UTF-8');
             $description = sanitizeHtml($data['job_description']);
             $category_id = (int) $data['category_id'];
             $job_type_id = (int) $data['job_type_id'];
             $employment_type_id = (int) $data['employment_type_id'];
-            $external_url = $data['external_url'];
             $city = htmlspecialchars($data['city'], ENT_QUOTES, 'UTF-8');
             $Fuente = htmlspecialchars($type, ENT_QUOTES, 'UTF-8');
             $external_id = htmlspecialchars($data['external_id'], ENT_QUOTES, 'UTF-8');

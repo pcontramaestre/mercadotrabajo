@@ -1,17 +1,20 @@
 <?php
+//print_r($_SESSION);
+  if (empty($_SESSION['company_id']) || $_SESSION['role_id'] != 3) {
+    echo "Acceso denegado. Por favor, inicia sesión.";
+    die(); // Detener la ejecución del script";
+  }
   /**
    * Data recibied
    * 
    * @param array $dataUserProfile
    * @param array $dataCompanyProfile
    */
-        
-  if (empty($_SESSION['user_id'])) {
-    echo "Acceso denegado. Por favor, inicia sesión.";
-    die(); // Detener la ejecución del script
-  }
+
 
   $dataCompanyProfile = $dataCompanyProfile[0];
+  $founded_since = $dataCompanyProfile['founded_since'] === null ? '' : $dataCompanyProfile['founded_since'];
+  
   include_once 'config/config.php';
   include_once 'views/company/header.php';
 ?>
@@ -93,7 +96,7 @@
                 <input
                   placeholder="0412 4444444"
                   type="text"
-                  value="<?php echo $dataCompanyProfile['Phone']; ?>"
+                  value="<?php echo $dataCompanyProfile['Phone'] ?? ''; ?>"
                   name="phone"
                   id="phone"
                   class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
@@ -107,7 +110,7 @@
                 <input
                   placeholder="https://www.mercadotrabajo.org"
                   type="url"
-                  value="<?php echo $dataCompanyProfile['website']; ?>"
+                  value="<?php echo $dataCompanyProfile['website'] ?? ''; ?>"
                   name="website"
                   id="website"
                   class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
@@ -121,7 +124,7 @@
                 <input
                   placeholder="2010"
                   type="text"
-                  value="<?php echo $dataCompanyProfile['founded_since']; ?>"
+                  value="<?php echo $founded_since; ?>"
                   name="founded_since"
                   id="founded_since"
                   class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
@@ -194,7 +197,7 @@
                   Descripción de la Empresa
                 </label>
                 <?php 
-                  $description = htmlspecialchars(strip_tags(trim($dataCompanyProfile['description'])), ENT_QUOTES, 'UTF-8');
+                  $description = htmlspecialchars(strip_tags(trim($dataCompanyProfile['description'] ?? '')), ENT_QUOTES, 'UTF-8');
                   ?>
                 <textarea
                   data-translate-es="Agregar aquí la descripción de la empresa"
@@ -328,7 +331,7 @@
                     name="complete_address"
                     id="complete_address"
                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
-                    ><?php echo htmlspecialchars(trim($dataCompanyProfile['complete_address']), ENT_QUOTES, 'UTF-8'); ?></textarea>
+                    ><?php echo htmlspecialchars(trim($dataCompanyProfile['complete_address'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></textarea>
               </div>
 
               <div class="form-group col-span-1 md:col-span-2">
@@ -358,7 +361,7 @@
                   type="url"
                   name="facebook"
                   id="facebook"
-                  value="<?php echo htmlspecialchars(trim($dataCompanyProfile['social_facebook']), ENT_QUOTES, 'UTF-8'); ?>"
+                  value="<?php echo htmlspecialchars(trim($dataCompanyProfile['social_facebook'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>"
                   class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
                 />
               </div>
@@ -372,7 +375,7 @@
                   type="url"
                   name="twitter"
                   id="twitter"
-                  value="<?php echo htmlspecialchars(trim($dataCompanyProfile['social_x']), ENT_QUOTES, 'UTF-8'); ?>"
+                  value="<?php echo htmlspecialchars(trim($dataCompanyProfile['social_x'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>"
                   class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
                 />
               </div>
@@ -386,7 +389,7 @@
                   type="url"
                   name="linkedin"
                   id="linkedin"
-                  value="<?php echo htmlspecialchars(trim($dataCompanyProfile['social_linkedin']), ENT_QUOTES, 'UTF-8'); ?>"
+                  value="<?php echo htmlspecialchars(trim($dataCompanyProfile['social_linkedin'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>"
                   class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
                 />
               </div>

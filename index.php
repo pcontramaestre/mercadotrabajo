@@ -38,6 +38,93 @@ switch ($request) {
     $controller = new BaseController($db);
     $controller->index();
     break;
+  case preg_match('/^\/login(?:\?message=(\d+))?$/', $request,  $matches) ? true : false:
+    $message = $matches[1] ?? '';
+    $controller = new BaseController($db);
+    $controller->viewLogin($message);
+    break;
+  case '/loginUser':
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $email = isset($_POST['email']) ? trim($_POST['email']) : '';
+        $password = isset($_POST['password']) ? $_POST['password'] : '';
+        
+        // Verificar que no esté vacío ningún campo
+        if (empty($email) || empty($password)) {
+            exit;
+        }
+        
+        // Eliminar espacios en blanco del email
+        $email = preg_replace('/\s+/','', $email);
+        
+        $controller = new BaseController($db);
+        $controller->loginUser($email, $password);
+    }
+    break;
+  
+  case '/logout':
+    $controller = new BaseController($db);
+    $controller->logout();
+    break;
+
+  case '/changePassword':
+    $controller = new BaseController($db);
+    $controller->viewChangePassword();
+    break;
+    
+  case preg_match('/^\/register\/candidate(?:\?error=(\d+))?$/', $request, $matches) ? true : false:
+    $error = $matches[1] ?? '';
+    $controller = new BaseController($db);
+    $controller->viewRegisterCandidate($error);
+    break;
+
+  case '/registerCandidate':
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $data = $_POST;
+        
+        // Verificar que no esté vacío ningún campo
+        if (empty($data['first_name']) || empty($data['last_name']) || empty($data['email']) || empty($data['phone']) || empty($data['password'])) {
+            exit;
+        }
+        
+        // Eliminar espacios en blanco del email
+        $email = isset($_POST['email']) ? preg_replace('/\s+/', '', $_POST['email']) : '';
+        $password = isset($_POST['password']) ? $_POST['password'] : '';
+        $controller = new BaseController($db);
+        $controller->registerCandidate($data);
+    }
+    break;
+    
+  case preg_match('/^\/register\/company(?:\?error=(\d+))?$/', $request, $matches) ? true : false:
+    $error = $matches[1] ?? '';
+    $controller = new BaseController($db);
+    $controller->viewRegisterCompany($error);
+    break;
+  
+  case '/registerCompany':
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $data = $_POST;
+        
+        // Verificar que no esté vacío ningún campo
+        if (empty($data['name']) || empty($data['email']) || empty($data['password'])) {
+            exit;
+        }
+        
+        // Eliminar espacios en blanco del email
+        $email = isset($_POST['email']) ? preg_replace('/\s+/', '', $_POST['email']) : '';
+        $password = isset($_POST['password']) ? $_POST['password'] : '';
+        $controller = new BaseController($db);
+        $controller->registerCompany($data);
+    }
+    break;
+    
+  case '/terms':
+    include_once 'views/front/pages/terms.php';
+    break;
+    
+  case '/privacy':
+    include_once 'views/front/pages/privacy.php';
+    break;
+
   case '/companies':
     $controller = new BaseController($db);
     $controller->viewCompanies();
@@ -116,6 +203,19 @@ switch ($request) {
     $controller = new companyDashboardController($db);
     $controller->viewProfile($dataUserProfile, $dataUserProfileCompany);
     break;
+  case '/dashboard/company/postjobs':
+    $controllerDataProfile = new getDataCompanyJsonController($db);
+    $dataUserProfile = $controllerDataProfile->getCompanyProfile($id_company);
+    $controller = new companyDashboardController($db);
+    $controller->viewPostJobs($dataUserProfile);
+    break;
+  
+  case '/dashboard/company/myjobs':
+    $controllerDataProfile = new getDataCompanyJsonController($db);
+    $dataUserProfile = $controllerDataProfile->getCompanyProfile($id_company);
+    $controller = new companyDashboardController($db);
+    $controller->viewMyJobs($dataUserProfile);
+    break;
 
   //Dashboard candidate
   case '/dashboard/candidate/dashboard':
@@ -191,6 +291,7 @@ switch ($request) {
     $controller = new getDataCandidateJsonController($db);
     $controller->getResumeDataJson($id_user);
     break;
+
   case '/api/v1/setdatacandidate':
     $controller = new setDataCandidateJsonController($db);
     
@@ -246,6 +347,17 @@ switch ($request) {
   case '/api/v1/setdataprofilecompany':
     $controller = new setDataCompanyJsonController($db);
     $controller->setDataProfileCompany($_POST['action'],$_POST['data']);
+    break;
+
+  case '/api/v1/getdatacompany':
+    if (!empty($_SESSION['company_id']) && $_SESSION['role_id'] == 3) {
+      $controller = new getDataCompanyJsonController($db);
+    }
+    break;
+  
+  case '/api/v1/setdatajob':
+    $controller = new setDataCompanyJsonController($db);
+    $controller->saveJob($_POST['action'],$_POST['data']);
     break;
 
   // Llamadas a estados, municipios y parroquias
@@ -324,6 +436,11 @@ switch ($request) {
     $controller = new BaseController($db);
     $controller->searchComputrabajoJobsAPI($dataEntityUrn);
     break;
+  case preg_match('/^\/api\/v1\/searchempleatejob(?:\/([A-Z0-9]+))?$/', $request, $matches) ? true : false:
+    $dataEntityUrn = $matches[1];
+    $controller = new BaseController($db);
+    $controller->searchEmplateJobsAPI($dataEntityUrn);
+    break;
 
   case '/api/v1/savejobexternal':
     $controller = new SetJobsDataController($db);
@@ -334,7 +451,13 @@ switch ($request) {
     $controller = new getDataExternalController();
     $result = $controller->searchExternalJobs('','','');
     header('Content-Type: application/json');
-    echo json_encode($result);
+    echo json_encode($result);  
+    break;
+  case '/api/v1/changepassword':
+    header('Content-Type: application/json');
+    header('Access-Control-Allow-Origin: *');
+    $controller = new BaseController($db);
+    echo json_encode($controller->changePassword($_POST['current_password'], $_POST['new_password']));
     break;
   
   default:

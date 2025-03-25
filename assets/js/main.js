@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
         element.placeholder = translation; // Para campos de entrada y áreas de texto
       } else {
-        element.textContent = translation; // Para cualquier otro tipo de elemento
+        element.innerHTML = translation; // Permite HTML en la traducción
       }
 
       // Aplicar la traducción al atributo value para los select

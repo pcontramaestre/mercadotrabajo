@@ -1,11 +1,12 @@
 <?php
-  if (empty($_SESSION['user_id'])) {
+  if (empty($_SESSION['user_id']) || $_SESSION['role_id'] != 2) {
     echo "Acceso denegado. Por favor, inicia sesión.";
     die(); // Detener la ejecución del script
   }
 
   include_once 'config/config.php';
   include_once 'views/candidate/header.php';
+  //recibe data $dataUserProfile = $params; $estados = $this->getEstados();
 ?>
 
 <!-- Main Content -->
@@ -238,7 +239,7 @@
 
               <div class="form-group">
                 <label class="block text-sm font-medium text-gray-700 mb-1"
-                  >Allow In Search & Listing</label
+                  data-translate-es="Permitido en búsqueda y listado" data-translate-en="Allow In Search & Listing">Allow In Search & Listing</label
                 >
                 <select
                   class="form-select w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
@@ -253,19 +254,21 @@
 
               <div class="form-group col-span-1 md:col-span-2">
                 <label class="block text-sm font-medium text-gray-700 mb-1"
-                  >Description</label
+                  data-translate-es="Descripción" data-translate-en="Description">Description</label
                 >
                 <textarea
                   placeholder="Insert description personal."
+                  data-translate-es="Insert description personal." data-translate-en="Insert description personal."
                   rows="6"
-                  name="description"
+                  name="description_profile"
                   id="description"
                   class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
                 ></textarea>
               </div>
 
               <div class="form-group">
-                <button type="submit" class="theme-btn btn-style-one save-btn">
+                <button type="submit" class="theme-btn btn-style-one save-btn"
+                  data-translate-es="Guardar" data-translate-en="Save">
                   Save
                 </button>
               </div>
@@ -278,7 +281,8 @@
           class="bg-white rounded-lg shadow-sm p-6 mb-6 border border-gray-200"
         >
           <div class="widget-title mb-6">
-            <h4 class="text-lg font-medium text-gray-700">
+            <h4 class="text-lg font-medium text-gray-700"
+              data-translate-es="Información de Contacto" data-translate-en="Contact Information">
               Contact Information
             </h4>
           </div>
@@ -287,7 +291,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div class="form-group">
                 <label class="block text-sm font-medium text-gray-700 mb-1"
-                  >Country</label
+                  data-translate-es="País" data-translate-en="Country">Country</label
                 >
                 <select
                   class="form-select w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
@@ -295,14 +299,13 @@
                   id="country_id"
                   required
                 >
-                  <option value="1">USA</option>
-                  <option value="2">Venezuela</option>
+                  <option value="1">Venezuela</option>
                 </select>
               </div>
 
               <div class="form-group">
                 <label class="block text-sm font-medium text-gray-700 mb-1"
-                  >States</label
+                  data-translate-es="Estado" data-translate-en="State">State</label
                 >
                 <select
                   class="form-select w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
@@ -310,23 +313,23 @@
                   id="city_id"
                   required
                 >
-                  <option value="1">Florida</option>
-                  <option value="2">Tachira</option>
+                  <?php foreach ($estados as $estado) { ?>
+                    <option value="<?php echo $estado['id_estado']; ?>"><?php echo $estado['estado']; ?></option>
+                  <?php } ?>
                 </select>
               </div>
 
               <div class="form-group col-span-1 md:col-span-2">
                 <label class="block text-sm font-medium text-gray-700 mb-1"
-                  >Complete Address</label
+                  data-translate-es="Dirección completa" data-translate-en="Complete Address">Complete Address</label
                 >
-                <input
+                <textarea
                   placeholder="329 Queensberry Street, North Melbourne VIC 3051, Australia."
                   required
-                  type="text"
                   name="complete_address"
                   id="complete_address"
                   class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
-                />
+                ></textarea>
               </div>
 
               <div class="form-group col-span-1 md:col-span-2">
@@ -350,7 +353,7 @@
             <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6">
               <div class="form-group col-span-1">
                 <label class="block text-sm font-medium text-gray-700 mb-1"
-                  >Facebook</label
+                  >Facebook <span class="text-gray-500"><em>(Opcional)</em></span></label
                 >
                 <input
                   placeholder="https://www.facebook.com/usuario"
@@ -363,7 +366,7 @@
 
               <div class="form-group col-span-1">
                 <label class="block text-sm font-medium text-gray-700 mb-1"
-                  >Twitter</label
+                  >Twitter (X.com) <span class="text-gray-500"><em>(Opcional)</em></span></label
                 >
                 <input
                   placeholder="https://www.x.com/usuario"
@@ -376,7 +379,7 @@
 
               <div class="form-group col-span-1">
                 <label class="block text-sm font-medium text-gray-700 mb-1"
-                  >Linkedin</label
+                  >Linkedin <span class="text-gray-500"><em>(Opcional)</em></span></label
                 >
                 <input
                   placeholder="https://www.linkedin.com/in/usuario"

@@ -64,7 +64,7 @@ class getDataCandidateJsonController extends BaseController {
         if (empty($records)) {
             return [];
         } else {
-            $url = SYSTEM_BASE_DIR.$records[0]['logo_path'];
+            $url = $records[0]['logo_path'];
             $records[0]['logo_path'] = $url;
             return $records;
         }

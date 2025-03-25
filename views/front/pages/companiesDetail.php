@@ -85,14 +85,14 @@ $jobsCompanyJson = json_encode($jobsCompany, JSON_UNESCAPED_UNICODE | JSON_PRETT
                     </div>
                 </div>
                 <div class="company-detail-jobs">
-                    <h2 class="text-2xl font-semibold mt-4 mb-4" data-translate-en="Jobs at <?php echo $company['name'] ?>" data-translate-es="Trabajos en <?php echo $company['name'] ?>">Trabajos en <?php echo $company['name'] ?></h2>
+                    <h2 class="text-2xl font-semibold mt-4 mb-4" data-translate-en="Jobs at <?php echo $company['name'] ?>" data-translate-es="Últimos trabajos publicados en <?php echo $company['name'] ?>">Últimos trabajos publicados en <?php echo $company['name'] ?></h2>
                     <div x-data="jobsData" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <template x-for="job in displayedJobs" :key="job.id">
                             <div class="job-item">
                                 <div
                                     :data-url-job="'<?php echo SYSTEM_BASE_DIR . 'searchjobs?job=' ?>' + job.id"
                                     :id="'job-' + job.id"
-                                    class="grid grid-cols-12 grid-rows-1 gap-2 relative  bg-white rounded-lg shadow-md p-4 border hover:shadow-lg transition-shadow cursor-pointer"
+                                    class="grid grid-cols-12 grid-rows-1 gap-2 relative min-h-[182px] bg-white rounded-lg shadow-md p-4 border hover:shadow-lg transition-shadow cursor-pointer"
                                     data-url-job=""
                                     @click.prevent="window.location.href = $el.dataset.urlJob">
                                     <div class="col-span-2 grid justify-center align-content-center">
@@ -101,8 +101,8 @@ $jobsCompanyJson = json_encode($jobsCompany, JSON_UNESCAPED_UNICODE | JSON_PRETT
                                             alt="Company Logo"
                                             class="w-12 h-12 rounded-lg object-cover mr-2" />
                                     </div>
-                                    <div class="col-span-10">
-                                        <div class="col-span-10 pr-12 relative pb-2">
+                                    <div class="col-span-10 flex flex-col justify-center">
+                                        <div class="col-span-10 relative pb-2">
                                             <h2 class="text-lg font-semibold leading-6" x-text="job.title"></h2>
                                         </div>
 
@@ -120,12 +120,14 @@ $jobsCompanyJson = json_encode($jobsCompany, JSON_UNESCAPED_UNICODE | JSON_PRETT
                                                         <span x-text="job.location"></span>
                                                     </div>
                                                 </div>
-                                                <div class="col-span-2 row-start-2">
-                                                    <div class="flex items-center text-sm text-gray-500">
-                                                        <i class="far fa-money-bill-alt px-2"></i>
-                                                        <span x-text="job.salary"></span>
+                                                <template :if="job.isExternal == '0'">
+                                                    <div class="col-span-2 row-start-2">
+                                                        <div class="flex items-center text-sm text-gray-500">
+                                                            <i class="far fa-money-bill-alt px-2"></i>
+                                                            <span x-text="job.salary"></span>
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                </template>
                                             </div>
                                         </div>
                                         <div class="col-span-10 col-start-3 row-start-3">

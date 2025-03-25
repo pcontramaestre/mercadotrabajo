@@ -172,21 +172,21 @@
                         </nav>
                     </div>
                     <div class="outer-box text-white">
-                        <button class="menu-btn text-white">
+                        <!-- <button class="menu-btn text-white">
                             <span class="count">1</span>
                             <i data-lucide="mail" class="w-6 h-6"></i>
                         </button>
                         <button class="menu-btn text-white">
                             <i data-lucide="bell" class="w-6 h-6"></i>
-                        </button>
+                        </button> -->
                         <div class="dropdown dashboard-option">
                             <a class="dropdown-toggle" role="button" data-bs-toggle="dropdown"
                                 aria-expanded="true">
-                                <img alt="avatar" loading="lazy" width="50" height="50" decoding="async" data-nimg="1"
-                                    class=""
-                                    src="<?php echo $dataUserProfile[0]['logo_path'] ?>"
+                                <img alt="avatar" 
+                                    class="rounded-full h-12 w-12 object-cover"
+                                    src="<?php echo $_SESSION['avatar'] ?>"
                                     style="color: transparent;">
-                                <span class="name text-white">My Account</span>
+                                <span class="name text-white" data-translate-es="Mi Cuenta" data-translate-en="My Account">My Account</span>
                                 <i data-lucide="chevron-down" class="w-5 h-5"></i>
                             </a>
 
@@ -235,13 +235,13 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
+                                    <a href="<?php echo SYSTEM_BASE_DIR ?>changePassword" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
                                         <i data-lucide="lock" class="w-5 h-5"></i>
                                         Change Password
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
+                                    <a href="<?php echo SYSTEM_BASE_DIR ?>logout" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
                                         <i data-lucide="log-out" class="w-5 h-5"></i>
                                         Logout
                                     </a>
@@ -295,13 +295,13 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
+                                <a href="<?php echo SYSTEM_BASE_DIR ?>changePassword" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
                                     <i data-lucide="lock" class="w-5 h-5"></i>
                                     Change Password
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
+                                <a href="<?php echo SYSTEM_BASE_DIR ?>logout" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
                                     <i data-lucide="log-out" class="w-5 h-5"></i>
                                     Logout
                                 </a>

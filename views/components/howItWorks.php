@@ -9,7 +9,7 @@
             <h2 data-translate-en="How It Works?" data-translate-es="¿Cómo funciona?">How It Works?</h2>
             <div class="text" data-translate-en="Job for anyone, anywhere" data-translate-es="Trabajo para cualquiera, en cualquier lugar">Job for anyone, anywhere</div>
         </div>
-        <div class="row aos-init aos-animate" data-aos="fade-up">
+        <div class="row">
             <div class="process-block col-lg-4 col-md-6 col-sm-12">
                 <div class="icon-box">
                     <img alt="how it works" loading="lazy" width="50" height="61" decoding="async" data-nimg="1" 

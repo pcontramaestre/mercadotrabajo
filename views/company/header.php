@@ -173,30 +173,14 @@
                         </nav>
                     </div>
                     <div class="outer-box text-white">
-                        <button class="menu-btn text-white">
-                            <span class="count">1</span>
-                            <i data-lucide="mail" class="w-6 h-6"></i>
-                        </button>
-                        <button class="menu-btn text-white">
-                            <i data-lucide="bell" class="w-6 h-6"></i>
-                        </button>
-                        <?php 
-                            if (isset($dataCompanyProfile[0]['logo_url'])){
-                                $logoUrl = $dataCompanyProfile[0]['logo_url'];
-                            } elseif (isset($dataCompanyProfile['logo_url'])) {
-                                $logoUrl = $dataCompanyProfile['logo_url'];
-                            } else {
-                                $logoUrl = SYSTEM_BASE_DIR . 'assets/img/company.webp';
-                            }
-                        ?>
                         <div class="dropdown dashboard-option">
                             <a class="dropdown-toggle" role="button" data-bs-toggle="dropdown"
                                 aria-expanded="true">
-                                <img alt="avatar" loading="lazy" width="50" height="50" decoding="async" data-nimg="1"
-                                    class=""
-                                    src="<?php echo $logoUrl ?>"
+                                <img alt="avatar"
+                                    class="rounded-full h-12 w-12 object-cover"
+                                    src="<?php echo $_SESSION['avatar'] ?>"
                                     style="color: transparent;">
-                                <span class="name text-white">My Account</span>
+                                <span class="name text-white" data-translate-es="Mi Cuenta" data-translate-en="My Account">My Account</span>
                                 <i data-lucide="chevron-down" class="w-5 h-5"></i>
                             </a>
 
@@ -222,38 +206,25 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="<?php echo SYSTEM_BASE_DIR ?>dashboard/company/myresume" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
+                                    <a href="<?php echo SYSTEM_BASE_DIR ?>dashboard/company/postjobs" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
                                         <i data-lucide="file-text" class="w-5 h-5"></i>
-                                        Post a New Job!
+                                        Post Jobs
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="<?php echo SYSTEM_BASE_DIR ?>dashboard/candidate/mycvmanager" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
-                                        <i data-lucide="file-text" class="w-5 h-5"></i>
-                                        CV Manager
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="<?php echo SYSTEM_BASE_DIR ?>dashboard/candidate/appliedjobs" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
+                                    <a href="<?php echo SYSTEM_BASE_DIR ?>dashboard/company/myjobs" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
                                         <i data-lucide="briefcase" class="w-5 h-5"></i>
-                                        Applied Jobs
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="<?php echo SYSTEM_BASE_DIR ?>dashboard/candidate/shorlistedjobs" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
-                                        <i data-lucide="bookmark" class="w-5 h-5"></i>
-                                        Shortlisted Jobs
+                                        My Jobs
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
+                                    <a href="<?php echo SYSTEM_BASE_DIR ?>changePassword" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
                                         <i data-lucide="lock" class="w-5 h-5"></i>
                                         Change Password
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
+                                    <a href="<?php echo SYSTEM_BASE_DIR ?>logout" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
                                         <i data-lucide="log-out" class="w-5 h-5"></i>
                                         Logout
                                     </a>
@@ -288,48 +259,32 @@
                             </li>
                             <li>
                                 <a 
-                                x-bind:class="{ 'bg-blue-50 text-blue-600': currentPath === '/dashboard/candidate/myresume' }"
-                                href="<?php echo SYSTEM_BASE_DIR ?>dashboard/candidate/myresume" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md">
+                                x-bind:class="{ 'bg-blue-50 text-blue-600': currentPath === '/dashboard/company/postjobs' }"
+                                href="<?php echo SYSTEM_BASE_DIR ?>dashboard/company/postjobs" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md">
                                     <i data-lucide="file-text" class="w-5 h-5"></i>
-                                    Post a New Job!
+                                    Post Jobs
                                 </a>
                             </li>
                             <li>
                                 <a 
-                                x-bind:class="{ 'bg-blue-50 text-blue-600': currentPath === '/dashboard/candidate/appliedjobs' }"
-                                href="<?php echo SYSTEM_BASE_DIR ?>dashboard/candidate/appliedjobs" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md">
+                                x-bind:class="{ 'bg-blue-50 text-blue-600': currentPath === '/dashboard/company/myjobs' }"
+                                href="<?php echo SYSTEM_BASE_DIR ?>dashboard/company/myjobs" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md">
                                     <i data-lucide="briefcase" class="w-5 h-5"></i>
-                                    Applied Jobs
+                                    My Jobs
                                 </a>
                             </li>
                             <li>
                                 <a 
-                                x-bind:class="{ 'bg-blue-50 text-blue-600': currentPath === '/dashboard/candidate/shorlistedjobs' }"
-                                href="<?php echo SYSTEM_BASE_DIR ?>dashboard/candidate/shorlistedjobs" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md">
-                                    <i data-lucide="bookmark" class="w-5 h-5"></i>
-                                    Shortlisted Jobs
-                                </a>
-                            </li>
-                            <li>
-                                <a 
-                                x-bind:class="{ 'bg-blue-50 text-blue-600': currentPath === '/dashboard/candidate/mycvmanager' }"
-                                href="<?php echo SYSTEM_BASE_DIR ?>dashboard/candidate/mycvmanager" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md">
-                                    <i data-lucide="file-text" class="w-5 h-5"></i>
-                                    CV Manager
-                                </a>
-                            </li>
-                            <li>
-                                <a 
-                                x-bind:class="{ 'bg-blue-50 text-blue-600': currentPath === '/dashboard/candidate/changepassword' }"
-                                href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md">
+                                x-bind:class="{ 'bg-blue-50 text-blue-600': currentPath === '/changePassword' }"
+                                href="<?php echo SYSTEM_BASE_DIR ?>changePassword" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md">
                                     <i data-lucide="lock" class="w-5 h-5"></i>
                                     Change Password
                                 </a>
                             </li>
                             <li>
                                 <a  
-                                x-bind:class="{ 'bg-blue-50 text-blue-600': currentPath === '/dashboard/candidate/logout' }"
-                                href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md">
+                                x-bind:class="{ 'bg-blue-50 text-blue-600': currentPath === '/logout' }"
+                                href="<?php echo SYSTEM_BASE_DIR ?>logout" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md">
                                     <i data-lucide="log-out" class="w-5 h-5"></i>
                                     Logout
                                 </a>

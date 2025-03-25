@@ -5,6 +5,13 @@ require_once 'models/BaseModel.php';
 require_once 'controllers/BaseController.php';
 
 class getDataCompanyJsonController extends BaseController {
+    
+    public function __construct($pdo, $configuration = null) {
+        parent::__construct($pdo);
+        if ($configuration) {
+            $this->configuration = $configuration;
+        }
+    }
 
 
     public function getSessionCompany($id_company) {
@@ -24,7 +31,7 @@ class getDataCompanyJsonController extends BaseController {
             if (empty($records)) {
                 return [];
             } else {
-                $url = SYSTEM_BASE_DIR.$records[0]['logo_url'];
+                $url = $records[0]['logo_url_completa'];
                 $records[0]['logo_url'] = $url;
                 return $records;
             }
@@ -83,4 +90,91 @@ class getDataCompanyJsonController extends BaseController {
             return [];
         }
     }
+    
+    /**
+     * Obtener todas las categorías de trabajos
+     * @return array
+     */
+    public function getCategories() {
+        $records = $this->modelBase->select('categories', [], 'name ASC');
+        return $records ?: [];
+    }
+    
+    /**
+     * Obtener todos los tipos de trabajo
+     * @return array
+     */
+    public function getJobTypes() {
+        $records = $this->modelBase->select('job_types', [], 'id ASC');
+        return $records ?: [];
+    }
+    
+    /**
+     * Obtener todos los tipos de empleo
+     * @return array
+     */
+    public function getEmploymentTypes() {
+        $records = $this->modelBase->select('employment_types', [], 'name_es ASC');
+        return $records ?: [];
+    }
+    
+    /**
+     * Obtener todos los trabajos de una empresa
+     * @param int $id_company
+     * @return array
+     */
+    public function getCompanyJobs($id_company) {
+        $company_id = $this->getSessionCompany($id_company);
+        if ($company_id) {
+            $records = $this->modelBase->select('jobs', ['company_id' => $company_id], 'created_at DESC');
+            return $records ?: [];
+        } else {
+            return [];
+        }
+    }
+}
+
+// Procesar solicitudes
+if (isset($_GET['action'])) {
+    // Iniciar sesión si no está iniciada
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    // Conexión a la base de datos
+    $config = new Config();
+    $database = new Database($config);
+    $pdo = $database->getConnection();
+    $controller = new getDataCompanyJsonController($pdo, $config);
+    $action = $_GET['action'];
+    
+    header('Content-Type: application/json');
+    
+    switch ($action) {
+        case 'getCategories':
+            echo json_encode($controller->getCategories());
+            break;
+        case 'getJobTypes':
+            echo json_encode($controller->getJobTypes());
+            break;
+        case 'getEmploymentTypes':
+            echo json_encode($controller->getEmploymentTypes());
+            break;
+        case 'getCompanyJobs':
+            $company_id = isset($_GET['company_id']) ? intval($_GET['company_id']) : 0;
+            echo json_encode($controller->getCompanyJobs($company_id));
+            break;
+        case 'getCompanyProfile':
+            $company_id = isset($_GET['company_id']) ? intval($_GET['company_id']) : 0;
+            echo json_encode($controller->getCompanyProfile($company_id));
+            break;
+        case 'getRecentApplicants':
+            $company_id = isset($_GET['company_id']) ? intval($_GET['company_id']) : 0;
+            echo json_encode($controller->getRecentApplicants($company_id));
+            break;
+        default:
+            echo json_encode(['error' => 'Acción no válida']);
+            break;
+    }
+    exit;
 }

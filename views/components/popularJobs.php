@@ -16,6 +16,7 @@ $fields = "
     jobs.title AS title, 
     jobs.city as location, 
     0 AS isFavorite,
+    jobs.is_external as isExternal,
     CASE 
         WHEN EXISTS (
             SELECT 1 
@@ -135,7 +136,8 @@ $categories = $controller->findRecordsManual($queryManual);
             :key="job.id">
             <div class="">
                 <?php
-                    $jobCard = new JobCards();
+                    $clases = 'min-h-40';
+                    $jobCard = new JobCards($clases);
                     echo $jobCard->render();
                 ?>
             </div>
@@ -177,6 +179,7 @@ $categories = $controller->findRecordsManual($queryManual);
             activeTab: "All",
             jobs: <?php echo $jsonResult; ?>,
             limit: 10, // Límite inicial
+            // isExternal: 1,
             showMore() {
                 this.limit += 10; // Incrementa el límite en 10
             },

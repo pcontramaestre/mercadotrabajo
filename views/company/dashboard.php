@@ -1,5 +1,10 @@
 <?php
 
+if (empty($_SESSION['company_id']) || $_SESSION['role_id'] != 3) {
+    echo "Acceso denegado. Por favor, inicia sesión.";
+    die(); // Detener la ejecución del script";
+}
+
 /**
  * Data recibied
  * 

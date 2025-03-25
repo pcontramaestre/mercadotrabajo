@@ -1,5 +1,10 @@
 <?php
 
+if (empty($_SESSION['company_id']) || $_SESSION['role_id'] != 3) {
+    echo "Acceso denegado. Por favor, inicia sesión.";
+    die(); // Detener la ejecución del script";
+}
+
 /**
  * Data received
  * 
@@ -145,7 +150,7 @@ include_once 'views/company/header.php';
                             <div class="content">
                                 <figure class="image">
                                     <img
-                                        class="w-24 h-24 rounded-full"
+                                        class="w-24 h-24 rounded-full object-cover"
                                         src="<?php echo htmlspecialchars($dataUserProfile['user_profile'][0]['logo_path']) ?>"
                                         alt="avatar" loading="lazy" width="100" height="100" style="color: transparent;">
                                 </figure>

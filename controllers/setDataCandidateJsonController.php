@@ -14,6 +14,7 @@ class setDataCandidateJsonController extends BaseController
        $this->configuration = new Config();
        $this->modelBase = new BaseModel($pdo);
    }
+
     public function saveDataResumeCandidate($action, $dataRecive)
     {
         header('Content-Type: application/json');
@@ -248,7 +249,7 @@ class setDataCandidateJsonController extends BaseController
             case 'save_description':
                 $description = isset($data['description']) ? htmlspecialchars($data['description'], ENT_QUOTES, 'UTF-8') : '';
 
-                $dataUpdate = ['description_profile' => $description];
+                $dataUpdate = ['description' => $description];
                 $conditions = ['user_id' => $userId];
                 $result = $this->modelBase->update('user_profile', $dataUpdate, $conditions);
 
@@ -357,7 +358,7 @@ class setDataCandidateJsonController extends BaseController
                 $age = isset($data['age']) ? filter_var($data['age'], FILTER_SANITIZE_NUMBER_INT) : 0;
                 $educationLevels = isset($data['education_levels']) ? htmlspecialchars($data['education_levels'], ENT_QUOTES, 'UTF-8') : '';
                 $languages = isset($data['languages']) ? htmlspecialchars($data['languages'], ENT_QUOTES, 'UTF-8') : '';
-                $descriptionProfile = isset($data['description']) ? htmlspecialchars($data['description'], ENT_QUOTES, 'UTF-8') : '';
+                $descriptionProfile = isset($data['description_profile']) ? htmlspecialchars($data['description_profile'], ENT_QUOTES, 'UTF-8') : '';
 
                 // Manejo del logo
                 $logoPath = null; // Inicializar la ruta del logo como null

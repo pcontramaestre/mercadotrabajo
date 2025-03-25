@@ -451,6 +451,7 @@ class DatabaseHelper {
                 jobs.skills_experience,
                 jobs.priority,
                 0 AS isFavorite,
+                jobs.is_external AS isExternal,
                 jobs.Fuente AS fuente,
                 jobs.external_url AS externalUrl,
                 ".$isInternalExternal.",
@@ -836,4 +837,68 @@ class DatabaseHelper {
             ];
         }
     }
+
+    /**
+     * Get user by email and password.
+     * @param mixed $email
+     * @param mixed $password
+     * @return array
+     */
+    public function getUserByEmail($email, $password): array {
+        try {
+            // First get the user by email only
+            $query = "SELECT * FROM users WHERE email = :email";
+            $stmt = $this->connection->prepare($query);
+            $stmt->bindValue(':email', $email);
+            $stmt->execute();
+            
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            // Debug: Log the user data
+            error_log("User data: " . print_r($user, true));
+            
+            // If user exists and has a password field, verify password
+            if ($user && isset($user['password_hash']) && !empty($user['password_hash'])) {
+                if (password_verify($password, $user['password_hash'])) {
+                    //update last login
+                    $this->updateLastLogin($user['id']);
+                    return $user;
+                }
+            } else if ($user) {
+                // Temporary solution: If there's no hashed password yet, allow login
+                // This should be removed in production and proper password hashing implemented
+                error_log("User found but no password hash exists");
+                return $user;
+            }
+            return [];
+        } catch (Exception $e) {
+            error_log("Error getting user by email: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Update the last login time for a user.
+     * @param int $userId The ID of the user to update.
+     */
+    private function updateLastLogin($userId) {
+        $query = "UPDATE users SET last_login = NOW() WHERE id = :userId";
+        $stmt = $this->connection->prepare($query);
+        $stmt->bindValue(':userId', $userId);
+        $stmt->execute();
+    }
+
+    /**
+     * Get the last login time for a user.
+     * @param int $userId The ID of the user to get.
+     * @return string The last login time.
+     */
+    public function getLastLogin($userId) {
+        $query = "SELECT last_login FROM users WHERE id = :userId";
+        $stmt = $this->connection->prepare($query);
+        $stmt->bindValue(':userId', $userId);
+        $stmt->execute();
+        return $stmt->fetchColumn();
+    }
+
 }

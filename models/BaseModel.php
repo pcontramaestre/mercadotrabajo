@@ -65,6 +65,10 @@ class BaseModel {
         return $this->dbHelper->getRelatedJobs($jobID, $limit);
     }
 
+    public function getUserByEmail($email, $password): array{
+        return $this->dbHelper->getUserByEmail($email, $password);
+    }
+
     public function saveJob(int $userId, int $jobId): bool {
         $data = [
             'user_id' => $userId,
@@ -91,5 +95,17 @@ class BaseModel {
     public function isJobSaved(int $userId, int $jobId): bool {
         $result = $this->select('saved_jobs', ['user_id' => $userId, 'job_id' => $jobId]);
         return !empty($result);
+    }
+
+    public function beginTransaction() {
+        $this->dbHelper->beginTransaction();
+    }
+
+    public function commit() {
+        $this->dbHelper->commit();
+    }
+
+    public function rollBack() {
+        $this->dbHelper->rollBack();
     }
 }

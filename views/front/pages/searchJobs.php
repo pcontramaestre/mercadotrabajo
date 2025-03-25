@@ -11,6 +11,7 @@ require_once 'views/components/pageTitleInternal.php';
 $search = $results;
 $related = $relatedJobs;
 
+
 if (empty($search)) {
     $search = [];
 } else {
@@ -98,7 +99,8 @@ if (empty($search)) {
                                     'bg-yellow-100': job.employment_type_name === 'Contract', 
                                     'bg-red-100': job.employment_type_name === 'Temporary',
                                     'bg-yellow-100': job.employment_type_name === 'LinkedIn',
-                                    'bg-blue-200': job.employment_type_name === 'Computrabajo'
+                                    'bg-blue-200': job.employment_type_name === 'Computrabajo',
+                                    'bg-green-100': job.employment_type_name === 'Empleate',
                                     }"
                                     class="px-2 py-1 rounded-lg text-xs bg-green-100"
                                     x-text="job.employment_type_name"></span>
@@ -157,6 +159,11 @@ if (empty($search)) {
                     Siguiente
                 </button>
             </div>
+            <div class="mt-4 mostrar-google" x-show="mostrarGoogle">
+                <p>Si no encuentras el trabajo que buscas, puedes buscarlo en Google</p>
+                <!-- Google Search -->
+                <div class="gcse-search"></div>
+            </div>
         </div>
 
         <!-- Detalles del trabajo seleccionado -->
@@ -195,6 +202,18 @@ if (empty($search)) {
                         </div>
 
                         <div class="btn-box mt-4 job-block-seven">
+                            <?php 
+                                if (empty($_SESSION['user_id'])) {
+                            ?>
+                            <a href="<?php echo SYSTEM_BASE_DIR.'login' ?>" class="theme-btn btn-style-one">
+                                Iniciar sesión para aplicar
+                            </a>
+                            <?php
+                                } else {
+                            ?>
+                            <?php
+                                if ($_SESSION['role_id'] == '2'){
+                            ?>
                                     <!-- Mostrar el botón "Apply For Job" solo si no se ha aplicado -->
                                     <template x-if="$store.selectedJobIsApplied == '0' && $store.isExternal == '0' && $store.isInternalExternal == '0'">
                                         <a href="#" class="theme-btn btn-style-one" data-bs-toggle="modal"
@@ -208,6 +227,15 @@ if (empty($search)) {
                                     <template x-if="$store.selectedJobIsLinkedin == '1'">
                                         <a  
                                         :href="'https://www.linkedin.com/jobs/view/' + selectedJob.dataEntityUrn"
+                                        class="theme-btn btn-style-one" target="_blank">
+                                            Aplicar al trabajo
+                                        </a>
+                                    </template>
+
+                                    <!-- Mostrar el botón "Apply For Job" solo si es de empleate -->
+                                    <template x-if="$store.selectedJobIsEmplate == '1'">
+                                        <a  
+                                        :href="'https://www.empleate.com/venezuela/ofertas/empleo/'+selectedJob.dataEntityUrn"
                                         class="theme-btn btn-style-one" target="_blank">
                                             Aplicar al trabajo
                                         </a>
@@ -239,7 +267,7 @@ if (empty($search)) {
                                     </template>
 
                                     <!-- Mostrar el botón de guardar solo si no es externo -->
-                                    <template x-if="$store.isInternalExternal == '1'">
+                                    <template x-if="$store.isInternalExternal == '1' || $store.isExternal == '0'">
                                         <button
                                             @click.stop="toggleSaveJob(selectedJob.id)"
                                             :class="{'text-blue-500': selectedJob.isSaved == '1', 'text-gray-400': selectedJob.isSaved == '0'}"
@@ -249,6 +277,11 @@ if (empty($search)) {
                                                 class="fa-bookmark far"></i>
                                         </button>
                                     </template>
+                                
+                                <?php
+                                    }
+                                }
+                            ?>
                             </div>
 
                     </div>
@@ -279,7 +312,7 @@ if (empty($search)) {
                     <div class="apply-modal-content modal-content">
                         <div class="text-center">
                             <h3 
-                                :data-translate-es="'Aplicar a' + selectedJob.title"
+                                :data-translate-es="'Aplicar a ' + selectedJob.title"
                                 :data-translate-en="'Apply for job ' + selectedJob.title"
                                 class="title" x-text="'Aplicar a '+selectedJob.title"
                                 >
@@ -362,6 +395,8 @@ if (empty($search)) {
         </div>
     </div>
 </div>
+
+<script async src="https://cse.google.com/cse.js?cx=255a777a2830c4f43"></script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -457,17 +492,10 @@ if (empty($search)) {
             .then(data => {
                 const uploadedFilesContainer = document.getElementById('uploaded-files');
                 uploadedFilesContainer.innerHTML = '';
-                // if (data.success && data.cvs) {
-                //     data.cvs.forEach(cv => {
-                //         addFileToUI(cv.filename, cv.id); // Mostrar archivos del servidor
-                //     });
-                // } else {
-                //     addFileToUI("", "");
-                // }
-                if (data.success && data.cvs) {
+                if (data.success && data.cvs && data.cvs.length > 0) {
                     data.cvs.forEach(cv => addFileToUI(cv.filename, cv.id));
                 } else {
-                    addFileToUI(null, null); // Forzar mensaje de error
+                    addFileToUI(0, 0); // Forzar mensaje de error
                 }
             })
             .catch(error => {
@@ -479,7 +507,7 @@ if (empty($search)) {
     function addFileToUI(filename, id) {
         const container = document.getElementById('uploaded-files');
 
-        if (!filename && !id) {
+        if (filename == 0 && id == 0) {
             // Caso 1: No hay CVs cargados → Mostrar mensaje
             container.innerHTML = `
             <div class="no-cvs-message">
@@ -519,6 +547,7 @@ if (empty($search)) {
         Alpine.store('selectedJobIsApplied', 0);
         Alpine.store('selectedJobIsLinkedin', 0);
         Alpine.store('selectedJobIsComputrabajo', 0);
+        Alpine.store('selectedJobIsEmplate', 0);
         Alpine.store('isExternal', 0);
         Alpine.store('isInternalExternal', 0);
         console.log('Alpine initialized');
@@ -529,6 +558,7 @@ if (empty($search)) {
             selectedJob: null, // Trabajo seleccionado
             currentPage: 1, // Página actual
             perPage: 20, // Número de trabajos por página
+            mostrarGoogle: false,
             // Calcular el número total de páginas
             get totalPages() {
                 return Math.ceil(this.jobs.length / this.perPage);
@@ -581,6 +611,10 @@ if (empty($search)) {
                         dataExternal.company_id = 7;
                         dataExternal.category_id  = 8;
                         dataExternal.Fuente = 'computrabajo';
+                    } else if (job.isEmpleate == 'true' || job.isEmpleate == true) {
+                        dataExternal.company_id = 9;
+                        dataExternal.category_id  = 9;
+                        dataExternal.Fuente = 'empleate';
                     }
                     dataExternal.title = job.title;
                     dataExternal.job_type_id = 6;
@@ -591,6 +625,7 @@ if (empty($search)) {
                     dataExternal.external_id = job.dataEntityUrn;
                     dataExternal.job_description = '';
                 }
+
                 if (window.innerWidth < 768) {
                     if (firstJob && totalJobs == 1) {
                         this.selectedJob = job;
@@ -615,6 +650,7 @@ if (empty($search)) {
                     this.$store.isInternalExternal = job.isInternalExternal;
                     if (job.isLinkedin == 'true' || job.isLinkedin == true) {
                         this.$store.selectedJobIsComputrabajo = 0;
+                        this.$store.selectedJobIsEmplate = 0;
                         this.$store.selectedJobIsLinkedin = 1;
                         job.description = '<br> Cargando...';
 
@@ -637,6 +673,7 @@ if (empty($search)) {
 
                     if (job.isComputrabajo == 'true' || job.isComputrabajo == true) {
                         this.$store.selectedJobIsComputrabajo = 1;
+                        this.$store.selectedJobIsEmplate = 0;
                         this.$store.selectedJobIsLinkedin = 0;
                         job.description = '<br> Cargando...';
 
@@ -647,6 +684,30 @@ if (empty($search)) {
                                     job.description = data.description;
                                     dataExternal.job_description = data.description;
                                     this.saveJob('computrabajo', dataExternal);
+                                } else {
+                                    job.description = 'No se pudo cargar la descripción';
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                job.description = 'Ocurrió un error al cargar la descripción';
+                            });
+                    }
+
+                    if (job.isEmpleate == 'true' || job.isEmpleate == true) {
+                        this.$store.selectedJobIsEmplate = 1;
+                        this.$store.selectedJobIsComputrabajo = 0;
+                        this.$store.selectedJobIsLinkedin = 0;
+                        job.description = '<br> Cargando...';
+
+                        fetch('<?php echo SYSTEM_BASE_DIR ?>api/v1/searchempleatejob/' + job.dataEntityUrn)
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    job.description = data.description;
+                                    dataExternal.job_description = data.description;
+                                    dataExternal.external_url = "https://www.empleate.com/venezuela/ofertas/empleo/" + data.dataEntityUrn;
+                                    this.saveJob('empleate', dataExternal);
                                 } else {
                                     job.description = 'No se pudo cargar la descripción';
                                 }
@@ -694,6 +755,11 @@ if (empty($search)) {
                     }
                     this.scrollToFirstJob();
                 }
+                if (this.currentPage == this.totalPages) {
+                    this.hideGoogleSearch();
+                } else {
+                    this.showGoogleSearch();
+                }
             },
 
             // Ir a la página siguiente
@@ -705,8 +771,18 @@ if (empty($search)) {
                     }
                     this.scrollToFirstJob();
                 }
+                if (this.currentPage == this.totalPages) {
+                    this.showGoogleSearch();
+                } else {
+                    this.hideGoogleSearch();
+                }
             },
-
+            showGoogleSearch() {
+                this.mostrarGoogle = true;
+            },
+            hideGoogleSearch() {
+                this.mostrarGoogle = false;
+            },
             // Seleccionar el primer trabajo de la página actual
             selectFirstJob() {
                 const firstJob = this.paginatedJobs[0];
@@ -750,10 +826,15 @@ if (empty($search)) {
                         this.selectFirstJob(); 
                     }
                 }
-
+                if (this.currentPage == this.totalPages) {
+                    this.showGoogleSearch();
+                } else {
+                    this.hideGoogleSearch();
+                }
                 this.$store.selectedJobId = this.selectedJob ? this.selectedJob.id : null;
                 this.$store.selectedJobIsApplied = this.selectedJob ? this.selectedJob.isApplied : null;
                 console.log(this.jobs);
+                console.log(this.$store);
             },
         }));
 

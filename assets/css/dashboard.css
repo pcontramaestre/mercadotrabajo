@@ -427,8 +427,8 @@ a[data-text]:hover:before, button[data-text]:hover:before, a[data-text]:hover:af
     line-height: 30px;
     padding: 15px 20px;
     font-size: 15px;
-    color: dimgray;
-    background-color: #f0f5f7;
+    color: #1e1d1d;
+    background-color: #f0f5f782;
     border: 1px solid #f0f5f7;
     box-sizing: border-box;
     border-radius: 8px;
@@ -1678,4 +1678,12 @@ a[data-text]:hover:before, button[data-text]:hover:before, a[data-text]:hover:af
         margin: 15px 0 15px;
         float: left;
         width: 100%
+    }
+
+    .mostrar-google .gsc-control-cse {
+        padding-left: 0;
+    }
+
+    .description-job-empleate .title-offer {
+        display: none;
     }
