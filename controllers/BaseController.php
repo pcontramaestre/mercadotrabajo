@@ -928,10 +928,7 @@ class BaseController
 
             echo json_encode($response);
         }
-    }
-
-
-    
+    }    
 
     //Función para buscar estados
     public function getEstados()
@@ -960,7 +957,6 @@ class BaseController
         $parroquias = $this->modelBase->selectWithFields('parroquias', 'id_parroquia, parroquia', "id_municipio = $id_municipio", 'id_parroquia ASC');
         return $parroquias;
     }
-
 
     //método para ver el blog
     public function viewBlog()
@@ -1074,5 +1070,10 @@ class BaseController
             error_log("Error al guardar el trabajo: " . $e->getMessage());
             echo json_encode(['success' => false, 'message' => 'Error al guardar el trabajo.']);
         }
+    }
+
+    public function select(string $tableName, array $conditions = [], string $orderBy = 'id DESC', int $offset = 0, int $limit = null, string $joinClause = null): array
+    {
+        return $this->modelBase->select($tableName, $conditions, $orderBy, $offset, $limit, $joinClause);
     }
 }
