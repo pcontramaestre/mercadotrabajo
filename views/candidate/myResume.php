@@ -10,11 +10,11 @@
 ?>
   
   <!-- Main Content -->
-<main class="flex-1 md:ml-64 md:pl-0 pl-0 pt-16 md:pt-0">
-    <div class="max-w-6xl mx-auto">
+<main class="flex-1 p-4 md:ml-64 md:pl-0 md:pt-0">
+    <div class="max-w-6xl mx-auto pt-4 lg:pt-0">
       <div class="mb-8">
-        <h1 class="text-2xl font-bold text-gray-800">My Resume!</h1>
-        <p class="text-gray-500 mt-1">Ready to jump back in?</p>
+        <h1 class="text-2xl font-bold text-gray-800">Mi resumen!</h1>
+        <p class="text-gray-500 mt-1">¡Hola, bienvenido de vuelta!</p>
       </div>
       
       <!-- Resume Content -->
@@ -39,11 +39,11 @@
         <!-- Description -->
         <div class="bg-white rounded-lg shadow-sm p-6 mb-6 shadow border">
           <div class="mb-8">
-          <h3 class="text-lg font-medium text-gray-700 flex flex-row items-center"><i data-lucide="user-round-pen" class="w-5 h-5 mr-2"></i> Resume Summary</h3>
+          <h3 class="text-lg font-medium text-gray-700 flex flex-row items-center"><i data-lucide="user-round-pen" class="w-5 h-5 mr-2"></i> Resumen del currículum</h3>
             <div class="bg-gray-50 p-4 rounded-md">
               <textarea 
                 id="resume-description"
-                placeholder="Resume Summary, enter here a summary of your skills, abilities and why you are good at your job"
+                placeholder="Resumen, ingresa aquí un resumen de tus habilidades, aptitudes y por qué eres bueno en tu trabajo"
                 class="w-full bg-gray-50 text-sm text-gray-600 leading-relaxed border-0 focus:ring-0 p-0"
                 rows="6"
               ></textarea>
@@ -55,7 +55,7 @@
                 type="button" 
                 class="px-6 py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               >
-                Save resume summary
+                Guardar cambios
               </button>
             </div>
           </div>
@@ -65,10 +65,10 @@
         <div class="bg-white rounded-lg shadow-sm p-6 mb-6 shadow border">
           <div class="mb-8">
             <div class="flex justify-between items-center mb-4">
-              <h3 class="text-lg font-medium text-gray-700 flex flex-row items-center"><i data-lucide="book-open-text" class="w-5 h-5 mr-2"></i> Education</h3>
+              <h3 class="text-lg font-medium text-gray-700 flex flex-row items-center"><i data-lucide="book-open-text" class="w-5 h-5 mr-2"></i> Educación</h3>
               <button id="add-education-btn" class="flex items-center text-sm font-medium text-blue-600 hover:text-blue-700">
                 <i data-lucide="plus-circle" class="w-5 h-5 mr-1"></i>
-                Add Education
+                Añadir Educación
               </button>
             </div>
             
@@ -82,10 +82,10 @@
         <div class="bg-white rounded-lg shadow-sm p-6 mb-6 shadow border">
           <div class="mb-8">
             <div class="flex justify-between items-center mb-4">
-              <h3 class="text-lg font-medium text-gray-700 flex flex-row items-center"><i data-lucide="briefcase" class="w-5 h-5 mr-2"></i> Work & Experience</h3>
-              <button id="add-experience-btn" class="flex items-center text-sm font-medium text-blue-600 hover:text-blue-700">
+              <h3 class="text-lg font-medium text-gray-700 flex flex-row items-center leading-none"><i data-lucide="briefcase" class="w-5 h-5 mr-2"></i> Experiencia laboral</h3>
+              <button id="add-experience-btn" class="flex items-center text-sm font-medium text-blue-600 hover:text-blue-700 leading-none">
                 <i data-lucide="plus-circle" class="w-5 h-5 mr-1"></i>
-                Add Experience
+                Añadir Experiencia
               </button>
             </div>
             
@@ -99,11 +99,10 @@
         <div class="bg-white rounded-lg shadow-sm p-6 mb-6 shadow border">
           <div class="mb-8">
             <div class="flex justify-between items-center mb-4">
-              <h3 class="text-lg font-medium text-gray-700 flex flex-row items-center"><i data-lucide="award" class="w-5 h-5 mr-2"></i> Awards</h3>
-              <h3 class="text-md font-medium text-gray-700">Awards</h3>
+              <h3 class="text-lg font-medium text-gray-700 flex flex-row items-center"><i data-lucide="award" class="w-5 h-5 mr-2"></i> Premios</h3>
               <button id="add-award-btn" class="flex items-center text-sm font-medium text-blue-600 hover:text-blue-700">
                 <i data-lucide="plus-circle" class="w-5 h-5 mr-1"></i>
-                Add Award
+                Añadir Premio
               </button>
             </div>
             
@@ -116,10 +115,10 @@
         <div class="bg-white rounded-lg shadow-sm p-6 mb-6 shadow border">
           <div class="mb-8">
             <div class="flex justify-between items-center mb-4">
-              <h3 class="text-lg font-medium text-gray-700 flex flex-row items-center"><i data-lucide="clipboard-check" class="w-5 h-5 mr-2"></i> Skills</h3>
+              <h3 class="text-lg font-medium text-gray-700 flex flex-row items-center"><i data-lucide="clipboard-check" class="w-5 h-5 mr-2"></i> Habilidades</h3>
               <button id="add-skill-btn" class="flex items-center text-sm font-medium text-blue-600 hover:text-blue-700">
                 <i data-lucide="plus-circle" class="w-5 h-5 mr-1"></i>
-                Add Skill
+                Añadir Habilidad
               </button>
             </div>
             
@@ -139,7 +138,7 @@
     <div class="bg-white rounded-lg shadow-lg w-full max-w-md mx-4">
       <div class="p-6">
         <div class="flex justify-between items-center mb-4">
-          <h3 class="text-lg font-medium text-gray-900">Add Education</h3>
+          <h3 class="text-lg font-medium text-gray-900">Añadir Educación</h3>
           <button id="close-education-modal" class="text-gray-400 hover:text-gray-500">
             <i data-lucide="x" class="w-5 h-5"></i>
           </button>
@@ -149,7 +148,7 @@
           <input type="hidden" id="education-id" value="">
           
           <div class="mb-4">
-            <label for="degree" class="block text-sm font-medium text-gray-700 mb-1">Degree</label>
+            <label for="degree" class="block text-sm font-medium text-gray-700 mb-1">Grado</label>
             <input 
               type="text" 
               id="degree" 
@@ -160,7 +159,7 @@
           </div>
           
           <div class="mb-4">
-            <label for="institution" class="block text-sm font-medium text-gray-700 mb-1">Institution</label>
+            <label for="institution" class="block text-sm font-medium text-gray-700 mb-1">Institución</label>
             <input 
               type="text" 
               id="institution" 
@@ -172,7 +171,7 @@
           
           <div class="grid grid-cols-2 gap-4 mb-4">
             <div>
-              <label for="start-year" class="block text-sm font-medium text-gray-700 mb-1">Start Year</label>
+              <label for="start-year" class="block text-sm font-medium text-gray-700 mb-1">Año de inicio</label>
               <input 
                 type="text" 
                 id="start-year" 
@@ -182,7 +181,7 @@
               >
             </div>
             <div>
-              <label for="end-year" class="block text-sm font-medium text-gray-700 mb-1">End Year</label>
+              <label for="end-year" class="block text-sm font-medium text-gray-700 mb-1">Año de fin</label>
               <input 
                 type="text" 
                 id="end-year" 
@@ -194,12 +193,12 @@
           </div>
           
           <div class="mb-4">
-            <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
             <textarea 
               id="description" 
               rows="3" 
               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Brief description of your studies and achievements"
+              placeholder="Breve descripción de tus estudios y logros"
             ></textarea>
           </div>
           
@@ -228,7 +227,9 @@
     <div class="bg-white rounded-lg shadow-lg w-full max-w-md mx-4">
       <div class="p-6">
         <div class="flex justify-between items-center mb-4">
-          <h3 class="text-lg font-medium text-gray-900">Add Experience</h3>
+          <h3 class="text-lg font-medium text-gray-900" data-translate-es="Añadir Experiencia" data-translate-en="Add Experience">
+            Añadir Experiencia
+          </h3>
           <button id="close-experience-modal" class="text-gray-400 hover:text-gray-500">
             <i data-lucide="x" class="w-5 h-5"></i>
           </button>
@@ -238,7 +239,9 @@
           <input type="hidden" id="experience-id" value="">
           
           <div class="mb-4">
-            <label for="job-title" class="block text-sm font-medium text-gray-700 mb-1">Job Title</label>
+            <label for="job-title" class="block text-sm font-medium text-gray-700 mb-1" data-translate-es="Título del Trabajo" data-translate-en="Job Title">
+              Título del Trabajo
+            </label>
             <input 
               type="text" 
               id="job-title" 
@@ -249,7 +252,9 @@
           </div>
           
           <div class="mb-4">
-            <label for="company" class="block text-sm font-medium text-gray-700 mb-1">Company</label>
+            <label for="company" class="block text-sm font-medium text-gray-700 mb-1" data-translate-es="Empresa" data-translate-en="Company">
+              Empresa
+            </label>
             <input 
               type="text" 
               id="company" 
@@ -261,7 +266,9 @@
           
           <div class="grid grid-cols-2 gap-4 mb-4">
             <div>
-              <label for="exp-start-date" class="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
+              <label for="exp-start-date" class="block text-sm font-medium text-gray-700 mb-1" data-translate-es="Fecha de inicio" data-translate-en="Start Date">
+                Fecha de inicio
+              </label>
               <input 
                 type="text" 
                 id="exp-start-date" 
@@ -271,7 +278,9 @@
               >
             </div>
             <div>
-              <label for="exp-end-date" class="block text-sm font-medium text-gray-700 mb-1">End Date</label>
+              <label for="exp-end-date" class="block text-sm font-medium text-gray-700 mb-1" data-translate-es="Fecha de fin" data-translate-en="End Date">
+                Fecha de fin
+              </label>
               <input 
                 type="text" 
                 id="exp-end-date" 
@@ -283,7 +292,9 @@
           </div>
           
           <div class="mb-4">
-            <label for="exp-description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <label for="exp-description" class="block text-sm font-medium text-gray-700 mb-1" data-translate-es="Descripción" data-translate-en="Description">
+              Descripción
+            </label>
             <textarea 
               id="exp-description" 
               rows="3" 
@@ -298,13 +309,13 @@
               id="cancel-experience-btn"
               class="px-4 py-2 bg-gray-100 text-gray-700 font-medium rounded-md mr-2 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
             >
-              Cancel
+              Cancelar
             </button>
             <button 
               type="submit" 
               class="px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
-              Save
+              Guardar
             </button>
           </div>
         </form>
@@ -317,7 +328,9 @@
     <div class="bg-white rounded-lg shadow-lg w-full max-w-md mx-4">
       <div class="p-6">
         <div class="flex justify-between items-center mb-4">
-          <h3 class="text-lg font-medium text-gray-900">Add Award</h3>
+          <h3 class="text-lg font-medium text-gray-900" data-translate-es="Añadir Premio" data-translate-en="Add Award">
+            Añadir Premio
+          </h3>
           <button id="close-award-modal" class="text-gray-400 hover:text-gray-500">
             <i data-lucide="x" class="w-5 h-5"></i>
           </button>
@@ -327,7 +340,9 @@
           <input type="hidden" id="award-id" value="">
           
           <div class="mb-4">
-            <label for="award-title" class="block text-sm font-medium text-gray-700 mb-1">Award Title</label>
+            <label for="award-title" class="block text-sm font-medium text-gray-700 mb-1" data-translate-es="Título del Premio" data-translate-en="Award Title">
+              Título del Premio
+            </label>
             <input 
               type="text" 
               id="award-title" 
@@ -338,7 +353,9 @@
           </div>
           
           <div class="mb-4">
-            <label for="award-organization" class="block text-sm font-medium text-gray-700 mb-1">Organization</label>
+            <label for="award-organization" class="block text-sm font-medium text-gray-700 mb-1" data-translate-es="Organización" data-translate-en="Organization">
+              Organización
+            </label>
             <input 
               type="text" 
               id="award-organization" 
@@ -349,7 +366,9 @@
           </div>
           
           <div class="mb-4">
-            <label for="award-year" class="block text-sm font-medium text-gray-700 mb-1">Year</label>
+            <label for="award-year" class="block text-sm font-medium text-gray-700 mb-1" data-translate-es="Año" data-translate-en="Year">
+              Año
+            </label>
             <input 
               type="text" 
               id="award-year" 
@@ -360,7 +379,9 @@
           </div>
           
           <div class="mb-4">
-            <label for="award-description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <label for="award-description" class="block text-sm font-medium text-gray-700 mb-1" data-translate-es="Descripción" data-translate-en="Description">
+              Descripción
+            </label>
             <textarea 
               id="award-description" 
               rows="3" 
@@ -375,13 +396,13 @@
               id="cancel-award-btn"
               class="px-4 py-2 bg-gray-100 text-gray-700 font-medium rounded-md mr-2 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
             >
-              Cancel
+              Cancelar
             </button>
             <button 
               type="submit" 
               class="px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
-              Save
+              Guardar
             </button>
           </div>
         </form>
@@ -394,7 +415,9 @@
     <div class="bg-white rounded-lg shadow-lg w-full max-w-md mx-4">
       <div class="p-6">
         <div class="flex justify-between items-center mb-4">
-          <h3 class="text-lg font-medium text-gray-900">Add Skill</h3>
+          <h3 class="text-lg font-medium text-gray-900" data-translate-es="Añadir Habilidad" data-translate-en="Add Skill">
+            Añadir Habilidad
+          </h3>
           <button id="close-skill-modal" class="text-gray-400 hover:text-gray-500">
             <i data-lucide="x" class="w-5 h-5"></i>
           </button>
@@ -404,7 +427,9 @@
           <input type="hidden" id="skill-id" value="">
           
           <div class="mb-4">
-            <label for="skill-name" class="block text-sm font-medium text-gray-700 mb-1">Skill Name</label>
+            <label for="skill-name" class="block text-sm font-medium text-gray-700 mb-1" data-translate-es="Nombre de la Habilidad" data-translate-en="Skill Name">
+              Nombre de la Habilidad
+            </label>
             <input 
               type="text" 
               id="skill-name" 
@@ -415,7 +440,9 @@
           </div>
           
           <div class="mb-4">
-            <label for="skill-level" class="block text-sm font-medium text-gray-700 mb-1">Skill Level (%)</label>
+            <label for="skill-level" class="block text-sm font-medium text-gray-700 mb-1" data-translate-es="Nivel de Habilidad (%)" data-translate-en="Skill Level (%)">
+              Nivel de Habilidad (%)
+            </label>
             <input 
               type="range" 
               id="skill-level" 
@@ -425,9 +452,9 @@
               class="w-full"
             >
             <div class="flex justify-between text-xs text-gray-500">
-              <span>Beginner</span>
+              <span data-translate-es="Principiante" data-translate-en="Beginner">Beginner</span>
               <span id="skill-level-value">75%</span>
-              <span>Expert</span>
+              <span data-translate-es="Experto" data-translate-en="Expert">Expert</span>
             </div>
           </div>
           
@@ -456,13 +483,13 @@
     <div class="bg-white rounded-lg shadow-lg w-full max-w-md mx-4">
       <div class="p-6">
         <div class="flex justify-between items-center mb-4">
-          <h3 class="text-lg font-medium text-gray-900">Confirm Delete</h3>
+          <h3 class="text-lg font-medium text-gray-900" data-translate-es="Confirmar Borrado" data-translate-en="Confirm Delete">Confirmar Borrado</h3>
           <button id="close-delete-modal" class="text-gray-400 hover:text-gray-500">
             <i data-lucide="x" class="w-5 h-5"></i>
           </button>
         </div>
         
-        <p class="text-gray-600 mb-6">Are you sure you want to delete this item? This action cannot be undone.</p>
+        <p class="text-gray-600 mb-6" data-translate-es="¿Estás seguro de que deseas eliminar este item? Esta acción no se puede deshacer." data-translate-en="Are you sure you want to delete this item? This action cannot be undone.">¿Estás seguro de que deseas eliminar este item? Esta acción no se puede deshacer.</p>
         
         <div class="flex justify-end">
           <button 
@@ -470,14 +497,14 @@
             id="cancel-delete-btn"
             class="px-4 py-2 bg-gray-100 text-gray-700 font-medium rounded-md mr-2 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
           >
-            Cancel
+            Cancelar
           </button>
           <button 
             type="button" 
             id="confirm-delete-btn"
             class="px-4 py-2 bg-red-600 text-white font-medium rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
           >
-            Delete
+            Eliminar
           </button>
         </div>
       </div>
@@ -623,7 +650,7 @@
       experienceList.innerHTML = '';
       
       if (experienceData.length === 0) {
-        experienceList.innerHTML = '<p class="text-center text-gray-500 py-4">No experience added yet. Click "Add Experience" to add your work history.</p>';
+        experienceList.innerHTML = '<p class="text-center text-gray-500 py-4">Aún no hay experiencia laboral añadida. Haz clic en "Añadir experiencia" para añadir tu historial laboral.</p>';
         return;
       }
       
@@ -696,7 +723,7 @@
       awardsList.innerHTML = '';
       
       if (awardsData.length === 0) {
-        awardsList.innerHTML = '<p class="text-center text-gray-500 py-4">No awards added yet. Click "Add Award" to add your achievements.</p>';
+        awardsList.innerHTML = '<p class="text-center text-gray-500 py-4">Aún no hay premios añadidos. Haz clic en "Añadir premio" para añadir tus logros.</p>';
         return;
       }
       
@@ -769,7 +796,7 @@
       skillsList.innerHTML = '';
       
       if (skillsData.length === 0) {
-        skillsList.innerHTML = '<p class="text-center text-gray-500 py-4">No skills added yet. Click "Add Skill" to add your skills.</p>';
+        skillsList.innerHTML = '<p class="text-center text-gray-500 py-4">Aún no hay habilidades añadidas. Haz clic en "Añadir habilidad" para añadir tus habilidades.</p>';
         return;
       }
       

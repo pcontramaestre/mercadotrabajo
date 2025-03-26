@@ -87,6 +87,7 @@ require_once 'views/components/pageTitleInternal.php';
         </div>
     </div>
 </div>
+
 <!-- Modal de Registro -->
 <div id="registration-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full z-50 flex items-center justify-center">
     <div class="relative mx-auto p-5 border w-11/12 md:w-96 shadow-lg rounded-md bg-white">
@@ -102,17 +103,17 @@ require_once 'views/components/pageTitleInternal.php';
                     Elige cómo deseas registrarte en nuestra plataforma
                 </p>
                 <div class="flex flex-col space-y-4">
-                    <a href="<?php echo SYSTEM_BASE_DIR ?>register/company" class="flex items-center justify-center px-4 py-3 border border-transparent text-base font-medium rounded-md text-white bg-[#13358a] hover:bg-[#0f2a6e] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#13358a] transition duration-150 ease-in-out">
-                        <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                        </svg>
-                        Registrarse como Empresa
-                    </a>
                     <a href="<?php echo SYSTEM_BASE_DIR ?>register/candidate" class="flex items-center justify-center px-4 py-3 border border-[#13358a] text-base font-medium rounded-md text-[#13358a] bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#13358a] transition duration-150 ease-in-out">
                         <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                         </svg>
                         Registrarse como Candidato
+                    </a>
+                    <a href="<?php echo SYSTEM_BASE_DIR ?>register/company" class="flex items-center justify-center px-4 py-3 border border-transparent text-base font-medium rounded-md text-white bg-[#13358a] hover:bg-[#0f2a6e] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#13358a] transition duration-150 ease-in-out">
+                        <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                        </svg>
+                        Registrarse como Empresa
                     </a>
                 </div>
             </div>

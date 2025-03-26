@@ -12,8 +12,21 @@
         <div class="row">
             <div class="process-block col-lg-4 col-md-6 col-sm-12">
                 <div class="icon-box">
-                    <img alt="how it works" loading="lazy" width="50" height="61" decoding="async" data-nimg="1" 
-                    src="<?php  echo SYSTEM_BASE_DIR . 'assets/img/process-1.webp' ?>"style="color: transparent;">
+                    <?php
+                        if (empty($_SESSION['user_id'])) {
+                    ?>
+                        <a href="<?php echo SYSTEM_BASE_DIR ?>login">
+                            <img alt="how it works" loading="lazy" width="50" height="61" decoding="async" data-nimg="1" 
+                            src="<?php  echo SYSTEM_BASE_DIR . 'assets/img/process-1.webp' ?>"style="color: transparent;">
+                        </a>
+                    <?php
+                        } else {
+                    ?>
+                        <img alt="how it works" loading="lazy" width="50" height="61" decoding="async" data-nimg="1" 
+                        src="<?php  echo SYSTEM_BASE_DIR . 'assets/img/process-1.webp' ?>"style="color: transparent;">
+                    <?php
+                        }
+                    ?>
                 </div>
                 <h4 data-translate-en="Register an account" data-translate-es="Registre una cuenta">Register an account 
                     <br> 

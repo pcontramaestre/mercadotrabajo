@@ -12,8 +12,7 @@ if (empty($_SESSION['company_id']) || $_SESSION['role_id'] != 3) {
  */
 
 require_once 'views/components/html/companyJobs.php';
-$controllerCompanyJobs = new CompanyJobs('TABLE', $dataCompanyJobs);
-
+$controllerCompanyJobs = new CompanyJobs('TABLE', $dataCompanyJob);
 include_once 'config/config.php';
 include_once 'views/company/header.php';
 ?>

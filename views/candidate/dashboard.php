@@ -7,39 +7,6 @@ if (empty($_SESSION['user_id']) || $_SESSION['role_id'] != 2) {
   include_once 'config/config.php';
   include_once 'views/candidate/header.php';
 ?>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            blue: {
-              50: '#eff6ff',
-              100: '#dbeafe',
-              600: '#2563eb'
-            },
-            red: {
-              50: '#fef2f2',
-              100: '#fee2e2',
-              600: '#dc2626'
-            },
-            yellow: {
-              50: '#fefce8',
-              100: '#fef9c3',
-              600: '#ca8a04'
-            },
-            green: {
-              50: '#f0fdf4',
-              100: '#dcfce7',
-              600: '#16a34a'
-            },
-            indigo: {
-              500: '#6366f1'
-            }
-          }
-        }
-      }
-    }
-  </script>
 
 <main class="flex-1 md:ml-64 md:pl-0 pl-0 pt-16 md:pt-0">
         
@@ -308,24 +275,6 @@ if (empty($_SESSION['user_id']) || $_SESSION['role_id'] != 2) {
     // Inicializar los iconos de Lucide
     lucide.createIcons();
     
-    // Toggle del menú móvil
-    document.getElementById('mobile-menu-toggle').addEventListener('click', function() {
-      const sidebar = document.getElementById('sidebar');
-      sidebar.classList.toggle('hidden');
-    });
-    
-    // Cerrar el sidebar en móvil cuando se hace clic fuera de él
-    document.addEventListener('click', function(event) {
-      const sidebar = document.getElementById('sidebar');
-      const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
-      
-      if (window.innerWidth < 768 && 
-          !sidebar.contains(event.target) && 
-          !mobileMenuToggle.contains(event.target)) {
-        sidebar.classList.add('hidden');
-      }
-    });
-    
     // Inicializar el gráfico de vistas de perfil
     const ctx = document.getElementById('profile-views-chart').getContext('2d');
     const profileViewsChart = new Chart(ctx, {
@@ -394,20 +343,6 @@ if (empty($_SESSION['user_id']) || $_SESSION['role_id'] != 2) {
       profileViewsChart.update();
     });
     
-    // Ajustar el sidebar en cambios de tamaño de ventana
-    window.addEventListener('resize', function() {
-      const sidebar = document.getElementById('sidebar');
-      if (window.innerWidth >= 768) {
-        sidebar.classList.remove('hidden');
-      } else {
-        sidebar.classList.add('hidden');
-      }
-    });
-    
-    // Inicializar el sidebar como oculto en móvil al cargar
-    if (window.innerWidth < 768) {
-      document.getElementById('sidebar').classList.add('hidden');
-    }
   </script>
 
 <?php

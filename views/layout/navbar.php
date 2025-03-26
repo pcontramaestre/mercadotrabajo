@@ -266,12 +266,26 @@
                       </span>
                     </li>
                   </div>
-
-                  
+                  <?php 
+                      if ($_SESSION['user_id'] == 0) {
+                    ?>
+                      <div class="d-flex align-items-center btn-box2 mt-2">
+                        <a href="<?php echo SYSTEM_BASE_DIR ?>login" class="theme-btn bg-bluemenu-100 btn-style-six call-modal" data-translate-es="Login / Registrarse" data-translate-en="Login / Register">Login / Register</a>
+                      </div>
+                    <?php
+                      } else {
+                    ?>
+                      <div class="d-flex align-items-center btn-box2 mt-2">
+                        <a href="<?php echo SYSTEM_BASE_DIR ?>logout" class="theme-btn btn-style-six call-modal" data-translate-es="Logout" data-translate-en="Logout">Logout</a>
+                      </div>
+                    <?php
+                      }
+                    ?>
                 </ul>
               </nav>
             </div>
           </aside>
+
           <div class="mm-add-listing mm-listitem pro-footer">
             <div class="social-links px-2">
                 <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer"><i
@@ -296,6 +310,7 @@
           <i class="fa fa-bars text-white"></i>
         </a>
       </div>
+
     </div>
   </div>
 </header>

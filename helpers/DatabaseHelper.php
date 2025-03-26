@@ -25,6 +25,15 @@ class DatabaseHelper {
     }
 
     /**
+     * Obtiene la conexión a la base de datos
+     * 
+     * @return PDO La conexión a la base de datos
+     */
+    public function getConnection() {
+        return $this->connection;
+    }
+
+    /**
      * Inicia una transacción.
      */
     public function beginTransaction(): void {
@@ -44,7 +53,6 @@ class DatabaseHelper {
     public function rollBack(): void {
         $this->connection->rollBack();
     }
-    
 
     /**
      * Insert data into a table.

@@ -13,21 +13,16 @@ include_once 'views/candidate/header.php';
     <section class="user-dashboard p-6">
         <div class="dashboard-outer max-w-6xl mx-auto">
             <div class="upper-title-box">
-                <h1 class="text-2xl font-bold text-gray-800">CV Manager!</h1>
-                <p class="text-gray-500 mt-1">Ready to jump back in?</p>
+                <h1 class="text-2xl font-bold text-gray-800">Mis hojas de vida</h1>
+                <p class="text-gray-500 mt-1">En esta sección puedes gestionar tus hojas de vida, subir nuevas, eliminar o editar las existentes.</p>
             </div>
 
-            <div class="mb-4 ms-0 show-1023">
-                <button type="button" class="theme-btn toggle-filters">
-                    <span class="flaticon-menu-1"></span> Menu
-                </button>
-            </div>
 
             <div class="row">
                 <div class="col-lg-12">
                     <div class="bg-white rounded-lg shadow-sm p-6 mb-6 border border-gray-200 mt-6">
                         <div class="widget-title">
-                            <h4>Cv Manager</h4>
+                            <h4>Subir hoja de vida</h4>
                         </div>
                         <div class="widget-content">
                             <!-- Upload Section -->
@@ -43,18 +38,17 @@ include_once 'views/candidate/header.php';
                                         style="display: none;"
                                         onchange="handleFileUpload(event)" />
                                     <label class="cv-uploadButton" for="upload">
-                                        <span class="title">Files upload</span>
+                                        <span class="title">Subir archivos</span>
                                         <span class="text"
                                             data-translate-en="To upload file size is (Max 1MB), allowed file 
                                             types are (.doc, .docx, .pdf). Max 4 CV, The file name must be unique"
                                             data-translate-es="El tamaño del archivo a cargar es (máximo 1 MB), los tipos de archivo permitidos 
                                             son (.doc, .docx, .pdf). Máximo 4 CV, el nombre del archivo debe ser único"
-                                        >To upload file size is (Max 1MB), allowed file 
-                                            types are (.doc, .docx, .pdf). Max 4 CV, The file name must be unique</span>
+                                        >El tamaño del archivo a subir es de (máximo 1 MB). Los tipos de archivo permitidos son (.doc, .docx, .pdf). Máximo 4 CV. El nombre del archivo debe ser único.</span>
                                         <span class="theme-btn btn-style-one"
                                             data-translate-en="Upload Resume"
                                             data-translate-es="Subir Curriculum"
-                                        >Upload Resume</span>
+                                        >Subir Curriculum</span>
                                     </label>
                                     <span class="uploadButton-file-name"></span>
                                 </div>

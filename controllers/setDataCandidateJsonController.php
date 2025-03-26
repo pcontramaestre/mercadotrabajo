@@ -634,6 +634,22 @@ class setDataCandidateJsonController extends BaseController
         ];
     
         $insertedId = $this->modelBase->insert('job_applications', $applicationData);
+
+        if ($insertedId) {
+            //Buscar el id de la empresa
+            $companyData = $this->modelBase->select('jobs', ['id' => $jobId]);
+            $companyId = $companyData[0]['company_id'];
+
+            //Guardar notificacion
+            $notificationData = [
+                'company_id' => $companyId,
+                'job_id' => $jobId,
+                'user_id' => $userId,
+            ];
+            $this->modelBase->insert('companies_notifications', $notificationData);
+        }
+
+        
     
         if (!$insertedId) {
             throw new Exception("Error al guardar la aplicación.");

@@ -7,24 +7,21 @@
 include_once 'config/config.php';
 include_once 'views/candidate/header.php';
 
-//data recibed $dataUserJobsSave, $dataUserProfile
-// Array ( [0] => Array ( [id] => 3 [title] => Marketing Digital [location] => San Francisco [is_active] => 1 [isSaved] => 1 [category] => Marketing [company_logo] => assets/companies/img/company-1.webp [logo] => http://mercadotrabajo.localdev:8080/assets/companies/img/company-1.webp [create_at] => 2025-03-06 13:45:36 ) [1] => Array ( [id] => 9 [title] => Administrador de Base de Datos [location] => San Francisco [is_active] => 1 [isSaved] => 1 [category] => Developer [company_logo] => assets/companies/img/company-3.webp [logo] => http://mercadotrabajo.localdev:8080/assets/companies/img/company-3.webp [create_at] => 2025-03-06 12:02:48 ) [2] => Array ( [id] => 8 [title] => Analista de Datos [location] => San Francisco [is_active] => 1 [isSaved] => 1 [category] => Accounting / Finance [company_logo] => assets/companies/img/company-2.webp [logo] => http://mercadotrabajo.localdev:8080/assets/companies/img/company-2.webp [create_at] => 2025-03-06 11:43:48 ) [3] => Array ( [id] => 16 [title] => Analista de Recursos Humanos [location] => San Francisco [is_active] => 1 [isSaved] => 1 [category] => Human Resource [company_logo] => assets/companies/img/company-4.webp [logo] => http://mercadotrabajo.localdev:8080/assets/companies/img/company-4.webp [create_at] => 2025-03-06 11:42:29 ) [4] => Array ( [id] => 18 [title] => Diseñador de Cursos [location] => San Francisco [is_active] => 1 [isSaved] => 1 [category] => Design [company_logo] => assets/companies/img/company-5.webp [logo] => http://mercadotrabajo.localdev:8080/assets/companies/img/company-5.webp [create_at] => 2025-03-06 11:41:01 ) )
-
+//data received $dataUserJobsSave, $dataUserProfile
 ?>
 <main class="flex-1 md:ml-64 md:pl-0 pl-0 pt-16 md:pt-0">
     <section class="user-dashboard max-w-6xl mx-auto">
-        <div class="dashboard-outer">
-            <div class="upper-title-box">
-                <h3 class="text-2xl font-bold text-gray-800">Shortlisted jobs!</h3>
-                <p class="text text-gray-500 mt-1">Ready to jump back in?</p>
+        <div class="dashboard-outer p-4">
+            <div class="upper-title-box pb-4">
+                <h3 class="text-2xl font-bold text-gray-800">Mis trabajos guardados!</h3>
+                <p class="text text-gray-500 mt-1">En esta sección puedes gestionar los trabajos que has guardado.</p>
             </div>
-            <div class="mb-4 ms-0 show-1023"><button type="button" class="theme-btn toggle-filters"><span class="flaticon-menu-1"></span> Menu</button></div>
             <div class="row">
-                <div class="col-lg-12">
+                <div class="">
                     <div class="ls-widget">
                         <div class="tabs-box">
                             <div class="widget-title">
-                                <h4>My Favorite Jobs</h4>
+                                <h4>Mis trabajos guardados</h4>
                             </div>
                             <div class="widget-content">
                                 <div class="table-outer">
@@ -32,10 +29,10 @@ include_once 'views/candidate/header.php';
                                         <table class="default-table manage-job-table">
                                             <thead>
                                                 <tr>
-                                                    <th>Job Title</th>
-                                                    <th>Date Save</th>
-                                                    <th>Status</th>
-                                                    <th>Action</th>
+                                                    <th>Título del trabajo</th>
+                                                    <th>Fecha de guardado</th>
+                                                    <th>Estado</th>
+                                                    <th>Acción</th>
                                                 </tr>
                                             </thead>
                                             <tbody>

@@ -34,7 +34,7 @@
             <!-- Logo Upload -->
             <div class="mb-6">
               <div
-                class="image-upload-area flex flex-col items-center justify-center rounded-md p-6 cursor-pointer"
+                class="image-upload-area flex flex-col items-center justify-center rounded-md p-6 cursor-pointer min-h-[300px] md:min-h-auto"
               >
                 <input
                   type="file"
@@ -525,12 +525,14 @@
                 "top-2",
                 "right-2",
                 "bg-white",
-                "rounded-full",
+                "md:rounded-full",
                 "p-1",
-                "shadow-sm",
+                "md:shadow-sm",
                 "text-gray-500",
                 "hover:text-gray-700",
-                "z-1"
+                "z-1",
+                "text-left",
+                "md:text-center"
               );
 
               removeButton.addEventListener("click", function (e) {
@@ -587,11 +589,13 @@
               "top-2",
               "right-2",
               "bg-white",
-              "rounded-full",
+              "md:rounded-full",
               "p-1",
-              "shadow-sm",
+              "md:shadow-sm",
               "text-gray-500",
-              "hover:text-gray-700"
+              "hover::text-gray-700",
+              "text-left",
+              "md:text-center"
             );
 
             removeButton.addEventListener("click", function (e) {

@@ -125,9 +125,19 @@
         </div>
     </div>
     <div class="min-h-screen flex flex-col bg-gray-50 text-gray-800 ">
-        <button id="mobile-menu-toggle" class="md:hidden text-gray-500 hover:text-gray-900">
-            <i data-lucide="menu" class="w-6 h-6"></i>
-        </button>
+        <div class="md:hidden bg-bluemenu-100 flex justify-between">
+            <div class="logo-box">
+                <div class="logo pl-2 pt-2 pb-1">
+                    <a href="<?php echo SYSTEM_BASE_DIR ?>">
+                        <img alt="brand" class="cover w-24"
+                            style="color:transparent" src="<?php echo SYSTEM_BASE_DIR ?>assets/img/logo2.png">
+                    </a>
+                </div>
+            </div>
+            <button id="mobile-menu-toggle" class="text-gray-500 hover:text-gray-900 pt-2 pl-4 text-white pr-4">
+                <i data-lucide="menu" class="w-8 h-8"></i>
+            </button>
+        </div>
         <header class="main-header header-style-two alternate bg-blue-800 shadow-sm">
             <div class="auto-container">
                 <div class="main-box">
@@ -172,13 +182,7 @@
                         </nav>
                     </div>
                     <div class="outer-box text-white">
-                        <!-- <button class="menu-btn text-white">
-                            <span class="count">1</span>
-                            <i data-lucide="mail" class="w-6 h-6"></i>
-                        </button>
-                        <button class="menu-btn text-white">
-                            <i data-lucide="bell" class="w-6 h-6"></i>
-                        </button> -->
+
                         <div class="dropdown dashboard-option">
                             <a class="dropdown-toggle" role="button" data-bs-toggle="dropdown"
                                 aria-expanded="true">
@@ -196,46 +200,58 @@
                                 data-popper-placement="bottom-start"
                                 style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(-71px, 52px);">
                                 <li>
-                                    <a href="<?php echo SYSTEM_BASE_DIR ?>dashboard/candidate/dashboard" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-blue-600 bg-blue-50 rounded-md">
+                                    <a href="<?php echo SYSTEM_BASE_DIR ?>dashboard/candidate/dashboard" 
+                                        x-bind:class="{ 'bg-blue-50 text-blue-600': currentPath === '/dashboard/candidate/dashboard' }"
+                                        class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md">
                                         <i data-lucide="home" class="w-5 h-5"></i>
                                         Dashboard
                                     </a>
                                 </li>
                                 <li>
                                     <a href="<?php echo SYSTEM_BASE_DIR ?>dashboard/candidate/myprofile"
-                                        x-bind:class="{ 'bg-blue-50': currentPath === '/dashboard/candidate/myprofile' }"
-                                        class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
+                                        x-bind:class="{ 'bg-blue-50 text-blue-600': currentPath === '/dashboard/candidate/myprofile' }"
+                                        class="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-gray-50 rounded-md">
                                         <i data-lucide="user" class="w-5 h-5"></i>
                                         My Profile
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="<?php echo SYSTEM_BASE_DIR ?>dashboard/candidate/myresume" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
+                                    <a href="<?php echo SYSTEM_BASE_DIR ?>dashboard/candidate/myresume" 
+                                        x-bind:class="{ 'bg-blue-50 text-blue-600': currentPath === '/dashboard/candidate/myresume' }"
+                                        class="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-gray-50 rounded-md">
                                         <i data-lucide="file-text" class="w-5 h-5"></i>
                                         My Resume
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="<?php echo SYSTEM_BASE_DIR ?>dashboard/candidate/mycvmanager" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
+                                    <a href="<?php echo SYSTEM_BASE_DIR ?>dashboard/candidate/mycvmanager" 
+                                        x-bind:class="{ 'bg-blue-50 text-blue-600': currentPath === '/dashboard/candidate/mycvmanager' }"
+                                        class="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-gray-50 rounded-md">
                                         <i data-lucide="file-text" class="w-5 h-5"></i>
                                         CV Manager
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="<?php echo SYSTEM_BASE_DIR ?>dashboard/candidate/appliedjobs" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
+                                    <a href="<?php echo SYSTEM_BASE_DIR ?>dashboard/candidate/appliedjobs" 
+                                        x-bind:class="{ 'bg-blue-50 text-blue-600': currentPath === '/dashboard/candidate/appliedjobs' }"
+                                        class="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-gray-50 rounded-md">
                                         <i data-lucide="briefcase" class="w-5 h-5"></i>
                                         Applied Jobs
                                     </a>
                                 </li>
 
                                 <li>
-                                    <a href="<?php echo SYSTEM_BASE_DIR ?>dashboard/candidate/shorlistedjobs" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
+                                    <a href="<?php echo SYSTEM_BASE_DIR ?>dashboard/candidate/shorlistedjobs" 
+                                        x-bind:class="{ 'bg-blue-50 text-blue-600': currentPath === '/dashboard/candidate/shorlistedjobs' }"
+                                        class="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-gray-50 rounded-md">
                                         <i data-lucide="bookmark" class="w-5 h-5"></i>
                                         Shortlisted Jobs
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="<?php echo SYSTEM_BASE_DIR ?>changePassword" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
+                                    <a href="<?php echo SYSTEM_BASE_DIR ?>changePassword" 
+                                        x-bind:class="{ 'bg-blue-50 text-blue-600': currentPath === '/changePassword' }"
+                                        class="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-gray-50 rounded-md">
                                         <i data-lucide="lock" class="w-5 h-5"></i>
                                         Change Password
                                     </a>
@@ -254,59 +270,74 @@
         </header>
         <div class="flex flex-1 lg:pt-32">
             <!-- Sidebar -->
-            <aside id="sidebar" class="sidebar w-64 bg-white h-screen md:h-auto border-r z-30 overflow-y-auto fixed">
+            <aside id="sidebar" class="sidebar w-64 bg-white h-screen md:h-auto border-r z-30 overflow-y-auto fixed w-full md:w-auto">
                 <div class="flex flex-col h-full">
                     <div class="flex-1 py-4">
-                        <ul class="px-4 space-y-1">
+                        <ul class="px-4 space-y-1" x-data="{ currentPath: window.location.pathname }">
                             <li>
-                                <a href="<?php echo SYSTEM_BASE_DIR ?>dashboard/candidate/dashboard" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-blue-600 bg-blue-50 rounded-md">
+                                <a href="<?php echo SYSTEM_BASE_DIR ?>dashboard/candidate/dashboard" 
+                                    x-bind:class="{ 'bg-blue-50 text-blue-600': currentPath === '/dashboard/candidate/dashboard' }"
+                                    class="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-gray-50 rounded-md">
                                     <i data-lucide="home" class="w-5 h-5"></i>
                                     Dashboard
                                 </a>
                             </li>
                             <li>
-                                <a href="<?php echo SYSTEM_BASE_DIR ?>dashboard/candidate/myprofile" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
+                                <a href="<?php echo SYSTEM_BASE_DIR ?>dashboard/candidate/myprofile" 
+                                    x-bind:class="{ 'bg-blue-50 text-blue-600': currentPath === '/dashboard/candidate/myprofile' }"
+                                    class="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-gray-50 rounded-md">
                                     <i data-lucide="user" class="w-5 h-5"></i>
-                                    My Profile
+                                    Mi perfil
                                 </a>
                             </li>
                             <li>
-                                <a href="<?php echo SYSTEM_BASE_DIR ?>dashboard/candidate/myresume" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
+                                <a href="<?php echo SYSTEM_BASE_DIR ?>dashboard/candidate/myresume" 
+                                    x-bind:class="{ 'bg-blue-50 text-blue-600': currentPath === '/dashboard/candidate/myresume' }"
+                                    class="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-gray-50 rounded-md">
                                     <i data-lucide="file-text" class="w-5 h-5"></i>
-                                    My Resume
+                                    Mi currículum
                                 </a>
                             </li>
                             <li>
-                                <a href="<?php echo SYSTEM_BASE_DIR ?>dashboard/candidate/appliedjobs" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
+                                <a href="<?php echo SYSTEM_BASE_DIR ?>dashboard/candidate/mycvmanager" 
+                                    x-bind:class="{ 'bg-blue-50 text-blue-600': currentPath === '/dashboard/candidate/mycvmanager' }"
+                                    class="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-gray-50 rounded-md">
+                                    <i data-lucide="file-text" class="w-5 h-5"></i>
+                                    Mis hojas de vida
+                                </a>
+                            </li>
+                            <li>
+                                <a href="<?php echo SYSTEM_BASE_DIR ?>dashboard/candidate/appliedjobs" 
+                                    x-bind:class="{ 'bg-blue-50 text-blue-600': currentPath === '/dashboard/candidate/appliedjobs' }"
+                                    class="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-gray-50 rounded-md">
                                     <i data-lucide="briefcase" class="w-5 h-5"></i>
-                                    Applied Jobs
+                                    Trabajos aplicados
                                 </a>
                             </li>
                             <li>
-                                <a href="<?php echo SYSTEM_BASE_DIR ?>dashboard/candidate/shorlistedjobs" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
+                                <a href="<?php echo SYSTEM_BASE_DIR ?>dashboard/candidate/shorlistedjobs" 
+                                    x-bind:class="{ 'bg-blue-50 text-blue-600': currentPath === '/dashboard/candidate/shorlistedjobs' }"
+                                    class="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-gray-50 rounded-md">
                                     <i data-lucide="bookmark" class="w-5 h-5"></i>
-                                    Shortlisted Jobs
+                                    Favoritos
                                 </a>
                             </li>
                             <li>
-                                <a href="<?php echo SYSTEM_BASE_DIR ?>dashboard/candidate/mycvmanager" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
-                                    <i data-lucide="file-text" class="w-5 h-5"></i>
-                                    CV Manager
-                                </a>
-                            </li>
-                            <li>
-                                <a href="<?php echo SYSTEM_BASE_DIR ?>changePassword" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
+                                <a href="<?php echo SYSTEM_BASE_DIR ?>changePassword" 
+                                    x-bind:class="{ 'bg-blue-50 text-blue-600': currentPath === '/changePassword' }"
+                                    class="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-gray-50 rounded-md">
                                     <i data-lucide="lock" class="w-5 h-5"></i>
-                                    Change Password
+                                    Cambiar contraseña
                                 </a>
                             </li>
                             <li>
                                 <a href="<?php echo SYSTEM_BASE_DIR ?>logout" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
                                     <i data-lucide="log-out" class="w-5 h-5"></i>
-                                    Logout
+                                    Cerrar sesión
                                 </a>
                             </li>
                         </ul>
                     </div>
                 </div>
             </aside>
+        </div>

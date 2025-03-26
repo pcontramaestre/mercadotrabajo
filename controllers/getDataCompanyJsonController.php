@@ -90,6 +90,21 @@ class getDataCompanyJsonController extends BaseController {
             return [];
         }
     }
+
+    /**
+     * Obtener todos los trabajos de una empresa
+     * @param int $id_company
+     * @return array
+     */
+    public function getCompanyJobs($id_company) {
+        $company_id = $this->getSessionCompany($id_company);
+        if ($company_id) {
+            $records = $this->modelBase->select('jobs', ['company_id' => $company_id]);
+            return $records ?: [];
+        } else {
+            return [];
+        }
+    }
     
     /**
      * Obtener todas las categorías de trabajos
@@ -116,21 +131,6 @@ class getDataCompanyJsonController extends BaseController {
     public function getEmploymentTypes() {
         $records = $this->modelBase->select('employment_types', [], 'name_es ASC');
         return $records ?: [];
-    }
-    
-    /**
-     * Obtener todos los trabajos de una empresa
-     * @param int $id_company
-     * @return array
-     */
-    public function getCompanyJobs($id_company) {
-        $company_id = $this->getSessionCompany($id_company);
-        if ($company_id) {
-            $records = $this->modelBase->select('jobs', ['company_id' => $company_id], 'created_at DESC');
-            return $records ?: [];
-        } else {
-            return [];
-        }
     }
 }
 

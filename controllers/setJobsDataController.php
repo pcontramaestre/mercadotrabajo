@@ -94,6 +94,8 @@ class SetJobsDataController extends BaseController {
             // Insert data into database
             $result = $this->modelBase->insert('jobs', $saveData);
             
+
+
             if ($result) {
                 $response['success'] = true;
                 $response['message'] = 'Job saved successfully';

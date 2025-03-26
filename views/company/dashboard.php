@@ -105,76 +105,11 @@ include_once 'views/company/header.php';
                     </div>
                 </div>
 
+                
                 <!-- Notifications -->
-                <div class="bg-white rounded-lg shadow-sm p-6">
-                    <h3 class="text-lg font-semibold mb-6">Notifications</h3>
-                    <div class="space-y-4">
-                        <!-- Notification Item 1 -->
-                        <div class="flex items-start gap-3">
-                            <div class="p-1 rounded-full bg-blue-100">
-                                <div class="w-8 h-8 bg-gray-200 rounded-full overflow-hidden flex items-center justify-center">
-                                    <i data-lucide="mail" class="w-4 h-4 text-blue-600"></i>
-                                </div>
-                            </div>
-                            <div class="flex-1">
-                                <div class="text-sm font-medium">Henry Wilson <span class="font-normal text-gray-500">applied for a job</span></div>
-                                <div class="text-sm text-blue-600">Product Designer</div>
-                            </div>
-                        </div>
-
-                        <!-- Notification Item 2 -->
-                        <div class="flex items-start gap-3">
-                            <div class="p-1 rounded-full bg-green-100">
-                                <div class="w-8 h-8 bg-gray-200 rounded-full overflow-hidden flex items-center justify-center">
-                                    <i data-lucide="mail" class="w-4 h-4 text-green-600"></i>
-                                </div>
-                            </div>
-                            <div class="flex-1">
-                                <div class="text-sm font-medium">Raul Costa <span class="font-normal text-gray-500">applied for a job</span></div>
-                                <div class="text-sm text-green-600">Product Manager, Risk</div>
-                            </div>
-                        </div>
-
-                        <!-- Notification Item 3 -->
-                        <div class="flex items-start gap-3">
-                            <div class="p-1 rounded-full bg-blue-100">
-                                <div class="w-8 h-8 bg-gray-200 rounded-full overflow-hidden flex items-center justify-center">
-                                    <i data-lucide="mail" class="w-4 h-4 text-blue-600"></i>
-                                </div>
-                            </div>
-                            <div class="flex-1">
-                                <div class="text-sm font-medium">Jack Milk <span class="font-normal text-gray-500">applied for a job</span></div>
-                                <div class="text-sm text-blue-600">Technical Architect</div>
-                            </div>
-                        </div>
-
-                        <!-- Notification Item 4 -->
-                        <div class="flex items-start gap-3">
-                            <div class="p-1 rounded-full bg-green-100">
-                                <div class="w-8 h-8 bg-gray-200 rounded-full overflow-hidden flex items-center justify-center">
-                                    <i data-lucide="mail" class="w-4 h-4 text-green-600"></i>
-                                </div>
-                            </div>
-                            <div class="flex-1">
-                                <div class="text-sm font-medium">Michel Arian <span class="font-normal text-gray-500">applied for a job</span></div>
-                                <div class="text-sm text-green-600">Software Engineer</div>
-                            </div>
-                        </div>
-
-                        <!-- Notification Item 5 -->
-                        <div class="flex items-start gap-3">
-                            <div class="p-1 rounded-full bg-blue-100">
-                                <div class="w-8 h-8 bg-gray-200 rounded-full overflow-hidden flex items-center justify-center">
-                                    <i data-lucide="mail" class="w-4 h-4 text-blue-600"></i>
-                                </div>
-                            </div>
-                            <div class="flex-1">
-                                <div class="text-sm font-medium">Wade Warren <span class="font-normal text-gray-500">applied for a job</span></div>
-                                <div class="text-sm text-blue-600">Web Developer</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <?php
+                    include 'views/components/notifications_company.php';
+                ?>
             </div>
 
             <!-- Recent Applicants -->

@@ -28,8 +28,9 @@ class companyDashboardController extends BaseController {
         include_once  'views/company/postJob.php';
     }
 
-    public function viewMyJobs(?array $params = []) {
-        $dataJobsApplied = $params;
+    public function viewMyJobs($params = [], $params2 = []) {
+        $dataCompanyProfile = $params;
+        $dataCompanyJob = $params2;
         include_once  'views/company/myJobs.php';
     }
 
