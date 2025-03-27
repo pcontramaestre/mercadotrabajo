@@ -95,8 +95,18 @@ class getDataExternalController {
         }
 
         $searchBumeran = "https://www.bumeran.com.ve/$search";
+        
+
+
+        //BeBee - Trabajos en Estados Unidos
+        $keywords = !empty($field_job) ? "?term=$field_job" : '?term=';
+        $location = !empty($field_postal) ? "&location=$field_postal" : '&location=';
+        $searchBebbee = "https://us.bebee.com/jobs" . $keywords . $location;
+        
+        
     
     $urls = [
+        'bebbee' => $searchBebbee,
         'linkedin' => $searchLinkedIn,
         // 'computrabajo' => $searchComputrabajo,
         // 'empleate' => $searchEmplate,
@@ -176,6 +186,7 @@ class getDataExternalController {
                                 if ($node->filter('time')->count() > 0) {
                                     $listDate = $node->filter('time')->text();
                                 }
+
                                 $responseJson[$count] =[
                                     'id'=> $count,
                                     'type'=> $type,
@@ -204,130 +215,64 @@ class getDataExternalController {
                                     'category'=> 'LinkedIn',
                                 ];
                             });
-                        
-                        case 'computrabajo':
-                            $count = 700000;
+                            break;
+
+                        case 'bebbee':
+                            $count = 900000;
                             $crawler = $response->getBody()->getContents();
                             $crawler = new Crawler($crawler);
-                            $crawler->filter('.box_offer')->slice(0, 10)->each(function ($node) use (&$count, &$crawler, &$responseJson, &$type) {
+                            $crawler->filter('.nf-job-list .nf-job')->slice(0, 15)->each(function ($node) use (&$count, &$crawler, &$responseJson, &$type) {
                                 $count++;
-                                $linkJob = "";
-                                $title = $node->filter('h2 > a.js-o-link')->text();
-                                $linkJob1 = $node->filter('h2 > a.js-o-link')->attr('href');
-                                $linkJob2 = $node->filter('h2 > a.js-o-link')->attr('href');
-                                $dataId = $node->attr('data-id');
+                                $title = $node->filter('h2 > a')->text();
+                                $linkJob1 = $node->filter('h2 > a')->attr('href');
+                                $dataId = '';
+                                if (!empty($linkJob1)) {
+                                    $parts = explode('/', $linkJob1);
+                                    $dataId = end($parts);
+                                }
                                 $company = '';
-                                if ($node->filter('p.dFlex.vm_fx.fs16.fc_base.mt5 a.fc_base.t_ellipsis')->count() > 0) {
-                                    $company = $node->filter('p.dFlex.vm_fx.fs16.fc_base.mt5 a.fc_base.t_ellipsis')->text();
+                                if ($node->filter('.nf-job-list-info > span:first-of-type')->count() > 0) {
+                                    $company = $node->filter('.nf-job-list-info > span:first-of-type')->text();
                                 } else {
                                     $company = 'No disponible';
                                 }
                                 $location = 'No disponible';
-                                if ($node->filter('p.fs16.fc_base.mt5 span')->count() > 0) {
-                                    $location = $node->filter('p.fs16.fc_base.mt5 span')->text();
-                                } else {
-                                    $location = 'No disponible';
+                                
+                                $description = '';
+                                $listDate = 'No disponible';
+                                if ($node->filter('p > small')->count() > 0) {
+                                    $listDate = $node->filter('p > small')->text();
                                 }
-                                $listDate = ""; //p.fs13.fc_aux
-                                if ($node->filter('p.fs13.fc_aux')->count() > 0) {
-                                    $listDate = $node->filter('p.fs13.fc_aux')->text();
-                                    $listDate = trim($listDate);
-                                } else {
-                                    $listDate = 'No disponible';
-                                }
-
-
-                                if ($linkJob1) {
-                                    $linkJob = "https://ve.computrabajo.com" . $linkJob1;
-                                }
-                                if ($linkJob2) {
-                                    $linkJob = "https://ve.computrabajo.com" . $linkJob2;
-                                }
-
-                                // Extraer el salario
-                                $salary = '';
-                                if ($node->filter('.fs13.mt15 .icon.i_salary')->count() > 0) {
-                                    // El salario está en el texto dentro del mismo contenedor que el ícono
-                                    $salary = $node->filter('.fs13.mt15 span.dIB')->eq(0)->text();
-                                    $salary = trim(preg_replace('/\s+/', ' ', $salary)); // Limpiar espacios extra
-                                } else {
-                                    $salary = 'No disponible';
-                                }
-                                $responseJson[$count] = [
+                                $responseJson[$count] =[
                                     'id'=> $count,
                                     'type'=> $type,
                                     'dataEntityUrn' => $dataId,
                                     'title' => trim($title),
-                                    'company_logo' => '/assets/companies/img/computrabajo.webp',    
-                                    'isInternalExternal'=> 0,
-                                    'description' => '',
+                                    'company_logo' => '/assets/companies/img/bebee.svg',
+                                    'description' => $description,
                                     'skills_experience'=> '',
-                                    'salary'=> $salary,
+                                    'salary'=> 'No disponible',
                                     'priority'=> 'Urgente',
-                                    'logo' => SYSTEM_BASE_DIR . 'assets/companies/img/computrabajo.webp',
+                                    'logo' => SYSTEM_BASE_DIR . 'assets/companies/img/bebee.svg',
                                     'key_responsibilities'=> '',
-                                    'linkJob' => $linkJob,
+                                    'linkJob' => $linkJob1,
                                     'company' => trim($company),
                                     'location' => trim($location),
                                     'timeAgo' => $listDate,
                                     'isExternal' => true,
                                     'isLinkedin' => false,
-                                    'isComputrabajo' => true,
-                                    'isSaved'=> 0,
-                                    'isFavorite'=> 0,
-                                    'isApplied'=> 0,
-                                    'employment_type_name'=> 'Computrabajo',
-                                    'job_type_name'=> 'Enlace externo',
-                                    'category'=> 'Computrabajo',
-                                ];
-                            });
-                        
-                        case 'empleate':
-                            $count = 800000;
-                            $crawler = $response->getBody()->getContents();
-                            $crawler = new Crawler($crawler);
-                            $crawler->filter('.card.w-100.align-middle.mt-3.mb-3.shadow')->slice(0, 10)->each(function ($node) use (&$count, &$crawler, &$responseJson, &$type) {
-                                $count++;
-                                $linkJob = $node->filter('a')->attr('href');
-                                $title = $node->filter('.cargo-titulo')->text();
-                                $company = $node->filter('.nombre-empresa')->text();
-                                $location = $node->filter('.ubicacion-empresa')->text();
-                                $description = $node->filter('.descripcion-cargo')->text();
-                                $timeago = $node->filter('.fecha-publi')->text();
-                                $dataEntityUrnArray = explode('/', $linkJob);
-                                $dataEntityUrn = $dataEntityUrnArray[4];
-
-
-
-
-                                $responseJson[$count] = [
-                                    'id'=> $count,
-                                    'type'=> $type,
-                                    'title'=> $title,
-                                    'dataEntityUrn' => $dataEntityUrn,
-                                    'company' => trim($company),
-                                    'location' => trim($location),
-                                    'description' => trim($description),
-                                    'skills_experience' => '',
-                                    'salary'=> 'N/A',
-                                    'priority'=> 'Normal',
-                                    'logo' => SYSTEM_BASE_DIR . 'assets/companies/img/empleate.png',
-                                    'key_responsibilities'=> '',
-                                    'linkJob' => $linkJob,
-                                    'timeAgo' => $timeago,
-                                    'isExternal' => true,
-                                    'isLinkedin' => false,
                                     'isComputrabajo' => false,
-                                    'isEmpleate'=> true,
-                                    'isInternalExternal'=> 0,
+                                    'isBeBee'=> true,
                                     'isSaved'=> 0,
                                     'isFavorite'=> 0,
                                     'isApplied'=> 0,
-                                    'employment_type_name'=> 'Empleate',
+                                    'isInternalExternal'=> 0,
+                                    'employment_type_name'=> 'beBee',
                                     'job_type_name'=> 'Enlace externo',
-                                    'category'=> 'Empleate',
+                                    'category'=> 'beBee',
                                 ];
                             });
+                            break;
                         default:
                             break;
                     }

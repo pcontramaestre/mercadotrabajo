@@ -446,6 +446,13 @@ switch ($request) {
     $controller->searchLinkedInJobsAPI($dataEntityUrn);
     break;
 
+  //beBee
+  case preg_match('/^\/api\/v1\/searchbebeejobs(?:\/([A-Za-z0-9]+))?$/', $request, $matches) ? true : false:
+    $dataEntityUrn = $matches[1];
+    $controller = new BaseController($db);
+    $controller->searchbeBeeJobsAPI($dataEntityUrn);
+    break;
+
   //Computrabajo 
   case preg_match('/^\/api\/v1\/searchcomputrabajojob(?:\/([A-Z0-9]+))?$/', $request, $matches) ? true : false:
     $dataEntityUrn = $matches[1];

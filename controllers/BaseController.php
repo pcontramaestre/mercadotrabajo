@@ -842,6 +842,66 @@ class BaseController
         }
     }
 
+    //Funcion api para buscar trabajos en beBee
+    public function searchbeBeeJobsAPI($dataEntityUrn) {
+        try {
+            $client = new Client();
+            $linkJobLink = "https://us.bebee.com/job/" . $dataEntityUrn;
+            $response = $client->request('GET', $linkJobLink, [
+                'headers' => [
+                    'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+                    'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+                    'Accept-Language' => 'es-ES,es;q=0.9',
+                    'Connection' => 'close',
+                    'Cache-Control' => 'max-age=3600, must-revalidate',
+                    'Pragma' => 'cache',
+                ],
+            ]);
+            $htmlJob = $response->getBody()->getContents();
+            $crawlerJob = new Crawler($htmlJob);
+            $descriptionHTML = $crawlerJob->filter('.nf-job-list-desc-box .description-job-tr')->html();
+            //.main-job-enc-loc  > a or .main-job-enc-loc
+
+            $city = '';
+            if ($crawlerJob->filter('.main-job-enc-loc')->count() > 0) {
+                $cityValue = $crawlerJob->filter('.main-job-enc-loc')->html();
+                if (!empty($cityValue)) {
+                    // Eliminar todo el HTML y dejar solo el texto
+                    $city = trim(strip_tags($cityValue));
+                }
+            }
+            $description = "
+                <div class='description descripcion-bebee'>
+                    $descriptionHTML
+                </div>
+            ";
+
+            $response = [
+                'success' => true,
+                'description' => $description,
+                'city' => $city
+            ];
+
+            header('Content-Type: application/json');
+            header('Access-Control-Allow-Origin: *');
+            header('Access-Control-Allow-Methods: GET');
+            header('Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With');
+            echo json_encode($response,JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+        } catch (Exception $e) {
+            error_log("Error en la consulta beBee: " . $e->getMessage());
+            $response = [
+                'success' => false,
+                'message' => 'Error al buscar el trabajo. beBee ' . $e->getMessage(),
+            ];
+            header('Content-Type: application/json');
+            header('Access-Control-Allow-Origin: *');
+            header('Access-Control-Allow-Methods: GET');
+            header('Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With');
+
+            echo json_encode($response);
+        }
+    }
+
     //Funcion api para buscar trabajos en empleate
     public function searchEmplateJobsAPI($dataEntityUrn){
         try {
@@ -931,7 +991,7 @@ class BaseController
 
             echo json_encode($response);
         }
-    }    
+    }
 
     //Función para buscar estados
     public function getEstados()

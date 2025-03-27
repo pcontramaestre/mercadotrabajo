@@ -34,7 +34,7 @@ class SetJobsDataController extends BaseController {
                 'message' => 'Error'
             ];
             
-            $typeAccepted = ['linkedin','computrabajo','empleate'];
+            $typeAccepted = ['linkedin','bebee','empleate'];
             if (!in_array($type, $typeAccepted)) {
                 $response['success'] = false;
                 $response['message'] = 'Invalid type';

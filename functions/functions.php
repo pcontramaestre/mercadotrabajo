@@ -71,6 +71,24 @@ function sanitizeHtml($html) {
     return $html;
 }
 
+/**
+ * Converts a relative time string to a DateTime object
+ * @param string $relativeTimeString The relative time string to convert
+ * @return ?DateTime The DateTime object or null if conversion fails
+ */
+function convertRelativeTimeToDateTime(string $relativeTimeString): ?DateTime {
+    // date_default_timezone_set('America/Bogota'); 
+
+    try {
+        $dateTime = new DateTime($relativeTimeString);
+        return $dateTime;
+    } catch (Exception $e) {
+        error_log($e->getMessage());
+        $dateTime = new DateTime();
+        return $dateTime;
+    }
+}
+
 function sendEmail($to, $subject, $message, $headers = [], $attachments = []) {  
     $config = new Config();
     // Crear un separador único para los archivos adjuntos  

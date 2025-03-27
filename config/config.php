@@ -4,7 +4,7 @@ require_once 'config/database.php';
 class Config {
     private $url_base = 'http://mercadotrabajo.localdev:8080/';
     private $host = "127.0.0.1";
-    private $db_name = "mercadotrabajo";
+    private $db_name = "mercadotrabajo_us";
     private $username = "pcontramaestre";
     private $password = "";
     private $home_url = 'https://quinteroandassociates.com/';
