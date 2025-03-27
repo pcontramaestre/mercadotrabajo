@@ -673,10 +673,12 @@ if (empty($search)) {
                             });
                         }
 
-                        //window.location.href = "<?php //echo SYSTEM_BASE_DIR ?>searchjobs?job=" + job.id;
+                        if (!job.isComputrabajo && !job.isEmplate && !job.isLinkedin && !job.isBeBee) {
+                            window.location.href = "<?php echo SYSTEM_BASE_DIR ?>searchjobs?job=" + job.id;
+                        }
                         return;
                     } else {
-                        //window.location.href = "<?php //echo SYSTEM_BASE_DIR ?>searchjobs?job=" + job.id;
+                        window.location.href = "<?php echo SYSTEM_BASE_DIR ?>searchjobs?job=" + job.id;
                     }
                 } else {
                     this.selectedJob = job;
