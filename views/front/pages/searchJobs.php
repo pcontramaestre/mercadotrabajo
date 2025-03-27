@@ -11,9 +11,9 @@ require_once 'views/components/pageTitleInternal.php';
 $search = $results;
 $related = $relatedJobs;
 
-
 if (empty($search)) {
     $search = [];
+    $searchJson = json_encode($search, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 } else {
     $countR = count($search);
     $totalJobs = count($search);
@@ -612,6 +612,7 @@ if (empty($search)) {
 
             // Seleccionar un trabajo
             selectJob(job, firstJob = false, totalJobs = 0) {
+                console.log(job);
                 dataExternal = {};
                 if (job.isExternal == '1' || job.isExternal == true || job.isExternal == 'true') {
                     if (job.isLinkedin == 'true' || job.isLinkedin == true) {
@@ -626,6 +627,11 @@ if (empty($search)) {
                         dataExternal.company_id = 9;
                         dataExternal.category_id  = 9;
                         dataExternal.Fuente = 'empleate';
+                    } else if (job.isBeBee == 'true' || job.isBeBee == true) {
+                        dataExternal.company_id = 11;
+                        dataExternal.category_id  = 10;
+                        dataExternal.Fuente = 'bebee';
+                        console.log(dataExternal);
                     }
                     dataExternal.title = job.title;
                     dataExternal.job_type_id = 6;
@@ -653,30 +659,25 @@ if (empty($search)) {
                             idJob = this.searchJobLinkedin(job.dataEntityUrn, job);
                             idJob.then(id => {
                                 window.location.href = "<?php echo SYSTEM_BASE_DIR ?>searchjobs?job=" + id;
+                                return;
                             });
                         }
 
-                        if (job.isComputrabajo == 'true' || job.isComputrabajo == true) {
-                            idJob = this.searchJobComputrabajo(job.dataEntityUrn, job);
+                        if (job.isBeBee == 'true' || job.isBeBee == true) {
+                            console.log(job);
+                            idJob = this.searchJobBeeBee(job.dataEntityUrn, job);
                             idJob.then(id => {
+                                console.log(id);
                                 window.location.href = "<?php echo SYSTEM_BASE_DIR ?>searchjobs?job=" + id;
+                                return;
                             });
                         }
 
-                        if (job.isEmpleate == 'true' || job.isEmpleate == true) {
-                            idJob = this.searchJobEmpleate(job.dataEntityUrn, job);
-                            //Obtener el id del job, de la promesa
-                            idJob.then(id => {
-                                window.location.href = "<?php echo SYSTEM_BASE_DIR ?>searchjobs?job=" + id;
-                            });
-                        }
-                        window.location.href = "<?php echo SYSTEM_BASE_DIR ?>searchjobs?job=" + job.id;
+                        //window.location.href = "<?php //echo SYSTEM_BASE_DIR ?>searchjobs?job=" + job.id;
                         return;
                     } else {
-                        window.location.href = "<?php echo SYSTEM_BASE_DIR ?>searchjobs?job=" + job.id;
+                        //window.location.href = "<?php //echo SYSTEM_BASE_DIR ?>searchjobs?job=" + job.id;
                     }
-
-                    window.location.href = "<?php echo SYSTEM_BASE_DIR ?>searchjobs?job=" + job.id;
                 } else {
                     this.selectedJob = job;
                     this.$store.selectedJobId = job.id;
@@ -687,13 +688,8 @@ if (empty($search)) {
                         idJob = this.searchJobLinkedin(job.dataEntityUrn, job);
                     }
 
-                    if (job.isComputrabajo == 'true' || job.isComputrabajo == true) {
-                        idJob = this.searchJobComputrabajo(job.dataEntityUrn, job);
-
-                    }
-
-                    if (job.isEmpleate == 'true' || job.isEmpleate == true) {
-                        idJob = this.searchJobEmpleate(job.dataEntityUrn, job);
+                    if (job.isBeBee == 'true' || job.isBeBee == true) {
+                        idJob = this.searchJobBeeBee(job.dataEntityUrn, job);
                     }
                 }
             },
@@ -711,6 +707,33 @@ if (empty($search)) {
                         job.description = data.description;
                         dataExternal.job_description = data.description;
                         last_id = this.saveJob('linkedin', dataExternal);
+                        job.id = last_id;
+                        return last_id;
+                    } else {
+                        job.description = 'No se pudo cargar la descripción';
+                    }
+                } catch(error) {
+                    console.error('Error:', error);
+                    job.description = 'Ocurrió un error al cargar la descripción';
+                }
+            },
+
+            async searchJobBeeBee(dataEntityUrn, job){
+                this.$store.selectedJobIsComputrabajo = 0;
+                this.$store.selectedJobIsEmplate = 0;
+                this.$store.selectedJobIsLinkedin = 0;
+                job.description = '<br> Cargando...';
+
+                try{
+                    const response = await fetch('<?php echo SYSTEM_BASE_DIR ?>api/v1/searchbebeejobs/' + job.dataEntityUrn);
+                    const data = await response.json();
+                    if (data.success) {
+                        job.description = data.description;
+                        dataExternal.job_description = data.description;
+                        dataExternal.city = data.city;
+                        job.location = data.city;
+                        last_id = this.saveJob('bebee', dataExternal);
+                        job.id = last_id;
                         return last_id;
                     } else {
                         job.description = 'No se pudo cargar la descripción';
