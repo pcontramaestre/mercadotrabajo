@@ -709,7 +709,7 @@ if (empty($search)) {
                         job.description = data.description;
                         dataExternal.job_description = data.description;
                         last_id = this.saveJob('linkedin', dataExternal);
-                        job.id = last_id;
+                        //job.id = last_id;
                         return last_id;
                     } else {
                         job.description = 'No se pudo cargar la descripción';
@@ -735,7 +735,7 @@ if (empty($search)) {
                         dataExternal.city = data.city;
                         job.location = data.city;
                         last_id = this.saveJob('bebee', dataExternal);
-                        job.id = last_id;
+                        //job.id = last_id;
                         return last_id;
                     } else {
                         job.description = 'No se pudo cargar la descripción';
