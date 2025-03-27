@@ -712,6 +712,7 @@ if (empty($search)) {
                         job.description = data.description;
                         dataExternal.job_description = data.description;
                         last_id = this.saveJob('linkedin', dataExternal);
+                        job.id = last_id;
                         return last_id;
                     } else {
                         job.description = 'No se pudo cargar la descripción';
@@ -735,6 +736,7 @@ if (empty($search)) {
                         job.description = data.description;
                         dataExternal.job_description = data.description;
                         last_id = this.saveJob('computrabajo', dataExternal);
+                        job.id = last_id;
                         return last_id;
                     } else {
                         job.description = 'No se pudo cargar la descripción';
@@ -759,6 +761,7 @@ if (empty($search)) {
                         dataExternal.job_description = data.description;
                         dataExternal.external_url = "https://www.empleate.com/venezuela/ofertas/empleo/" + data.dataEntityUrn;
                         last_id = this.saveJob('empleate', dataExternal);
+                        job.id = last_id;
                         return last_id;
                     } else {
                         job.description = 'No se pudo cargar la descripción';
