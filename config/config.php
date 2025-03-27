@@ -96,13 +96,13 @@ class Config {
                 'user_id' => $_SESSION['user_id']
             ];
             $resultAvatar = $controller->findRecord('user_profile', $conditions);
-            $_SESSION['avatar'] = $resultAvatar['logo_path'];
+            $_SESSION['avatar'] = $resultAvatar['logo_path'] ?? SYSTEM_BASE_DIR . 'assets/img/avatars/default.png';
         } else if($resultUser['role_id'] == 3) {
             $conditions = [
                 'id' => (int)$_SESSION['company_id']
             ];
             $resultAvatar = $controller->findRecord('companies', $conditions);
-            $_SESSION['avatar'] = $resultAvatar['logo_url_completa'];
+            $_SESSION['avatar'] = $resultAvatar['logo_url_completa'] ?? SYSTEM_BASE_DIR . 'assets/img/avatars/default.png';
         }
         $_SESSION['user_uid'] = $resultUser['uid'];
         $_SESSION['role_id'] = $resultUser['role_id'];

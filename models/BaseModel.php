@@ -21,8 +21,8 @@ class BaseModel {
         return $this->dbHelper;
     }
 
-    public function getLastRecord() {
-        return $this->dbHelper->getLastRecord($this->tableName);
+    public function getLastRecord($table) {
+        return $this->dbHelper->getLastRecord($table);
     }
 
     public function countRecords(string $tablename,array $conditions = []) {

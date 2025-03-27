@@ -20,7 +20,7 @@ class CandidateDashboardController extends BaseController {
 
     public function viewCvManager(?array $params = []) {
         $dataUserProfile = $params;
-        include_once  'views/candidate/MyCvManager.php';
+        include_once  'views/candidate/mycvManager.php';
     }
 
     public function viewShortListedJobs(?array $params = [], ?array $params2 = []) {

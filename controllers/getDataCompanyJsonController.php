@@ -132,6 +132,16 @@ class getDataCompanyJsonController extends BaseController {
         $records = $this->modelBase->select('employment_types', [], 'name_es ASC');
         return $records ?: [];
     }
+
+    public function getJobDetails($jobId,$id_company) {
+        $company_id = $this->getSessionCompany($id_company);
+        if ($company_id) {
+            $records = $this->modelBase->select('jobs', ['id' => $jobId, 'company_id' => $company_id]);
+            return $records[0] ?? null;
+        } else {
+            return null;
+        }
+    }
 }
 
 // Procesar solicitudes

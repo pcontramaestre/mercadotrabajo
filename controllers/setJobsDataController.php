@@ -71,6 +71,7 @@ class SetJobsDataController extends BaseController {
             if ($result) {
                 $response['success'] = true;
                 $response['message'] = 'Job already exists';
+                $response['id'] = $result[0]['id'];
                 return json_encode($response);
             }
 
@@ -99,7 +100,7 @@ class SetJobsDataController extends BaseController {
             if ($result) {
                 $response['success'] = true;
                 $response['message'] = 'Job saved successfully';
-                $response['data'] = $saveData;
+                $response['id'] = $result;
             } else {
                 $response['success'] = false;
                 $response['message'] = 'Failed to save job';

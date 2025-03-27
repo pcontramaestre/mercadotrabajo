@@ -92,11 +92,13 @@ class DatabaseHelper {
             //si hay un error al inserter mostrar el error
             if ($this->connection->errorCode() != 0) {
                 error_log("Error: " . $this->connection->errorInfo());
-
                 return false;
             } else {
-
-                return $this->connection->lastInsertId();
+                if ( $this->connection->lastInsertId() > 0) {
+                    return $this->connection->lastInsertId();
+                } else {
+                    return true;
+                }
             }
 
         } catch (Exception $e) {
