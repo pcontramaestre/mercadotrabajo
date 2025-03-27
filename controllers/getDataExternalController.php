@@ -42,10 +42,9 @@ class getDataExternalController {
         $location = $field_postal;
 
         if (empty($field_postal)) {
-            $location = 'Venezuela';
+            $location = 'United States';
         }
-        $searchLinkedIn = "https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=$keywords&location=$location&geoId=101490751&trk=public_jobs_jobs-search-bar_search-submit&position=1&pageNum=0&start=0";
-
+        $searchLinkedIn = "https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=$keywords&location=$location&trk=public_jobs_jobs-search-bar_search-submit&position=1&pageNum=0&start=0";
 
 
         //Computrabajo
@@ -99,8 +98,8 @@ class getDataExternalController {
     
     $urls = [
         'linkedin' => $searchLinkedIn,
-        'computrabajo' => $searchComputrabajo,
-        'empleate' => $searchEmplate,
+        // 'computrabajo' => $searchComputrabajo,
+        // 'empleate' => $searchEmplate,
         // 'bumeran' => $searchBumeran,
     ];
 
