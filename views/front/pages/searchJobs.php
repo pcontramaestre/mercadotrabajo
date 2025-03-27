@@ -37,6 +37,11 @@ if (empty($search)) {
             </div>
 
         <?php } else { ?>
+            <a class="text-blue-500 hover:underline cursor-pointer block md:hidden"
+            @click="history.back()">
+                <i class="fas fa-arrow-left pr-2"></i>
+                 Volver
+            </a>
             <span data-translate-en="Found jobs" data-translate-es="Trabajos encontrados"></span>
             <?php echo ": $countR"; ?>
         <?php
@@ -305,64 +310,67 @@ if (empty($search)) {
                 </div>
             </template>
 
-            <div class="modal fade"
-                :id="'applyJobModal'+selectedJob.id"
-                id="applyJobModal4" tabindex="-1" style="display: none;" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                    <div class="apply-modal-content modal-content">
-                        <div class="text-center">
-                            <h3 
-                                :data-translate-es="'Aplicar a ' + selectedJob.title"
-                                :data-translate-en="'Apply for job ' + selectedJob.title"
-                                class="title" x-text="'Aplicar a '+selectedJob.title"
-                                >
-                                Aplicar a {{selectedJob.title}}
-                            </h3>
-                            <button type="button" class="closed-modal" data-bs-dismiss="modal" aria-label="Close">
 
-                            </button>
-                        </div>
-                        <form
-                            :data-id="selectedJob.id"
-                            method="post"
-                            class="default-form job-apply-form" method="post" data-id="">
-                            <div class="row">
-                                <div class="col-lg-12 col-md-12 col-sm-12 form-group">
-                                    <div class="uploading-outer apply-cv-outer">
-                                        <div id="uploaded-files">
-                                            <!-- <select id="uploaded-my-cvs"></select> -->
-                                        </div>
-                                        <!-- <div class="uploadButton">
-                                            <input class="uploadButton-input" accept=".doc, .docx, application/pdf" id="upload" required="" type="file" name="attachments[]">
-                                            <label class="uploadButton-button ripple-effect" for="upload">Upload CV (doc, docx, pdf)</label>
-                                        </div> -->
-                                    </div>
-                                </div>
-                                <div class="col-lg-12 col-md-12 col-sm-12 form-group">
-                                    <textarea class="darma" name="cover_letter" id="cover_letter" placeholder="Message" required=""></textarea>
-                                    <input type="hidden" name="job_id" :value="selectedJob.id" required>
-                                </div>
-                                <div class="col-lg-12 col-md-12 col-sm-12 form-group">
-                                    <div class="input-group checkboxes square">
-                                        <input id="rememberMe" type="checkbox" name="remember-me">
-                                        <label for="rememberMe" class="remember">
-                                            <span class="custom-checkbox"></span> <span data-translate-es="Aceptas nuestros" data-translate-en="Accept our"></span>
-                                            <span data-bs-dismiss="modal">
-                                                <a href="/terms" target="_blank" data-translate-es="Términos y condiciones y política de privacidad" data-translate-en="Terms and Conditions and Privacy Policy">Terms and Conditions and Privacy Policy</a>
-                                            </span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-lg-12 col-md-12 col-sm-12 form-group">
-                                    <button class="theme-btn btn-style-one w-100" type="submit" name="submit-form">
-                                        <span data-translate-es="Aplicar al trabajo" data-translate-en="Apply for job"></span>
-                                    </button>
-                                </div>
+            <template x-if="selectedJob">
+                <div class="modal fade"
+                    :id="'applyJobModal'+selectedJob.id"
+                    id="applyJobModal4" tabindex="-1" style="display: none;" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                        <div class="apply-modal-content modal-content">
+                            <div class="text-center">
+                                <h3 
+                                    :data-translate-es="'Aplicar a ' + selectedJob.title"
+                                    :data-translate-en="'Apply for job ' + selectedJob.title"
+                                    class="title" x-text="'Aplicar a '+selectedJob.title"
+                                    >
+                                    Aplicar a {{selectedJob.title}}
+                                </h3>
+                                <button type="button" class="closed-modal" data-bs-dismiss="modal" aria-label="Close">
+
+                                </button>
                             </div>
-                        </form>
+                            <form
+                                :data-id="selectedJob.id"
+                                method="post"
+                                class="default-form job-apply-form" method="post" data-id="">
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                                        <div class="uploading-outer apply-cv-outer">
+                                            <div id="uploaded-files">
+                                                <!-- <select id="uploaded-my-cvs"></select> -->
+                                            </div>
+                                            <!-- <div class="uploadButton">
+                                                <input class="uploadButton-input" accept=".doc, .docx, application/pdf" id="upload" required="" type="file" name="attachments[]">
+                                                <label class="uploadButton-button ripple-effect" for="upload">Upload CV (doc, docx, pdf)</label>
+                                            </div> -->
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                                        <textarea class="darma" name="cover_letter" id="cover_letter" placeholder="Message" required=""></textarea>
+                                        <input type="hidden" name="job_id" :value="selectedJob.id" required>
+                                    </div>
+                                    <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                                        <div class="input-group checkboxes square">
+                                            <input id="rememberMe" type="checkbox" name="remember-me">
+                                            <label for="rememberMe" class="remember">
+                                                <span class="custom-checkbox"></span> <span data-translate-es="Aceptas nuestros" data-translate-en="Accept our"></span>
+                                                <span data-bs-dismiss="modal">
+                                                    <a href="/terms" target="_blank" data-translate-es="Términos y condiciones y política de privacidad" data-translate-en="Terms and Conditions and Privacy Policy">Terms and Conditions and Privacy Policy</a>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                                        <button class="theme-btn btn-style-one w-100" type="submit" name="submit-form">
+                                            <span data-translate-es="Aplicar al trabajo" data-translate-en="Apply for job"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </template>
 
             <div class="jobs-related mt-4" x-data="relatedJobsData">
                 <!-- Mostrar trabajos relacionados -->
@@ -491,11 +499,13 @@ if (empty($search)) {
             .then(response => response.json())
             .then(data => {
                 const uploadedFilesContainer = document.getElementById('uploaded-files');
-                uploadedFilesContainer.innerHTML = '';
-                if (data.success && data.cvs && data.cvs.length > 0) {
-                    data.cvs.forEach(cv => addFileToUI(cv.filename, cv.id));
-                } else {
-                    addFileToUI(0, 0); // Forzar mensaje de error
+                if (uploadedFilesContainer){
+                    uploadedFilesContainer.innerHTML = '';
+                    if (data.success && data.cvs && data.cvs.length > 0) {
+                        data.cvs.forEach(cv => addFileToUI(cv.filename, cv.id));
+                    } else {
+                        addFileToUI(0, 0); // Forzar mensaje de error
+                    }
                 }
             })
             .catch(error => {
@@ -550,6 +560,8 @@ if (empty($search)) {
         Alpine.store('selectedJobIsEmplate', 0);
         Alpine.store('isExternal', 0);
         Alpine.store('isInternalExternal', 0);
+        Alpine.store('isMobile', 0);
+        Alpine.store('totalJobs', 0);
         console.log('Alpine initialized');
         console.log('Alpine store:', Alpine.store('selectedJobId'));
 
@@ -637,8 +649,32 @@ if (empty($search)) {
                     }
 
                     if (job.isExternal == '1') {
-                        window.open(job.linkJob, '_blank');
+                        //window.open(job.linkJob, '_blank');
+                        if (job.isLinkedin == 'true' || job.isLinkedin == true) {
+                            idJob = this.searchJobLinkedin(job.dataEntityUrn, job);
+                            idJob.then(id => {
+                                window.location.href = "<?php echo SYSTEM_BASE_DIR ?>searchjobs?job=" + id;
+                            });
+                        }
+
+                        if (job.isComputrabajo == 'true' || job.isComputrabajo == true) {
+                            idJob = this.searchJobComputrabajo(job.dataEntityUrn, job);
+                            idJob.then(id => {
+                                window.location.href = "<?php echo SYSTEM_BASE_DIR ?>searchjobs?job=" + id;
+                            });
+                        }
+
+                        if (job.isEmpleate == 'true' || job.isEmpleate == true) {
+                            idJob = this.searchJobEmpleate(job.dataEntityUrn, job);
+                            //Obtener el id del job, de la promesa
+                            idJob.then(id => {
+                                window.location.href = "<?php echo SYSTEM_BASE_DIR ?>searchjobs?job=" + id;
+                            });
+                        }
+                        window.location.href = "<?php echo SYSTEM_BASE_DIR ?>searchjobs?job=" + job.id;
                         return;
+                    } else {
+                        window.location.href = "<?php echo SYSTEM_BASE_DIR ?>searchjobs?job=" + job.id;
                     }
 
                     window.location.href = "<?php echo SYSTEM_BASE_DIR ?>searchjobs?job=" + job.id;
@@ -649,78 +685,90 @@ if (empty($search)) {
                     this.$store.isExternal = job.isExternal;
                     this.$store.isInternalExternal = job.isInternalExternal;
                     if (job.isLinkedin == 'true' || job.isLinkedin == true) {
-                        this.$store.selectedJobIsComputrabajo = 0;
-                        this.$store.selectedJobIsEmplate = 0;
-                        this.$store.selectedJobIsLinkedin = 1;
-                        job.description = '<br> Cargando...';
-
-                        fetch('<?php echo SYSTEM_BASE_DIR ?>api/v1/searchlinkedinjobs/' + job.dataEntityUrn)
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.success) {
-                                    job.description = data.description;
-                                    dataExternal.job_description = data.description;
-                                    this.saveJob('linkedin', dataExternal);
-                                } else {
-                                    job.description = 'No se pudo cargar la descripción';
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error:', error);
-                                job.description = 'Ocurrió un error al cargar la descripción';
-                            });
+                        idJob = this.searchJobLinkedin(job.dataEntityUrn, job);
                     }
 
                     if (job.isComputrabajo == 'true' || job.isComputrabajo == true) {
-                        this.$store.selectedJobIsComputrabajo = 1;
-                        this.$store.selectedJobIsEmplate = 0;
-                        this.$store.selectedJobIsLinkedin = 0;
-                        job.description = '<br> Cargando...';
+                        idJob = this.searchJobComputrabajo(job.dataEntityUrn, job);
 
-                        fetch('<?php echo SYSTEM_BASE_DIR ?>api/v1/searchcomputrabajojob/' + job.dataEntityUrn)
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.success) {
-                                    job.description = data.description;
-                                    dataExternal.job_description = data.description;
-                                    this.saveJob('computrabajo', dataExternal);
-                                } else {
-                                    job.description = 'No se pudo cargar la descripción';
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error:', error);
-                                job.description = 'Ocurrió un error al cargar la descripción';
-                            });
                     }
 
                     if (job.isEmpleate == 'true' || job.isEmpleate == true) {
-                        this.$store.selectedJobIsEmplate = 1;
-                        this.$store.selectedJobIsComputrabajo = 0;
-                        this.$store.selectedJobIsLinkedin = 0;
-                        job.description = '<br> Cargando...';
-
-                        fetch('<?php echo SYSTEM_BASE_DIR ?>api/v1/searchempleatejob/' + job.dataEntityUrn)
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.success) {
-                                    job.description = data.description;
-                                    dataExternal.job_description = data.description;
-                                    dataExternal.external_url = "https://www.empleate.com/venezuela/ofertas/empleo/" + data.dataEntityUrn;
-                                    this.saveJob('empleate', dataExternal);
-                                } else {
-                                    job.description = 'No se pudo cargar la descripción';
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error:', error);
-                                job.description = 'Ocurrió un error al cargar la descripción';
-                            });
+                        idJob = this.searchJobEmpleate(job.dataEntityUrn, job);
                     }
                 }
-
-
             },
+
+            async searchJobLinkedin(dataEntityUrn, job){
+                this.$store.selectedJobIsComputrabajo = 0;
+                this.$store.selectedJobIsEmplate = 0;
+                this.$store.selectedJobIsLinkedin = 1;
+                job.description = '<br> Cargando...';
+
+                try{
+                    const response = await fetch('<?php echo SYSTEM_BASE_DIR ?>api/v1/searchlinkedinjobs/' + job.dataEntityUrn);
+                    const data = await response.json();
+                    if (data.success) {
+                        job.description = data.description;
+                        dataExternal.job_description = data.description;
+                        last_id = this.saveJob('linkedin', dataExternal);
+                        return last_id;
+                    } else {
+                        job.description = 'No se pudo cargar la descripción';
+                    }
+                } catch(error) {
+                    console.error('Error:', error);
+                    job.description = 'Ocurrió un error al cargar la descripción';
+                }
+            },
+
+            async searchJobComputrabajo(dataEntityUrn, job){
+                this.$store.selectedJobIsComputrabajo = 1;
+                this.$store.selectedJobIsEmplate = 0;
+                this.$store.selectedJobIsLinkedin = 0;
+                job.description = '<br> Cargando...';
+
+                try{
+                    const response = await fetch('<?php echo SYSTEM_BASE_DIR ?>api/v1/searchcomputrabajojob/' + job.dataEntityUrn);
+                    const data = await response.json();
+                    if (data.success) {
+                        job.description = data.description;
+                        dataExternal.job_description = data.description;
+                        last_id = this.saveJob('computrabajo', dataExternal);
+                        return last_id;
+                    } else {
+                        job.description = 'No se pudo cargar la descripción';
+                    }
+                } catch(error) {
+                    console.error('Error:', error);
+                    job.description = 'Ocurrió un error al cargar la descripción';
+                }
+            },
+
+            async searchJobEmpleate(dataEntityUrn, job){
+                this.$store.selectedJobIsEmplate = 1;
+                this.$store.selectedJobIsComputrabajo = 0;
+                this.$store.selectedJobIsLinkedin = 0;
+                job.description = '<br> Cargando...';
+
+                try{
+                    const response = await fetch('<?php echo SYSTEM_BASE_DIR ?>api/v1/searchempleatejob/' + dataEntityUrn);
+                    const data = await response.json();
+                    if (data.success) {
+                        job.description = data.description;
+                        dataExternal.job_description = data.description;
+                        dataExternal.external_url = "https://www.empleate.com/venezuela/ofertas/empleo/" + data.dataEntityUrn;
+                        last_id = this.saveJob('empleate', dataExternal);
+                        return last_id;
+                    } else {
+                        job.description = 'No se pudo cargar la descripción';
+                    }
+                } catch (error) {
+                    console.error('Error al cargar la descripción:', error);
+                    job.description = 'Ocurrió un error al cargar la descripción';
+                }
+            },
+
 
             async saveJob(type, data) {
                 console.log(type, data);
@@ -738,6 +786,7 @@ if (empty($search)) {
                     const result = await response.json();
                     if (result.success) {
                         console.log(result);
+                        return result['id'];
                     } else {
                         console.error('Error al guardar el trabajo:', result);
                     }
@@ -820,9 +869,13 @@ if (empty($search)) {
                 if (window.innerWidth > 768) {
                     if (this.jobs.length > 0) {
                         this.selectFirstJob();
+                        this.$store.totalJobs = 0;
                     }
                 } else {
+                    this.$store.isMobile = 1;
+                    this.$store.totalJobs = 0;
                     if (this.jobs.length == 1) {
+                        this.$store.totalJobs = 1;
                         this.selectFirstJob(); 
                     }
                 }
@@ -833,8 +886,6 @@ if (empty($search)) {
                 }
                 this.$store.selectedJobId = this.selectedJob ? this.selectedJob.id : null;
                 this.$store.selectedJobIsApplied = this.selectedJob ? this.selectedJob.isApplied : null;
-                console.log(this.jobs);
-                console.log(this.$store);
             },
         }));
 

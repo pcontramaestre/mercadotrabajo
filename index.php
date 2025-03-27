@@ -209,12 +209,28 @@ switch ($request) {
     $controller = new companyDashboardController($db);
     $controller->viewPostJobs($dataUserProfile);
     break;
+
+  case preg_match('/^\/dashboard\/company\/editpostjob(?:\/(\d+))?$/', $request, $matches) ? true : false:
+    $jobId = $matches[1] ?? null;
+    $controllerDataProfile = new getDataCompanyJsonController($db);
+    $dataUserProfile = $controllerDataProfile->getCompanyProfile($id_company);    
+    if ($jobId) {
+      $jobData = $controllerDataProfile->getJobDetails($jobId, $id_company);
+    } else {
+      echo 'No tiene un ID de trabajo valido';
+    }
+    
+    $controller = new companyDashboardController($db);
+    $controller->viewEditPostJob($dataUserProfile, $jobData);
+    break;
   
   case '/dashboard/company/myjobs':
     $controllerDataProfile = new getDataCompanyJsonController($db);
     $dataUserProfile = $controllerDataProfile->getCompanyProfile($id_company);
+    $dataCompanyJobs  = $controllerDataProfile->getCompanyJobs($id_company);
+
     $controller = new companyDashboardController($db);
-    $controller->viewMyJobs($dataUserProfile);
+    $controller->viewMyJobs($dataUserProfile, $dataCompanyJobs);
     break;
 
   //Dashboard candidate

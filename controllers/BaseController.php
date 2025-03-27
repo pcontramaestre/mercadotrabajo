@@ -148,6 +148,9 @@ class BaseController
                 $this->modelBase->rollback();
                 $this->redirect(SYSTEM_BASE_DIR . 'register/candidate?error=99');
             }
+        } else {
+            $this->modelBase->rollback();
+            $this->redirect(SYSTEM_BASE_DIR . 'register/candidate?error=99');
         }
     }
 
